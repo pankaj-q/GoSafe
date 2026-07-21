@@ -49,33 +49,73 @@ const amenityIcons: Record<string, React.ReactNode> = {
 function generateMockSeats(busType: string, totalSeats: number, availableSeats: number): Seat[] {
   const seats: Seat[] = []
   const isSleeper = busType.includes('SLEEPER')
-  const cols = isSleeper ? 3 : 4
-  const rows = Math.ceil(totalSeats / cols)
-  const bookedCount = totalSeats - availableSeats
-  const bookedIndices = new Set<number>()
-  while (bookedIndices.size < bookedCount) {
-    bookedIndices.add(Math.floor(Math.random() * totalSeats))
-  }
 
-  let id = 1
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      if (id > totalSeats) break
-      const idx = seats.length
-      const isBooked = bookedIndices.has(idx)
-      seats.push({
-        id: idx + 1,
-        seatNumber: isSleeper ? `${r + 1}${String.fromCharCode(65 + c)}` : `${r + 1}${c + 1}`,
-        seatType: isSleeper ? 'SLEEPER' : 'SEATER',
-        floor: isSleeper ? (r < rows / 2 ? 1 : 2) : 1,
-        rowPos: isSleeper ? (r < rows / 2 ? r : r - Math.floor(rows / 2)) : r,
-        colPos: c,
-        status: isBooked ? 'BOOKED' : 'AVAILABLE',
-        passengerName: isBooked ? 'X' : undefined,
-      })
-      id++
+  if (isSleeper) {
+    const gridCols = 3
+    const aisleCol = 1
+    const seatsPerRow = 2
+    const rowsPerDeck = Math.ceil(totalSeats / 2 / seatsPerRow)
+    const bookedCount = totalSeats - availableSeats
+    const bookedIndices = new Set<number>()
+    while (bookedIndices.size < bookedCount) {
+      bookedIndices.add(Math.floor(Math.random() * totalSeats))
+    }
+
+    let id = 1
+    for (let d = 0; d < 2; d++) {
+      for (let r = 0; r < rowsPerDeck; r++) {
+        for (let c = 0; c < gridCols; c++) {
+          if (c === aisleCol) continue
+          if (id > totalSeats) break
+          const idx = seats.length
+          const isBooked = bookedIndices.has(idx)
+          seats.push({
+            id: idx + 1,
+            seatNumber: d === 0
+              ? `${r + 1}${String.fromCharCode(65 + c)}`
+              : `U${r + 1}${String.fromCharCode(65 + c)}`,
+            seatType: d === 0 ? 'SEATER' : 'SLEEPER',
+            floor: d + 1,
+            rowPos: r,
+            colPos: c,
+            status: isBooked ? 'BOOKED' : 'AVAILABLE',
+            passengerName: isBooked ? 'X' : undefined,
+          })
+          id++
+        }
+      }
+    }
+  } else {
+    const gridCols = 5
+    const aisleCol = 2
+    const seatsPerRow = 4
+    const rows = Math.ceil(totalSeats / seatsPerRow)
+    const bookedCount = totalSeats - availableSeats
+    const bookedIndices = new Set<number>()
+    while (bookedIndices.size < bookedCount) {
+      bookedIndices.add(Math.floor(Math.random() * totalSeats))
+    }
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < gridCols; c++) {
+        if (c === aisleCol) continue
+        if (seats.length >= totalSeats) break
+        const idx = seats.length
+        const isBooked = bookedIndices.has(idx)
+        seats.push({
+          id: idx + 1,
+          seatNumber: `${r + 1}${c < aisleCol ? c + 1 : c}`,
+          seatType: 'SEATER',
+          floor: 1,
+          rowPos: r,
+          colPos: c,
+          status: isBooked ? 'BOOKED' : 'AVAILABLE',
+          passengerName: isBooked ? 'X' : undefined,
+        })
+      }
     }
   }
+
   return seats
 }
 
@@ -275,6 +315,16 @@ export default function BusCard(props: BusCardProps) {
       {/* Inline Seat Layout */}
       {showSeats && (
         <div className="border-t border-gray-100 bg-gray-50/50 animate-fade-in">
+          {/* Step header */}
+          <div className="px-4 sm:px-5 pt-4 pb-0">
+            <div className="flex items-center gap-0 text-xs font-medium border-b border-gray-200">
+              <span className="px-3 py-2 text-blue-700 border-b-2 border-blue-600 bg-white rounded-t-md">Select Seat</span>
+              <span className="px-3 py-2 text-gray-400 cursor-not-allowed">Review Booking</span>
+              <span className="px-3 py-2 text-gray-400 cursor-not-allowed">Boarding Points</span>
+              <span className="px-3 py-2 text-gray-400 cursor-not-allowed">Cancel Policy</span>
+            </div>
+          </div>
+
           <div className="p-4 sm:p-5">
             {loadingSeats ? (
               <SeatSkeleton busType={busType} />
@@ -284,7 +334,6 @@ export default function BusCard(props: BusCardProps) {
                   seats={seats}
                   selectedSeats={selectedSeats}
                   onSeatToggle={handleSeatToggle}
-                  busType={busType}
                 />
 
                 {selectedSeats.length > 0 && (

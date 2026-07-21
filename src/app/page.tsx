@@ -4,6 +4,7 @@ import Footer from '@/components/Footer'
 import SearchBar from '@/components/SearchBar'
 import AdSlot from '@/components/AdSlot'
 import NewsletterSignup from '@/components/NewsletterSignup'
+import TypewriterText from '@/components/TypewriterText'
 import Link from 'next/link'
 import {
   ShieldCheck, HeadphonesIcon, TicketCheck, Bus, Clock, ArrowRight,
@@ -90,8 +91,12 @@ export default function Home() {
             <div className="inline-flex items-center gap-1.5 bg-blue-500/30 text-blue-100 text-xs font-medium px-3 py-1 rounded-full mb-4">
               <TrendingUp className="w-3 h-3" /> India&apos;s Trusted Bus Platform
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-3 leading-tight">
-              Book Bus Tickets Across India
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-3 leading-tight whitespace-nowrap">
+              Book{' '}
+              <span className="font-[Aquire] font-normal italic tracking-wider">
+                <TypewriterText words={['Bus Tickets', 'Bus Booking', 'Travel Safe']} typeSpeed={150} deleteSpeed={80} />
+              </span>{' '}
+              Across India
             </h1>
             <p className="text-blue-200 text-sm sm:text-base max-w-lg mx-auto">
               Safe, reliable & affordable bus travel for every route in India — AC Sleeper, Volvo, Non-AC.

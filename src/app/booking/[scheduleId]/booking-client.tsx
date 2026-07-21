@@ -175,7 +175,7 @@ export default function BookingClient() {
                       <h2 className="font-bold text-gray-900">Select Your Seats</h2>
                       <div className="text-xs text-gray-500">{busData.operatorName} · {busData.departureTime} - {busData.arrivalTime}</div>
                     </div>
-                    <SeatLayout seats={seats} selectedSeats={selectedSeatIds} onSeatToggle={handleSeatToggle} busType={busData.busType} />
+                    <SeatLayout seats={seats} selectedSeats={selectedSeatIds} onSeatToggle={handleSeatToggle} />
                     {errors.seats && <p className="text-red-500 text-xs mt-2">{errors.seats}</p>}
                   </div>
                   <div className="flex justify-end mt-4">

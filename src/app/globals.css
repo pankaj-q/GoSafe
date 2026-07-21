@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Aquire';
+  src: url('/fonts/Aquire.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme inline {
   --color-background: #ffffff;
   --color-foreground: #0f172a;
@@ -170,34 +178,121 @@ body {
     color: var(--color-danger);
   }
 
-  .seat-available {
-    @apply w-10 h-10 rounded-lg border-2 border-green-400 bg-green-50 
-           flex items-center justify-center text-xs font-bold text-green-700
-           cursor-pointer transition-all hover:bg-green-100 hover:scale-110;
+  .seat-sleeper {
+    width: 3.5rem;
+    height: 2.75rem;
+    border-radius: 0.375rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.125rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .seat-sleeper::before {
+    content: '';
+    width: 1.25rem;
+    height: 0.25rem;
+    border-radius: 0.125rem;
+    display: block;
+  }
+  .seat-sleeper-available {
+    border: 2px solid #4ade80;
+    background: #f0fdf4;
+    color: #15803d;
+  }
+  .seat-sleeper-available::before {
+    background: #86efac;
+  }
+  .seat-sleeper-available:hover {
+    background: #dcfce7;
+    transform: scale(1.05);
+  }
+  .seat-sleeper-selected {
+    background: #2563eb;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px -1px rgba(37,99,235,0.3);
+  }
+  .seat-sleeper-selected::before {
+    background: rgba(255,255,255,0.5);
+  }
+  .seat-sleeper-booked {
+    border: 2px solid #fca5a5;
+    background: #fef2f2;
+    color: #dc2626;
+    cursor: not-allowed;
+  }
+  .seat-sleeper-booked::before {
+    background: #fca5a5;
+  }
+  .seat-sleeper-pending {
+    border: 2px solid #fcd34d;
+    background: #fefce8;
+    color: #b45309;
+    cursor: not-allowed;
+  }
+  .seat-sleeper-pending::before {
+    background: #fcd34d;
+  }
+  .seat-sleeper-locked {
+    background: #f9fafb;
+    color: #d1d5db;
+    cursor: not-allowed;
+    border: 1px dashed #d1d5db;
+  }
+  .seat-sleeper-locked::before {
+    background: #e5e7eb;
   }
 
-  .seat-selected {
-    @apply w-10 h-10 rounded-lg bg-blue-600 text-white
-           flex items-center justify-center text-xs font-bold
-           cursor-pointer transition-all scale-110 shadow-md;
+  .seat-seater {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.625rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
   }
-
-  .seat-booked {
-    @apply w-10 h-10 rounded-lg bg-gray-300 text-gray-500
-           flex items-center justify-center text-xs font-bold
-           cursor-not-allowed;
+  .seat-seater-available {
+    border: 2px solid #4ade80;
+    background: #f0fdf4;
+    color: #15803d;
   }
-
-  .seat-pending {
-    @apply w-10 h-10 rounded-lg border-2 border-amber-400 bg-amber-50
-           flex items-center justify-center text-xs font-bold text-amber-700
-           cursor-not-allowed relative;
+  .seat-seater-available:hover {
+    background: #dcfce7;
+    transform: scale(1.05);
   }
-
-  .seat-locked {
-    @apply w-10 h-10 rounded-lg bg-gray-100 text-gray-300
-           flex items-center justify-center text-xs
-           cursor-not-allowed border border-dashed border-gray-200;
+  .seat-seater-selected {
+    background: #2563eb;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px -1px rgba(37,99,235,0.3);
+  }
+  .seat-seater-booked {
+    border: 2px solid #fca5a5;
+    background: #fef2f2;
+    color: #dc2626;
+    cursor: not-allowed;
+  }
+  .seat-seater-pending {
+    border: 2px solid #fcd34d;
+    background: #fefce8;
+    color: #b45309;
+    cursor: not-allowed;
+  }
+  .seat-seater-locked {
+    background: #f9fafb;
+    color: #d1d5db;
+    cursor: not-allowed;
+    border: 1px dashed #d1d5db;
   }
 }
 
@@ -226,4 +321,18 @@ body {
 
 .animate-pulse-dot {
   animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 0.7s step-end infinite;
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
 }
