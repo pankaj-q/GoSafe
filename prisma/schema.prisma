@@ -1,0 +1,245 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model City {
+  id        Int      @id @default(autoincrement())
+  name      String
+  state     String
+  slug      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  sourceRoutes Route[] @relation("sourceRoutes")
+  destRoutes   Route[] @relation("destRoutes")
+}
+
+model Route {
+  id        Int        @id @default(autoincrement())
+  sourceId  Int
+  destId    Int
+  distanceKm Float?
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+
+  source    City       @relation("sourceRoutes", fields: [sourceId], references: [id])
+  dest      City       @relation("destRoutes", fields: [destId], references: [id])
+  schedules Schedule[]
+
+  @@unique([sourceId, destId])
+}
+
+model Operator {
+  id            Int      @id @default(autoincrement())
+  name          String
+  companyName   String
+  email         String   @unique
+  phone         String   @unique
+  passwordHash  String
+  logo          String?
+  commissionPct Float    @default(15.0)
+  isApproved    Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  buses Bus[]
+}
+
+model Bus {
+  id              Int      @id @default(autoincrement())
+  operatorId      Int
+  busNumber       String
+  registrationNo  String   @unique
+  busType         String   // AC_SLEEPER, AC_SEATER, NON_AC_SLEEPER, NON_AC_SEATER, VOLVO
+  totalSeats      Int
+  seatLayout      String   @default("2X1")
+  model           String?
+  year            Int?
+  rating          Float    @default(4.0)
+  totalRatings    Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  operator  Operator     @relation(fields: [operatorId], references: [id])
+  images    BusImage[]
+  amenities BusAmenity[]
+  schedules Schedule[]
+  seats     Seat[]
+}
+
+model BusImage {
+  id        Int      @id @default(autoincrement())
+  busId     Int
+  url       String
+  altText   String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  bus Bus @relation(fields: [busId], references: [id], onDelete: Cascade)
+}
+
+model Amenity {
+  id    Int          @id @default(autoincrement())
+  name  String       @unique
+  icon  String?
+  buses BusAmenity[]
+}
+
+model BusAmenity {
+  busId     Int
+  amenityId Int
+
+  bus     Bus     @relation(fields: [busId], references: [id], onDelete: Cascade)
+  amenity Amenity @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@id([busId, amenityId])
+}
+
+model Schedule {
+  id            Int      @id @default(autoincrement())
+  busId         Int
+  routeId       Int
+  departureTime String   // HH:mm
+  arrivalTime   String   // HH:mm
+  durationMin   Int
+  baseFare      Float
+  operatingDays String   // JSON array [0,1,2,3,4,5,6]
+  status        String   @default("ACTIVE")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  bus            Bus            @relation(fields: [busId], references: [id])
+  route          Route          @relation(fields: [routeId], references: [id])
+  boardingPoints BoardingPoint[]
+  seats          Seat[]
+  bookings       Booking[]
+  holds          BookingHold[]
+}
+
+model BoardingPoint {
+  id         Int      @id @default(autoincrement())
+  scheduleId Int
+  name       String
+  address    String?
+  time       String   // HH:mm
+  type       String   // BOARDING or DROPPING
+  sortOrder  Int      @default(0)
+
+  schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+}
+
+model Seat {
+  id         Int      @id @default(autoincrement())
+  busId      Int
+  scheduleId Int
+  seatNumber String   // L1, U1, L2 etc.
+  seatType   String   // LOWER, UPPER, WINDOW, AISLE, SEATER
+  floor      Int      @default(1)
+  rowPos     Int      @default(0)
+  colPos     Int      @default(0)
+  isActive   Boolean  @default(true)
+
+  bus      Bus           @relation(fields: [busId], references: [id])
+  schedule Schedule      @relation(fields: [scheduleId], references: [id])
+  holds    BookingHold[]
+
+  @@unique([scheduleId, seatNumber])
+}
+
+model BookingHold {
+  id         String   @id @default(uuid())
+  scheduleId Int
+  seatId     Int
+  sessionId  String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  seat     Seat     @relation(fields: [seatId], references: [id], onDelete: Cascade)
+  schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId, sessionId])
+  @@index([expiresAt])
+}
+
+model Booking {
+  id              Int         @id @default(autoincrement())
+  referenceCode   String      @unique
+  scheduleId      Int
+  journeyDate     DateTime
+  passengerCount  Int
+  totalAmount     Float
+  gstAmount       Float       @default(0)
+  insuranceAmount Float       @default(0)
+  insuranceOpted  Boolean     @default(false)
+  insurancePlanId Int?
+  status          String      @default("PENDING")
+  contactName     String
+  contactPhone    String
+  contactEmail    String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  schedule   Schedule          @relation(fields: [scheduleId], references: [id])
+  passengers BookingPassenger[]
+  payments   Payment[]
+}
+
+model BookingPassenger {
+  id        Int      @id @default(autoincrement())
+  bookingId Int
+  seatId    Int
+  name      String
+  age       Int
+  gender    String   // MALE, FEMALE, OTHER
+  createdAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id                Int      @id @default(autoincrement())
+  bookingId         Int
+  razorpayOrderId   String?  @unique
+  razorpayPaymentId String?
+  razorpaySignature String?
+  amount            Int      // in paise
+  currency          String   @default("INR")
+  status            String   @default("CREATED")
+  idempotencyKey    String   @unique
+  gatewayResponse   String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@index([bookingId])
+  @@index([idempotencyKey])
+}
+
+model PaymentWebhook {
+  id        Int      @id @default(autoincrement())
+  eventId   String   @unique
+  gateway   String   @default("razorpay")
+  eventType String
+  payload   String
+  rawBody   String
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+}
+
+model InsurancePlan {
+  id             Int      @id @default(autoincrement())
+  name           String
+  provider       String
+  description    String?
+  coverageAmount Float
+  premiumAmount  Float
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+}
