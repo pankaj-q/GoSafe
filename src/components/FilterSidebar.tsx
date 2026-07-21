@@ -1,22 +1,23 @@
 'use client'
 
 import { useState } from 'react'
-import { SlidersHorizontal, X, Star, ChevronDown } from 'lucide-react'
+import { X, Star, ChevronDown, TrendingUp, Clock, MapPin, Building2 } from 'lucide-react'
 
+const popularRoutes = [
+  ['Delhi', 'Varanasi'], ['Mumbai', 'Pune'], ['Delhi', 'Jaipur'],
+  ['Bangalore', 'Chennai'], ['Delhi', 'Lucknow'], ['Delhi', 'Mumbai'],
+]
 const busTypes = ['AC Sleeper', 'Non-AC Sleeper', 'AC Seater', 'Volvo AC', 'AC Semi-Sleeper', 'Non-AC Seater']
-const amenities = ['Charging Port', 'WiFi', 'Blanket', 'Water Bottle', 'Reading Light', 'CCTV', 'First Aid', 'Snacks', 'Pillow']
-const boardingTimes = [
-  { label: 'Early Morning (00:00–06:00)', range: '00:00-06:00' },
-  { label: 'Morning (06:00–12:00)', range: '06:00-12:00' },
-  { label: 'Afternoon (12:00–18:00)', range: '12:00-18:00' },
-  { label: 'Evening (18:00–00:00)', range: '18:00-00:00' },
+const seatTypes = ['Sleeper', 'Seater / Semi-Sleeper']
+const timeSlots = [
+  { label: '00:00 – 06:00', sub: 'Early Morning' },
+  { label: '06:00 – 12:00', sub: 'Morning' },
+  { label: '12:00 – 18:00', sub: 'Afternoon' },
+  { label: '18:00 – 23:59', sub: 'Evening' },
 ]
-const priceRanges = [
-  { label: 'Under ₹500', range: '0-500' },
-  { label: '₹500 – ₹1,000', range: '500-1000' },
-  { label: '₹1,000 – ₹1,500', range: '1000-1500' },
-  { label: '₹1,500+', range: '1500-99999' },
-]
+const operators = ['Royal Travels', 'Shree Balaji', 'Hans Travels', 'Varanasi Express', 'Maa Vaishno', 'Pawna Travels']
+const boardingPoints = ['ISBT Kashmere Gate', 'Anand Vihar', 'DND Flyway', 'Sarai Kale Khan', 'Karol Bagh']
+const droppingPoints = ['Varanasi Junction', 'Lanka (BHU)', 'Mughal Sarai', 'Sarnath']
 
 interface FilterSidebarProps {
   isOpen: boolean
@@ -25,44 +26,49 @@ interface FilterSidebarProps {
 
 export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({
-    busType: true,
-    price: true,
-    time: true,
-    rating: false,
-    amenities: false,
+    popular: false, busType: true, seatType: true, departure: true, arrival: false,
+    boarding: false, dropping: false, operator: false,
   })
-
-  const toggle = (key: string) => setExpanded(prev => ({ ...prev, [key]: !prev[key] }))
+  const toggle = (key: string) => setExpanded(p => ({ ...p, [key]: !p[key] }))
 
   return (
     <>
-      {/* Mobile overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={onClose} />
       )}
-
       <aside className={`
-        fixed lg:sticky top-0 lg:top-4 z-50 lg:z-0 h-full lg:h-auto
+        fixed lg:sticky top-0 lg:top-24 z-50 lg:z-0
         w-72 lg:w-64 bg-white border-r lg:border border-gray-200 lg:rounded-xl lg:shadow-sm
         transition-transform duration-300
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        overflow-y-auto
+        ${isOpen ? '' : 'lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto'}
       `}>
-        <div className="sticky top-0 bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between lg:hidden">
+        <div className="sticky top-0 bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between lg:hidden z-10">
           <span className="font-semibold text-sm text-gray-900 flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4" /> Filters
+            Filters
           </span>
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg">
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-8rem)]">
+          {/* Popular Routes */}
+          <FilterSection title="Popular Routes" icon={TrendingUp} expanded={expanded.popular} onToggle={() => toggle('popular')}>
+            <div className="flex flex-wrap gap-1.5">
+              {popularRoutes.map(([from, to]) => (
+                <button key={`${from}-${to}`} className="text-xs px-2.5 py-1.5 rounded-full border border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all">
+                  {from} → {to}
+                </button>
+              ))}
+            </div>
+          </FilterSection>
+
           {/* Bus Type */}
-          <FilterSection title="Bus Type" expanded={expanded.busType} onToggle={() => toggle('busType')}>
-            <div className="space-y-2">
+          <FilterSection title="Bus Type" icon={Building2} expanded={expanded.busType} onToggle={() => toggle('busType')}>
+            <div className="space-y-1.5">
               {busTypes.map(type => (
-                <label key={type} className="flex items-center gap-2.5 cursor-pointer group">
+                <label key={type} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
                   <span className="text-sm text-gray-700 group-hover:text-gray-900">{type}</span>
                 </label>
@@ -70,64 +76,90 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
             </div>
           </FilterSection>
 
-          {/* Price Range */}
-          <FilterSection title="Price Range" expanded={expanded.price} onToggle={() => toggle('price')}>
-            <div className="space-y-2">
-              {priceRanges.map(pr => (
-                <label key={pr.range} className="flex items-center gap-2.5 cursor-pointer group">
-                  <input type="radio" name="price" className="w-4 h-4 border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{pr.label}</span>
-                </label>
-              ))}
-            </div>
-          </FilterSection>
-
-          {/* Boarding Time */}
-          <FilterSection title="Boarding Time" expanded={expanded.time} onToggle={() => toggle('time')}>
-            <div className="space-y-2">
-              {boardingTimes.map(bt => (
-                <label key={bt.range} className="flex items-center gap-2.5 cursor-pointer group">
+          {/* Seat Type */}
+          <FilterSection title="Seat Type" icon={Star} expanded={expanded.seatType} onToggle={() => toggle('seatType')}>
+            <div className="space-y-1.5">
+              {seatTypes.map(st => (
+                <label key={st} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{bt.label}</span>
+                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{st}</span>
                 </label>
               ))}
             </div>
           </FilterSection>
 
-          {/* Rating */}
-          <FilterSection title="Minimum Rating" expanded={expanded.rating} onToggle={() => toggle('rating')}>
-            <div className="space-y-2">
-              {[4, 3, 2, 1].map(r => (
-                <label key={r} className="flex items-center gap-2.5 cursor-pointer group">
-                  <input type="radio" name="rating" className="w-4 h-4 border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900 flex items-center gap-1">
-                    {r}+ <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+          {/* Departure Time */}
+          <FilterSection title="Departure Time" icon={Clock} expanded={expanded.departure} onToggle={() => toggle('departure')}>
+            <div className="space-y-1.5">
+              {timeSlots.map(ts => (
+                <label key={ts.label} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
+                  <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                  <span className="text-sm text-gray-700 group-hover:text-gray-900">
+                    {ts.label} <span className="text-gray-400 text-xs">({ts.sub})</span>
                   </span>
                 </label>
               ))}
             </div>
           </FilterSection>
 
-          {/* Amenities */}
-          <FilterSection title="Amenities" expanded={expanded.amenities} onToggle={() => toggle('amenities')}>
-            <div className="space-y-2">
-              {amenities.map(a => (
-                <label key={a} className="flex items-center gap-2.5 cursor-pointer group">
+          {/* Arrival Time */}
+          <FilterSection title="Arrival Time" icon={Clock} expanded={expanded.arrival} onToggle={() => toggle('arrival')}>
+            <div className="space-y-1.5">
+              {timeSlots.map(ts => (
+                <label key={ts.label} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{a}</span>
+                  <span className="text-sm text-gray-700 group-hover:text-gray-900">
+                    {ts.label} <span className="text-gray-400 text-xs">({ts.sub})</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </FilterSection>
+
+          {/* Boarding Point */}
+          <FilterSection title="Boarding Point" icon={MapPin} expanded={expanded.boarding} onToggle={() => toggle('boarding')}>
+            <div className="space-y-1.5">
+              {boardingPoints.map(bp => (
+                <label key={bp} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
+                  <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{bp}</span>
+                </label>
+              ))}
+            </div>
+          </FilterSection>
+
+          {/* Dropping Point */}
+          <FilterSection title="Dropping Point" icon={MapPin} expanded={expanded.dropping} onToggle={() => toggle('dropping')}>
+            <div className="space-y-1.5">
+              {droppingPoints.map(dp => (
+                <label key={dp} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
+                  <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{dp}</span>
+                </label>
+              ))}
+            </div>
+          </FilterSection>
+
+          {/* Operator */}
+          <FilterSection title="Operator" icon={Building2} expanded={expanded.operator} onToggle={() => toggle('operator')}>
+            <div className="space-y-1.5">
+              {operators.map(op => (
+                <label key={op} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
+                  <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{op}</span>
                 </label>
               ))}
             </div>
           </FilterSection>
         </div>
 
-        {/* Apply / Clear */}
+        {/* Apply / Clear — sticky at bottom */}
         <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 flex gap-2">
           <button className="flex-1 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-            Clear All
+            Clear
           </button>
           <button className="flex-1 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
-            Apply Filters
+            Apply
           </button>
         </div>
       </aside>
@@ -135,18 +167,21 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
   )
 }
 
-function FilterSection({ title, expanded, onToggle, children }: { title: string; expanded: boolean; onToggle: () => void; children: React.ReactNode }) {
+function FilterSection({ title, icon: Icon, expanded, onToggle, children }: { title: string; icon?: React.ComponentType<{ className?: string }>; expanded: boolean; onToggle: () => void; children: React.ReactNode }) {
   return (
-    <div>
+    <div className="border-b border-gray-50 last:border-0">
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between py-2 text-sm font-semibold text-gray-900"
+        className="w-full flex items-center justify-between py-2.5 text-sm font-semibold text-gray-900"
       >
-        {title}
+        <span className="flex items-center gap-2">
+          {Icon && <Icon className="w-3.5 h-3.5 text-gray-400" />}
+          {title}
+        </span>
         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${expanded ? 'rotate-180' : ''}`} />
       </button>
-      {expanded && <div className="pt-1 pb-2">{children}</div>}
+      {expanded && <div className="pb-3">{children}</div>}
     </div>
   )
 }
