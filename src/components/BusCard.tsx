@@ -7,6 +7,7 @@ import { Star, MapPin, Wifi, BatteryCharging, Droplets, Camera, ChevronDown, Arm
 import { BUS_TYPE_LABELS } from '@/lib/constants'
 import { formatCurrency } from '@/lib/utils'
 import SeatLayout from '@/components/SeatLayout'
+import SeatSkeleton from '@/components/SeatSkeleton'
 
 interface Seat {
   id: number
@@ -276,10 +277,7 @@ export default function BusCard(props: BusCardProps) {
         <div className="border-t border-gray-100 bg-gray-50/50 animate-fade-in">
           <div className="p-4 sm:p-5">
             {loadingSeats ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" />
-                <span className="ml-3 text-sm text-gray-500">Loading seats...</span>
-              </div>
+              <SeatSkeleton busType={busType} />
             ) : (
               <>
                 <SeatLayout

@@ -2,13 +2,38 @@
 
 import Link from 'next/link'
 import { Bus, Phone, Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
-export default function NavHeader() {
+export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [visible, setVisible] = useState(true)
+  const lastScrollY = useRef(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY
+      if (currentY < 60) {
+        setVisible(true)
+      } else if (currentY > lastScrollY.current) {
+        setVisible(false)
+      } else {
+        setVisible(true)
+      }
+      lastScrollY.current = currentY
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <header
+      className={`bg-white border-b border-gray-200 ${
+        sticky ? 'sticky top-0 z-50' : ''
+      } transition-transform duration-300 ${
+        visible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
       <div className="gosafe-container">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2.5">

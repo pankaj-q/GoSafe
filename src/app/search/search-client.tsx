@@ -7,7 +7,7 @@ import SearchBar from '@/components/SearchBar'
 import BusCard from '@/components/BusCard'
 import FilterSidebar from '@/components/FilterSidebar'
 import AdSlot from '@/components/AdSlot'
-import { SlidersHorizontal, Frown, Star, Clock, ArrowUpDown, Zap, IndianRupee, ChevronDown, Search, MapPin, Calendar } from 'lucide-react'
+import { SlidersHorizontal, Frown, Star, Clock, ArrowUpDown, Zap, IndianRupee, ChevronDown } from 'lucide-react'
 
 interface SearchResult {
   id: number
@@ -123,7 +123,6 @@ function SearchContent() {
   const date = searchParams.get('date') || ''
 
   const [showFilters, setShowFilters] = useState(false)
-  const [showSearch, setShowSearch] = useState(false)
   const [sortKey, setSortKey] = useState<SortKey>('departure')
 
   useEffect(() => {
@@ -151,46 +150,17 @@ function SearchContent() {
 
   return (
     <>
-      <NavHeader />
-      <main className="min-h-screen bg-gray-50">
-        {/* Sticky top bar — collapsible */}
-        <div className="bg-white border-b border-gray-200 sticky top-16 z-40 shadow-sm">
-          <div className="gosafe-container py-3">
-            {showSearch ? (
-              <SearchBar compact initialSource={source} initialDest={destination} />
-            ) : (
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                    <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
-                    <span className="font-semibold text-sm text-gray-900 truncate">{source}</span>
-                    <div className="flex items-center gap-1 text-gray-300">
-                      <div className="w-1.5 h-1.5 rounded-full border border-blue-500" />
-                      <div className="w-8 h-px bg-gradient-to-r from-blue-400 to-blue-500 hidden sm:block" />
-                      <div className="w-1.5 h-1.5 rounded-full border border-blue-500" />
-                    </div>
-                    <MapPin className="w-4 h-4 text-red-500 shrink-0" />
-                    <span className="font-semibold text-sm text-gray-900 truncate">{destination}</span>
-                  </div>
-                  {formattedDate && (
-                    <div className="hidden sm:flex items-center gap-1 text-xs text-gray-500 shrink-0">
-                      <Calendar className="w-3 h-3" />
-                      {formattedDate}
-                    </div>
-                  )}
-                </div>
-                <button
-                  onClick={() => setShowSearch(true)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 hover:bg-gray-50 hover:border-blue-200 transition-all shrink-0"
-                >
-                  <Search className="w-3.5 h-3.5" />
-                  Search Again
-                </button>
-              </div>
-            )}
+      {/* Single sticky container: NavHeader slides away, SearchBar stays */}
+      <div className="sticky top-0 z-50">
+        <NavHeader sticky={false} />
+        <div className="bg-white border-b border-gray-200 shadow-sm">
+          <div className="gosafe-container py-2.5 sm:py-3">
+            <SearchBar compact initialSource={source} initialDest={destination} updateMode />
           </div>
         </div>
+      </div>
 
+      <main className="min-h-screen bg-gray-50">
         <div className="gosafe-container py-6">
           <div className="flex gap-6">
             <FilterSidebar isOpen={showFilters} onClose={() => setShowFilters(false)} />
@@ -207,6 +177,12 @@ function SearchContent() {
                       {formattedDate}{formattedDate ? ' · ' : ''}
                       <span className="font-semibold text-gray-700">{available.length}</span> buses
                       {available.length < sorted.length && <span className="text-gray-400"> ({sorted.length - available.length} sold out)</span>}
+                      <button
+                        onClick={() => window.location.reload()}
+                        className="ml-2 text-blue-600 hover:text-blue-700 font-medium"
+                      >
+                        Update Search
+                      </button>
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
