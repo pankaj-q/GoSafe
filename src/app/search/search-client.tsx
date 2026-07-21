@@ -5,6 +5,8 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import NavHeader from '@/components/NavHeader'
 import SearchBar from '@/components/SearchBar'
 import BusCard from '@/components/BusCard'
+import FilterSidebar from '@/components/FilterSidebar'
+import AdSlot from '@/components/AdSlot'
 import { SlidersHorizontal, Frown } from 'lucide-react'
 
 interface SearchResult {
@@ -166,70 +168,57 @@ function SearchContent() {
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="gosafe-btn gosafe-btn-secondary text-xs flex items-center gap-1.5"
+              className="lg:hidden gosafe-btn gosafe-btn-secondary text-xs flex items-center gap-1.5"
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
               Filters
             </button>
           </div>
 
-          {showFilters && (
-            <div className="gosafe-card p-4 mb-4 animate-fade-in">
-              <div className="flex flex-wrap gap-3">
-                <div>
-                  <label className="text-xs font-medium text-gray-600 block mb-1">Bus Type</label>
-                  <div className="flex flex-wrap gap-2">
-                    {['AC Sleeper', 'AC Seater', 'Volvo', 'Non-AC'].map(t => (
-                      <button key={t} className="text-xs px-3 py-1.5 rounded-full border border-gray-200 hover:border-blue-300 hover:text-blue-600 transition-colors">
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-gray-600 block mb-1">Departure</label>
-                  <div className="flex flex-wrap gap-2">
-                    {['Before 6am', '6am-12pm', '12pm-6pm', 'After 6pm'].map(t => (
-                      <button key={t} className="text-xs px-3 py-1.5 rounded-full border border-gray-200 hover:border-blue-300 hover:text-blue-600 transition-colors">
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          <div className="flex gap-6">
+            {/* Sidebar filters */}
+            <FilterSidebar isOpen={showFilters} onClose={() => setShowFilters(false)} />
 
-          {/* Results */}
-          {MOCK_RESULTS.length === 0 ? (
-            <div className="text-center py-20">
-              <Frown className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 text-sm">No buses found for this route.</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {MOCK_RESULTS.map((bus, i) => (
-                <div key={bus.id} style={{ animationDelay: `${i * 60}ms` }}>
-                  <BusCard
-                    scheduleId={bus.id}
-                    operatorName={bus.operatorName}
-                    busType={bus.busType}
-                    busRating={bus.busRating}
-                    totalRatings={bus.totalRatings}
-                    busImages={bus.busImages}
-                    amenities={bus.amenities}
-                    departureTime={bus.departureTime}
-                    arrivalTime={bus.arrivalTime}
-                    durationMin={bus.durationMin}
-                    baseFare={bus.baseFare}
-                    availableSeats={bus.availableSeats}
-                    totalSeats={bus.totalSeats}
-                    queryString={queryString}
-                  />
+            {/* Main content */}
+            <div className="flex-1 min-w-0">
+              {/* Ad slot above results */}
+              <AdSlot format="leaderboard" className="mb-4" />
+
+              {/* Results */}
+              {MOCK_RESULTS.length === 0 ? (
+                <div className="text-center py-20">
+                  <Frown className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-500 text-sm">No buses found for this route.</p>
                 </div>
-              ))}
+              ) : (
+                <div className="space-y-4">
+                  {MOCK_RESULTS.map((bus, i) => (
+                    <div key={bus.id} style={{ animationDelay: `${i * 60}ms` }}>
+                      <BusCard
+                        scheduleId={bus.id}
+                        operatorName={bus.operatorName}
+                        busType={bus.busType}
+                        busRating={bus.busRating}
+                        totalRatings={bus.totalRatings}
+                        busImages={bus.busImages}
+                        amenities={bus.amenities}
+                        departureTime={bus.departureTime}
+                        arrivalTime={bus.arrivalTime}
+                        durationMin={bus.durationMin}
+                        baseFare={bus.baseFare}
+                        availableSeats={bus.availableSeats}
+                        totalSeats={bus.totalSeats}
+                        queryString={queryString}
+                      />
+                    </div>
+                  ))}
+
+                  {/* Ad slot between results */}
+                  <AdSlot format="rectangle" className="my-4" />
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </main>
     </>

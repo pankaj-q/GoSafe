@@ -115,8 +115,13 @@ body {
     border-radius: var(--radius-sm);
     font-size: 1rem;
     background: white;
+    color: var(--color-foreground);
     transition: border-color 0.15s, box-shadow 0.15s;
     outline: none;
+  }
+
+  .gosafe-input::placeholder {
+    color: #94a3b8;
   }
 
   .gosafe-input:focus {
