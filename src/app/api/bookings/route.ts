@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
 import { generateReference, calculateGST } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth()
     const body = await req.json()
     const { scheduleId, journeyDate, passengers, contactName, contactPhone, contactEmail, insuranceOpted, selectedSeatIds } = body
 
@@ -27,11 +29,13 @@ export async function POST(req: NextRequest) {
     const totalAmount = baseAmount + gst + insuranceAmount
 
     const referenceCode = generateReference()
+    const userId = session?.user?.id ? parseInt(session.user.id, 10) : undefined
 
     const booking = await prisma.booking.create({
       data: {
         referenceCode,
         scheduleId,
+        userId,
         journeyDate: new Date(journeyDate),
         passengerCount,
         totalAmount,
@@ -53,7 +57,6 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    // Create payment record with idempotency key
     const idempotencyKey = `booking_${referenceCode}_${Date.now()}`
 
     const payment = await prisma.payment.create({

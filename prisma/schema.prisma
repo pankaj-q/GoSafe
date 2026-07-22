@@ -171,6 +171,7 @@ model Booking {
   id              Int         @id @default(autoincrement())
   referenceCode   String      @unique
   scheduleId      Int
+  userId          Int?
   journeyDate     DateTime
   passengerCount  Int
   totalAmount     Float
@@ -186,6 +187,7 @@ model Booking {
   updatedAt       DateTime    @updatedAt
 
   schedule   Schedule          @relation(fields: [scheduleId], references: [id])
+  user       User?             @relation(fields: [userId], references: [id])
   passengers BookingPassenger[]
   payments   Payment[]
 }
@@ -231,6 +233,18 @@ model PaymentWebhook {
   rawBody   String
   status    String   @default("PENDING")
   createdAt DateTime @default(now())
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String?   @unique
+  phone     String    @unique
+  password  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  bookings Booking[]
 }
 
 model InsurancePlan {

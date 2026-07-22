@@ -1,33 +1,46 @@
 import NextAuth from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import { prisma } from '@/lib/prisma'
+import { comparePassword } from '@/lib/password'
 
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   providers: [
-    process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
-      ? GoogleProvider({
-          clientId: process.env.GOOGLE_CLIENT_ID,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    CredentialsProvider({
+      name: 'credentials',
+      credentials: {
+        email: { label: 'Email or Phone', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null
+
+        const user = await prisma.user.findFirst({
+          where: {
+            OR: [
+              { email: credentials.email as string },
+              { phone: credentials.email as string },
+            ],
+          },
         })
-      : CredentialsProvider({
-          name: 'Phone',
-          credentials: {
-            phone: { label: 'Phone', type: 'tel' },
-            otp: { label: 'OTP', type: 'text' },
-          },
-          async authorize() {
-            return { id: 'guest', name: 'Guest User', phone: '0000000000' }
-          },
-        }),
-  ].filter(Boolean),
-  pages: {
-    signIn: '/',
-  },
+
+        if (!user?.password) return null
+
+        const valid = comparePassword(credentials.password as string, user.password)
+        if (!valid) return null
+
+        return { id: String(user.id), name: user.name, email: user.email || undefined }
+      },
+    }),
+  ],
+  session: { strategy: 'jwt' },
+  pages: { signIn: '/login' },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) token.id = user.id
+      return token
+    },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.sub || ''
-      }
+      if (session.user) session.user.id = token.id as string
       return session
     },
   },

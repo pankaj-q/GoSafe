@@ -22,7 +22,7 @@ export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatL
   const upperSeats = seats.filter(s => s.floor === 2)
   const hasUpper = upperSeats.length > 0
 
-  function renderSeat(seat: Seat) {
+  function renderSeat(seat: Seat, index: number) {
     const isSleeperStyle = seat.seatType === 'SLEEPER'
     const prefix = isSleeperStyle ? 'seat-sleeper' : 'seat-seater'
     const isSelected = selectedSeats.includes(seat.id)
@@ -46,7 +46,8 @@ export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatL
         onClick={() => {
           if (seat.status === 'AVAILABLE') onSeatToggle(seat.id)
         }}
-        className={cls}
+        className={`${cls} animate-seat-in`}
+        style={{ animationDelay: `${index * 20}ms` }}
         title={`${seat.seatNumber} - ${seat.status === 'AVAILABLE' ? 'Available' : seat.status === 'BOOKED' ? 'Booked' : seat.status === 'PENDING' ? 'Pending' : 'Not available'}`}
         disabled={seat.status !== 'AVAILABLE'}
       >
@@ -76,8 +77,8 @@ export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatL
 
     const firstSeat = deckSeats.find(s => s.seatType) || deckSeats[0]
     const isSleeperStyle = firstSeat?.seatType === 'SLEEPER'
-    const cellH = isSleeperStyle ? 'h-11' : 'h-10'
-    const seatW = isSleeperStyle ? 'w-14' : 'w-10'
+    const cellH = isSleeperStyle ? 'h-9 sm:h-11' : 'h-9 sm:h-10'
+    const seatW = isSleeperStyle ? 'w-11 sm:w-14' : 'w-9 sm:w-10'
     const prefix = isSleeperStyle ? 'seat-sleeper' : 'seat-seater'
 
     return (
@@ -86,11 +87,13 @@ export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatL
           <div className="text-[11px] font-semibold text-gray-500 mb-1.5">{label}</div>
         )}
         <div
-          className="grid gap-1 mx-auto"
-          style={{ gridTemplateColumns: `repeat(${totalCols}, auto)` }}
+          className="grid gap-0.5 sm:gap-1 mx-auto"
+          style={{ gridTemplateColumns: `repeat(${maxRow + 1}, auto)` }}
         >
-          {grid.flatMap((row, ri) =>
-            row.map((seat, ci) => {
+          {Array.from({ length: totalCols }, (_, ci) =>
+            Array.from({ length: maxRow + 1 }, (_, ri) => {
+              const seat = grid[ri][ci]
+              const idx = ci * (maxRow + 1) + ri
               if (!seat) {
                 const isAisle = ci === aisleCol
                 return (
@@ -104,9 +107,9 @@ export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatL
                   </div>
                 )
               }
-              return renderSeat(seat)
+              return renderSeat(seat, idx)
             })
-          )}
+          ).flat()}
         </div>
       </div>
     )
