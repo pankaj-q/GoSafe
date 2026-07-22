@@ -10,7 +10,7 @@ import AdSlot from '@/components/AdSlot'
 import { SlidersHorizontal, Frown, Star, Clock, ArrowUpDown, Zap, IndianRupee, ChevronDown } from 'lucide-react'
 
 interface SearchResult {
-  id: number
+  scheduleId: number
   operatorName: string
   busType: string
   busRating: number
@@ -27,46 +27,13 @@ interface SearchResult {
   droppingPoints?: { name: string; time: string }[]
 }
 
-const MOCK_RESULTS: SearchResult[] = [
-  { id: 1, operatorName: 'Royal Travels', busType: 'AC_SLEEPER', busRating: 4.3, totalRatings: 234,
-    busImages: [{ url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=200&fit=crop', altText: 'Bus exterior' }, { url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=200&fit=crop', altText: 'Bus interior' }],
-    amenities: ['Charging Port', 'WiFi', 'Blanket', 'Water Bottle', 'Reading Light', 'CCTV'],
-    departureTime: '22:00', arrivalTime: '07:30', durationMin: 570, baseFare: 899, availableSeats: 12, totalSeats: 32,
-    boardingPoints: [{ name: 'ISBT Kashmere Gate', time: '22:00' }, { name: 'Anand Vihar', time: '22:20' }, { name: 'DND Flyway', time: '22:35' }],
-    droppingPoints: [{ name: 'Varanasi Junction', time: '07:00' }, { name: 'Lanka (BHU)', time: '07:30' }] },
-  { id: 2, operatorName: 'Shree Balaji Travels', busType: 'VOLVO_SLEEPER', busRating: 4.5, totalRatings: 567,
-    busImages: [{ url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=200&fit=crop', altText: 'Volvo bus' }],
-    amenities: ['Charging Port', 'WiFi', 'Blanket', 'Pillow', 'Water Bottle', 'Snacks', 'First Aid'],
-    departureTime: '21:30', arrivalTime: '06:45', durationMin: 555, baseFare: 1299, availableSeats: 4, totalSeats: 28,
-    boardingPoints: [{ name: 'ISBT Kashmere Gate', time: '21:30' }, { name: 'Karol Bagh', time: '21:50' }],
-    droppingPoints: [{ name: 'Varanasi Junction', time: '06:15' }, { name: 'Lanka (BHU)', time: '06:45' }] },
-  { id: 3, operatorName: 'Hans Travels', busType: 'AC_SEATER', busRating: 4.0, totalRatings: 189,
-    busImages: [], amenities: ['Charging Port', 'Water Bottle'],
-    departureTime: '23:00', arrivalTime: '09:00', durationMin: 600, baseFare: 649, availableSeats: 18, totalSeats: 40,
-    boardingPoints: [{ name: 'Anand Vihar', time: '23:00' }], droppingPoints: [{ name: 'Varanasi Junction', time: '08:30' }] },
-  { id: 4, operatorName: 'Varanasi Express', busType: 'AC_SLEEPER', busRating: 4.1, totalRatings: 312,
-    busImages: [{ url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=200&fit=crop', altText: 'Bus front' }],
-    amenities: ['Charging Port', 'Blanket', 'Water Bottle', 'Reading Light'],
-    departureTime: '20:00', arrivalTime: '06:30', durationMin: 630, baseFare: 799, availableSeats: 0, totalSeats: 32,
-    boardingPoints: [{ name: 'ISBT Kashmere Gate', time: '20:00' }, { name: 'Sarai Kale Khan', time: '20:20' }],
-    droppingPoints: [{ name: 'Varanasi Junction', time: '06:00' }] },
-  { id: 5, operatorName: 'Maa Vaishno Travels', busType: 'NON_AC_SLEEPER', busRating: 3.8, totalRatings: 98,
-    busImages: [], amenities: ['Charging Port'],
-    departureTime: '22:30', arrivalTime: '08:00', durationMin: 570, baseFare: 549, availableSeats: 22, totalSeats: 36,
-    boardingPoints: [{ name: 'DND Flyway', time: '22:30' }], droppingPoints: [{ name: 'Mughal Sarai', time: '07:30' }] },
-  { id: 6, operatorName: 'Pawna Travels', busType: 'AC_SEMI_SLEEPER', busRating: 4.2, totalRatings: 445,
-    busImages: [{ url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=200&fit=crop', altText: 'Interior' }],
-    amenities: ['Charging Port', 'WiFi', 'Water Bottle', 'Snacks', 'Hand Towel'],
-    departureTime: '19:45', arrivalTime: '05:15', durationMin: 570, baseFare: 749, availableSeats: 8, totalSeats: 30,
-    boardingPoints: [{ name: 'Karol Bagh', time: '19:45' }, { name: 'ISBT Kashmere Gate', time: '20:10' }],
-    droppingPoints: [{ name: 'Varanasi Junction', time: '04:45' }, { name: 'Lanka (BHU)', time: '05:15' }] },
-]
-
 type SortKey = 'rating' | 'departure' | 'arrival' | 'duration' | 'price'
 
 const sortOptions: { key: SortKey; label: string }[] = [
-  { key: 'rating', label: 'Best Rating' }, { key: 'departure', label: 'Departure' },
-  { key: 'arrival', label: 'Arrival' }, { key: 'duration', label: 'Fastest' },
+  { key: 'rating', label: 'Best Rating' },
+  { key: 'departure', label: 'Departure' },
+  { key: 'arrival', label: 'Arrival' },
+  { key: 'duration', label: 'Fastest' },
   { key: 'price', label: 'Cheapest' },
 ]
 
@@ -115,23 +82,40 @@ function SortDropdown({ value, onChange }: { value: SortKey; onChange: (k: SortK
   )
 }
 
-function SearchContent() {
-  const searchParams = useSearchParams()
+function SearchContent({ source, destination, date, queryString }: {
+  source: string; destination: string; date: string; queryString: string
+}) {
   const router = useRouter()
-  const source = searchParams.get('source') || ''
-  const destination = searchParams.get('destination') || ''
-  const date = searchParams.get('date') || ''
 
+  const [results, setResults] = useState<SearchResult[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [showFilters, setShowFilters] = useState(false)
   const [sortKey, setSortKey] = useState<SortKey>('departure')
 
   useEffect(() => {
-    if (!source && !destination) router.push('/')
+    if (!source && !destination) {
+      router.push('/')
+      return
+    }
+
+    const params = new URLSearchParams({ source, destination })
+    fetch(`/api/search?${params.toString()}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Search failed')
+        return res.json()
+      })
+      .then(data => {
+        setResults(data.results || [])
+      })
+      .catch(err => {
+        setError('Failed to load results. Please try again.')
+        console.error('Search fetch error:', err)
+      })
+      .finally(() => setLoading(false))
   }, [source, destination, router])
 
-  const queryString = searchParams.toString()
-
-  const sorted = [...MOCK_RESULTS].sort((a, b) => {
+  const sorted = [...results].sort((a, b) => {
     switch (sortKey) {
       case 'rating': return b.busRating - a.busRating
       case 'departure': return a.departureTime.localeCompare(b.departureTime)
@@ -150,7 +134,6 @@ function SearchContent() {
 
   return (
     <>
-      {/* Single sticky container: NavHeader slides away, SearchBar stays */}
       <div className="sticky top-0 z-50">
         <NavHeader sticky={false} />
         <div className="bg-white border-b border-gray-200 shadow-sm">
@@ -166,24 +149,29 @@ function SearchContent() {
             <FilterSidebar isOpen={showFilters} onClose={() => setShowFilters(false)} />
 
             <div className="flex-1 min-w-0">
-              {/* Sort bar */}
               <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 mb-4">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <h1 className="text-base font-bold text-gray-900 truncate">
-                      {source} → {destination}
-                    </h1>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      {formattedDate}{formattedDate ? ' · ' : ''}
-                      <span className="font-semibold text-gray-700">{available.length}</span> buses
-                      {available.length < sorted.length && <span className="text-gray-400"> ({sorted.length - available.length} sold out)</span>}
-                      <button
-                        onClick={() => window.location.reload()}
-                        className="ml-2 text-blue-600 hover:text-blue-700 font-medium"
-                      >
-                        Update Search
-                      </button>
-                    </p>
+                    {loading ? (
+                      <div className="h-5 w-48 bg-gray-200 rounded animate-pulse" />
+                    ) : (
+                      <>
+                        <h1 className="text-base font-bold text-gray-900 truncate">
+                          {source} → {destination}
+                        </h1>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          {formattedDate}{formattedDate ? ' · ' : ''}
+                          <span className="font-semibold text-gray-700">{available.length}</span> buses
+                          {available.length < sorted.length && <span className="text-gray-400"> ({sorted.length - available.length} sold out)</span>}
+                          <button
+                            onClick={() => window.location.reload()}
+                            className="ml-2 text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            Update Search
+                          </button>
+                        </p>
+                      </>
+                    )}
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <button
@@ -200,7 +188,40 @@ function SearchContent() {
 
               <AdSlot format="leaderboard" className="mb-4" />
 
-              {sorted.length === 0 ? (
+              {loading ? (
+                <div className="space-y-3">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="bg-white rounded-xl border border-gray-100 p-5 animate-pulse">
+                      <div className="flex gap-4">
+                        <div className="w-44 shrink-0 space-y-2">
+                          <div className="w-14 h-14 bg-gray-200 rounded-xl" />
+                          <div className="h-3 w-24 bg-gray-200 rounded" />
+                          <div className="h-3 w-16 bg-gray-200 rounded" />
+                        </div>
+                        <div className="flex-1 space-y-2">
+                          <div className="h-4 w-32 bg-gray-200 rounded" />
+                          <div className="h-3 w-48 bg-gray-200 rounded" />
+                        </div>
+                        <div className="w-36 space-y-2">
+                          <div className="h-5 w-20 bg-gray-200 rounded ml-auto" />
+                          <div className="h-8 w-28 bg-gray-200 rounded ml-auto" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : error ? (
+                <div className="text-center py-20">
+                  <Frown className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-500 text-sm mb-4">{error}</p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="text-blue-600 font-medium text-sm hover:text-blue-700"
+                  >
+                    Try again
+                  </button>
+                </div>
+              ) : sorted.length === 0 ? (
                 <div className="text-center py-20">
                   <Frown className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                   <p className="text-gray-500 text-sm">No buses found for this route.</p>
@@ -208,9 +229,9 @@ function SearchContent() {
               ) : (
                 <div className="space-y-3">
                   {sorted.map((bus, i) => (
-                    <div key={bus.id} style={{ animationDelay: `${i * 60}ms` }}>
+                    <div key={bus.scheduleId} style={{ animationDelay: `${i * 60}ms` }}>
                       <BusCard
-                        scheduleId={bus.id}
+                        scheduleId={bus.scheduleId}
                         operatorName={bus.operatorName}
                         busType={bus.busType}
                         busRating={bus.busRating}
@@ -240,6 +261,23 @@ function SearchContent() {
   )
 }
 
+function SearchParamsReader() {
+  const searchParams = useSearchParams()
+  const source = searchParams.get('source') || ''
+  const destination = searchParams.get('destination') || ''
+  const date = searchParams.get('date') || ''
+  const queryString = searchParams.toString()
+  return (
+    <SearchContent
+      key={`${source}-${destination}-${date}`}
+      source={source}
+      destination={destination}
+      date={date}
+      queryString={queryString}
+    />
+  )
+}
+
 export default function SearchClient() {
   return (
     <Suspense fallback={
@@ -247,7 +285,7 @@ export default function SearchClient() {
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
       </div>
     }>
-      <SearchContent />
+      <SearchParamsReader />
     </Suspense>
   )
 }

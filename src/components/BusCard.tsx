@@ -46,79 +46,6 @@ const amenityIcons: Record<string, React.ReactNode> = {
   'CCTV': <Camera className="w-3 h-3" />,
 }
 
-function generateMockSeats(busType: string, totalSeats: number, availableSeats: number): Seat[] {
-  const seats: Seat[] = []
-  const isSleeper = busType.includes('SLEEPER')
-
-  if (isSleeper) {
-    const gridCols = 3
-    const aisleCol = 1
-    const seatsPerRow = 2
-    const rowsPerDeck = Math.ceil(totalSeats / 2 / seatsPerRow)
-    const bookedCount = totalSeats - availableSeats
-    const bookedIndices = new Set<number>()
-    while (bookedIndices.size < bookedCount) {
-      bookedIndices.add(Math.floor(Math.random() * totalSeats))
-    }
-
-    let id = 1
-    for (let d = 0; d < 2; d++) {
-      for (let r = 0; r < rowsPerDeck; r++) {
-        for (let c = 0; c < gridCols; c++) {
-          if (c === aisleCol) continue
-          if (id > totalSeats) break
-          const idx = seats.length
-          const isBooked = bookedIndices.has(idx)
-          seats.push({
-            id: idx + 1,
-            seatNumber: d === 0
-              ? `${r + 1}${String.fromCharCode(65 + c)}`
-              : `U${r + 1}${String.fromCharCode(65 + c)}`,
-            seatType: d === 0 ? 'SEATER' : 'SLEEPER',
-            floor: d + 1,
-            rowPos: r,
-            colPos: c,
-            status: isBooked ? 'BOOKED' : 'AVAILABLE',
-            passengerName: isBooked ? 'X' : undefined,
-          })
-          id++
-        }
-      }
-    }
-  } else {
-    const gridCols = 5
-    const aisleCol = 2
-    const seatsPerRow = 4
-    const rows = Math.ceil(totalSeats / seatsPerRow)
-    const bookedCount = totalSeats - availableSeats
-    const bookedIndices = new Set<number>()
-    while (bookedIndices.size < bookedCount) {
-      bookedIndices.add(Math.floor(Math.random() * totalSeats))
-    }
-
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < gridCols; c++) {
-        if (c === aisleCol) continue
-        if (seats.length >= totalSeats) break
-        const idx = seats.length
-        const isBooked = bookedIndices.has(idx)
-        seats.push({
-          id: idx + 1,
-          seatNumber: `${r + 1}${c < aisleCol ? c + 1 : c}`,
-          seatType: 'SEATER',
-          floor: 1,
-          rowPos: r,
-          colPos: c,
-          status: isBooked ? 'BOOKED' : 'AVAILABLE',
-          passengerName: isBooked ? 'X' : undefined,
-        })
-      }
-    }
-  }
-
-  return seats
-}
-
 export default function BusCard(props: BusCardProps) {
   const { scheduleId, operatorName, busType, busRating, totalRatings, busImages, amenities, departureTime, arrivalTime, durationMin, baseFare, availableSeats, totalSeats, boardingPoints, droppingPoints, queryString } = props
   const [showPoints, setShowPoints] = useState(false)
@@ -126,21 +53,32 @@ export default function BusCard(props: BusCardProps) {
   const [seats, setSeats] = useState<Seat[]>([])
   const [selectedSeats, setSelectedSeats] = useState<number[]>([])
   const [loadingSeats, setLoadingSeats] = useState(false)
+  const [seatsError, setSeatsError] = useState('')
   const seatsFetched = useRef(false)
 
   useEffect(() => {
     if (showSeats && !seatsFetched.current) {
       seatsFetched.current = true
       setLoadingSeats(true)
-      const timer = setTimeout(() => {
-        setSeats(generateMockSeats(busType, totalSeats, availableSeats))
-        setLoadingSeats(false)
-      }, 400)
-      return () => clearTimeout(timer)
-    }
-  }, [showSeats, busType, totalSeats, availableSeats])
+      setSeatsError('')
 
-  const seatPercent = availableSeats / totalSeats
+      fetch(`/api/schedules/${scheduleId}/seats`)
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to load seats')
+          return res.json()
+        })
+        .then(data => {
+          setSeats(data.seats || [])
+        })
+        .catch(err => {
+          setSeatsError('Could not load seat layout')
+          console.error('Seats fetch error:', err)
+        })
+        .finally(() => setLoadingSeats(false))
+    }
+  }, [showSeats, scheduleId])
+
+  const seatPercent = totalSeats > 0 ? availableSeats / totalSeats : 0
   const seatStatus = seatPercent > 0.3 ? 'good' : seatPercent > 0.1 ? 'low' : 'critical'
 
   function handleSeatToggle(seatId: number) {
@@ -315,7 +253,6 @@ export default function BusCard(props: BusCardProps) {
       {/* Inline Seat Layout */}
       {showSeats && (
         <div className="border-t border-gray-100 bg-gray-50/50 animate-fade-in">
-          {/* Step header */}
           <div className="px-4 sm:px-5 pt-4 pb-0">
             <div className="flex items-center gap-0 text-xs font-medium border-b border-gray-200">
               <span className="px-3 py-2 text-blue-700 border-b-2 border-blue-600 bg-white rounded-t-md">Select Seat</span>
@@ -328,6 +265,16 @@ export default function BusCard(props: BusCardProps) {
           <div className="p-4 sm:p-5">
             {loadingSeats ? (
               <SeatSkeleton busType={busType} />
+            ) : seatsError ? (
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-500">{seatsError}</p>
+                <button
+                  onClick={() => { seatsFetched.current = false; setShowSeats(false); setTimeout(() => setShowSeats(true), 100) }}
+                  className="mt-2 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  Retry
+                </button>
+              </div>
             ) : (
               <>
                 <SeatLayout

@@ -1,11 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { CheckCircle, Bus, Download, Smartphone, Mail, ArrowRight } from 'lucide-react'
+import { CheckCircle, Bus, Download, Smartphone, Mail, ArrowRight, Loader2 } from 'lucide-react'
 import NavHeader from '@/components/NavHeader'
 import { formatCurrency, formatDate } from '@/lib/utils'
+
+function genRef() {
+  return `GS${String(Math.floor(10000000 + Math.random() * 90000000))}`
+}
 
 export default function ConfirmationClient() {
   const searchParams = useSearchParams()
@@ -16,10 +20,27 @@ export default function ConfirmationClient() {
   const seats = searchParams.get('seats') || ''
   const total = searchParams.get('amount') || '0'
   const insurance = searchParams.get('insurance') === 'true'
+  const bookingId = searchParams.get('bookingId') || ''
 
-  const [refNo] = useState(() =>
-    `GS${String(Math.floor(10000000 + Math.random() * 90000000))}`)
+  const [refNo, setRefNo] = useState(bookingId ? '' : genRef())
+  const [loading, setLoading] = useState(Boolean(bookingId))
   const [sentTo, setSentTo] = useState<{ email?: boolean; whatsapp?: boolean }>({})
+
+  useEffect(() => {
+    if (!bookingId) return
+
+    fetch(`/api/bookings/user`)
+      .then(res => res.json())
+      .then(data => {
+        const booking = data.bookings?.find((b: { id: number; referenceCode: string }) =>
+          String(b.id) === bookingId || b.referenceCode === bookingId
+        )
+        if (booking?.referenceCode) setRefNo(booking.referenceCode)
+        else setRefNo(genRef())
+      })
+      .catch(() => setRefNo(genRef()))
+      .finally(() => setLoading(false))
+  }, [bookingId])
 
   function handleSend(type: 'whatsapp' | 'email') {
     setSentTo(prev => ({ ...prev, [type]: true }))
@@ -38,11 +59,12 @@ export default function ConfirmationClient() {
             <p className="text-gray-500 text-sm">Your ticket has been booked successfully</p>
             <div className="mt-3 inline-block bg-blue-50 px-4 py-2 rounded-lg">
               <span className="text-xs text-gray-500">Reference No.</span>
-              <div className="text-lg font-bold text-blue-700 tracking-wider">{refNo}</div>
+              <div className="text-lg font-bold text-blue-700 tracking-wider">
+                {loading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : refNo}
+              </div>
             </div>
           </div>
 
-          {/* Ticket Card */}
           <div className="max-w-md mx-auto gosafe-card overflow-hidden animate-slide-up">
             <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-5 py-4 text-white">
               <div className="flex items-center justify-between mb-2">
@@ -96,7 +118,6 @@ export default function ConfirmationClient() {
               </div>
             </div>
 
-            {/* QR placeholder */}
             <div className="px-5 pb-5 flex justify-center">
               <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
                 <span className="text-[8px] text-gray-400 text-center leading-tight">QR Code<br/>(PDF)</span>
@@ -104,7 +125,6 @@ export default function ConfirmationClient() {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="max-w-md mx-auto mt-6 space-y-3">
             <button className="w-full gosafe-btn gosafe-btn-primary py-3">
               <Download className="w-4 h-4" />

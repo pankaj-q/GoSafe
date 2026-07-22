@@ -20,9 +20,7 @@ export async function POST(req: NextRequest) {
     }
 
     const amountInPaise = Math.round(booking.totalAmount * 100)
-
     const receipt = `${booking.referenceCode}_${Date.now()}`
-
     const order = await createRazorpayOrder({
       amount: amountInPaise,
       currency: 'INR',
@@ -33,29 +31,16 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    if (order.mock) {
-      await prisma.payment.create({
-        data: {
-          bookingId: booking.id,
-          amount: amountInPaise,
-          currency: 'INR',
-          status: 'CREATED',
-          idempotencyKey: `mock_${receipt}`,
-          razorpayOrderId: order.id,
-        },
-      })
-    } else {
-      await prisma.payment.create({
-        data: {
-          bookingId: booking.id,
-          amount: amountInPaise,
-          currency: 'INR',
-          status: 'CREATED',
-          idempotencyKey: receipt,
-          razorpayOrderId: order.id,
-        },
-      })
-    }
+    await prisma.payment.create({
+      data: {
+        bookingId: booking.id,
+        amount: amountInPaise,
+        currency: 'INR',
+        status: 'CREATED',
+        idempotencyKey: order.mock ? `mock_${receipt}` : receipt,
+        razorpayOrderId: order.id,
+      },
+    })
 
     return NextResponse.json({
       orderId: order.id,

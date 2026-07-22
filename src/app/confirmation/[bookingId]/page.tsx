@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import ConfirmationClient from './confirmation-client'
 
 export const metadata: Metadata = {
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 }
 
 export default function ConfirmationPage() {
-  return <ConfirmationClient />
+  return (
+    <Suspense>
+      <ConfirmationClient />
+    </Suspense>
+  )
 }

@@ -10,6 +10,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Source and destination required' }, { status: 400 })
   }
 
+  if (source.length < 2 || destination.length < 2) {
+    return NextResponse.json({ error: 'City names must be at least 2 characters' }, { status: 400 })
+  }
+
   try {
     const route = await prisma.route.findFirst({
       where: {
@@ -31,6 +35,10 @@ export async function GET(req: NextRequest) {
               },
             },
             boardingPoints: { orderBy: { sortOrder: 'asc' } },
+            bookings: {
+              where: { status: { not: 'CANCELLED' } },
+              select: { passengerCount: true, journeyDate: true },
+            },
           },
         },
       },
@@ -42,11 +50,11 @@ export async function GET(req: NextRequest) {
 
     const results = route.schedules.map(schedule => {
       const totalSeats = schedule.bus.totalSeats
-      const bookedCount = 0
-      const availableSeats = totalSeats - bookedCount
+      const bookedCount = schedule.bookings.reduce((sum, b) => sum + b.passengerCount, 0)
+      const availableSeats = Math.max(0, totalSeats - bookedCount)
 
       return {
-        id: schedule.id,
+        scheduleId: schedule.id,
         operatorName: schedule.bus.operator.name,
         operatorLogo: schedule.bus.operator.logo,
         busType: schedule.bus.busType,

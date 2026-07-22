@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import NavHeader from '@/components/NavHeader'
 import SeatLayout from '@/components/SeatLayout'
@@ -22,90 +22,82 @@ interface Seat {
   passengerName?: string
 }
 
-function generateMockSeats(busType: string): Seat[] {
-  const seats: Seat[] = []
-  const isSleeper = busType.includes('SLEEPER')
-  const isVolvo = busType === 'VOLVO_SLEEPER'
-
-  if (isSleeper) {
-    const rows = isVolvo ? 14 : 16
-    for (let row = 0; row < rows; row++) {
-      const rowNum = row + 1
-      seats.push({ id: row * 4 + 1, seatNumber: `L${rowNum}`, seatType: 'LOWER', floor: 1, rowPos: row, colPos: 0, status: Math.random() > 0.3 ? 'AVAILABLE' : 'BOOKED' })
-      seats.push({ id: row * 4 + 2, seatNumber: `U${rowNum}`, seatType: 'UPPER', floor: 2, rowPos: row, colPos: 0, status: Math.random() > 0.35 ? 'AVAILABLE' : 'BOOKED' })
-      seats.push({ id: row * 4 + 3, seatNumber: `L${rowNum}A`, seatType: 'LOWER', floor: 1, rowPos: row, colPos: 2, status: Math.random() > 0.4 ? 'AVAILABLE' : 'BOOKED' })
-      seats.push({ id: row * 4 + 4, seatNumber: `U${rowNum}A`, seatType: 'UPPER', floor: 2, rowPos: row, colPos: 2, status: Math.random() > 0.4 ? 'AVAILABLE' : 'BOOKED' })
-    }
-  } else {
-    for (let row = 0; row < 20; row++) {
-      const rowNum = row + 1
-      seats.push({ id: row * 3 + 1, seatNumber: `W${rowNum}`, seatType: 'WINDOW', floor: 1, rowPos: row, colPos: 0, status: Math.random() > 0.25 ? 'AVAILABLE' : 'BOOKED' })
-      seats.push({ id: row * 3 + 2, seatNumber: `M${rowNum}`, seatType: 'AISLE', floor: 1, rowPos: row, colPos: 1, status: Math.random() > 0.3 ? 'AVAILABLE' : 'BOOKED' })
-      seats.push({ id: row * 3 + 3, seatNumber: `A${rowNum}`, seatType: 'AISLE', floor: 1, rowPos: row, colPos: 2, status: Math.random() > 0.4 ? 'AVAILABLE' : 'BOOKED' })
-    }
-  }
-
-  return seats
-}
-
-const MOCK_BUS_DATA: Record<number, {
-  operatorName: string
-  busType: string
-  busRating: number
-  totalRatings: number
-  departureTime: string
-  arrivalTime: string
-  durationMin: number
-  baseFare: number
-  source: string
-  destination: string
+interface ScheduleData {
+  schedule: { departureTime: string; arrivalTime: string; durationMin: number; baseFare: number }
+  bus: { operatorName: string; busType: string; rating: number; totalRatings: number }
+  seats: Seat[]
   boardingPoints: { name: string; time: string }[]
   droppingPoints: { name: string; time: string }[]
-}> = {
-  1: {
-    operatorName: 'Royal Travels',
-    busType: 'AC_SLEEPER',
-    busRating: 4.3,
-    totalRatings: 234,
-    departureTime: '22:00',
-    arrivalTime: '07:30',
-    durationMin: 570,
-    baseFare: 899,
-    source: 'Delhi',
-    destination: 'Varanasi',
-    boardingPoints: [
-      { name: 'ISBT Kashmere Gate', time: '22:00' },
-      { name: 'Anand Vihar', time: '22:20' },
-      { name: 'DND Flyway', time: '22:35' },
-    ],
-    droppingPoints: [
-      { name: 'Varanasi Junction', time: '07:00' },
-      { name: 'Lanka (BHU)', time: '07:30' },
-    ],
-  },
 }
 
-export default function BookingClient() {
+export default function BookingClient({ scheduleId }: { scheduleId: number }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const source = searchParams.get('source') || 'Delhi'
   const destination = searchParams.get('destination') || 'Varanasi'
   const date = searchParams.get('date') || new Date().toISOString().split('T')[0]
-  const scheduleId = Number(searchParams.get('scheduleId')) || 1
+  const seatIdsParam = searchParams.get('seats') || ''
+  const initialSeatIds = seatIdsParam.split(',').map(Number).filter(Boolean)
 
-  const busData = MOCK_BUS_DATA[scheduleId] || MOCK_BUS_DATA[1]
-  const [seats] = useState<Seat[]>(() => generateMockSeats(busData.busType))
-  const [selectedSeatIds, setSelectedSeatIds] = useState<number[]>([])
+  const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    fetch(`/api/schedules/${scheduleId}/seats`)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to load schedule')
+        return res.json()
+      })
+      .then(data => setScheduleData(data))
+      .catch(err => {
+        setError('Could not load booking data')
+        console.error('Schedule fetch error:', err)
+      })
+      .finally(() => setLoading(false))
+  }, [scheduleId])
+
+  const [selectedSeatIds, setSelectedSeatIds] = useState<number[]>(initialSeatIds)
   const [step, setStep] = useState(1)
   const [insuranceOpted, setInsuranceOpted] = useState(false)
   const [passengers, setPassengers] = useState<PassengerData[]>([{ name: '', age: 18, gender: 'MALE' }])
   const [contactName, setContactName] = useState('')
   const [contactPhone, setContactPhone] = useState('')
   const [contactEmail, setContactEmail] = useState('')
+  const [paying, setPaying] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const insurancePremium = 19
   const insuranceCoverage = 500000
+
+  if (loading) {
+    return (
+      <>
+        <NavHeader />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        </div>
+      </>
+    )
+  }
+
+  if (error || !scheduleData) {
+    return (
+      <>
+        <NavHeader />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-gray-500 text-sm mb-4">{error || 'Data not available'}</p>
+            <button onClick={() => router.back()} className="text-blue-600 font-medium text-sm">Go back</button>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  const busData = scheduleData.bus
+  const schedule = scheduleData.schedule
+  const seats = scheduleData.seats
 
   function handleSeatToggle(seatId: number) {
     setSelectedSeatIds(prev =>
@@ -115,7 +107,7 @@ export default function BookingClient() {
 
   const selectedSeatsData = seats.filter(s => selectedSeatIds.includes(s.id))
   const selectedCount = selectedSeatIds.length
-  const subtotal = busData.baseFare * selectedCount
+  const subtotal = schedule.baseFare * selectedCount
   const gst = Math.round(subtotal * 0.05 * 100) / 100
   const total = subtotal + gst + (insuranceOpted ? insurancePremium : 0)
 
@@ -134,15 +126,44 @@ export default function BookingClient() {
     return Object.keys(errs).length === 0
   }
 
-  const [paying, setPaying] = useState(false)
-
-  function handleRazorpayPayment() {
+  async function handlePayment() {
     setPaying(true)
-    const params = new URLSearchParams(searchParams.toString())
-    params.set('seats', selectedSeatsData.map(s => s.seatNumber).join(','))
-    params.set('insurance', String(insuranceOpted))
-    params.set('amount', String(total))
-    router.push(`/confirmation/${scheduleId}?${params.toString()}`)
+    try {
+      const bookingRes = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          scheduleId,
+          journeyDate: date,
+          contactName,
+          contactPhone,
+          contactEmail: contactEmail || undefined,
+          insuranceOpted,
+          passengers: passengers.filter(p => p.name.trim()),
+          selectedSeatIds,
+        }),
+      })
+
+      const bookingData = await bookingRes.json()
+      if (!bookingRes.ok) {
+        setErrors({ submit: bookingData.error || 'Failed to create booking' })
+        setPaying(false)
+        return
+      }
+
+      const params = new URLSearchParams({
+        source, destination, date,
+        seats: selectedSeatsData.map(s => s.seatNumber).join(','),
+        amount: String(total),
+        insurance: String(insuranceOpted),
+        bookingId: String(bookingData.booking?.id || bookingData.booking?.referenceCode || ''),
+      })
+
+      router.push(`/confirmation/${scheduleId}?${params.toString()}`)
+    } catch {
+      setErrors({ submit: 'Something went wrong. Please try again.' })
+      setPaying(false)
+    }
   }
 
   return (
@@ -173,7 +194,7 @@ export default function BookingClient() {
                   <div className="gosafe-card p-5">
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="font-bold text-gray-900">Select Your Seats</h2>
-                      <div className="text-xs text-gray-500">{busData.operatorName} · {busData.departureTime} - {busData.arrivalTime}</div>
+                      <div className="text-xs text-gray-500">{busData.operatorName} · {schedule.departureTime} - {schedule.arrivalTime}</div>
                     </div>
                     <SeatLayout seats={seats} selectedSeats={selectedSeatIds} onSeatToggle={handleSeatToggle} />
                     {errors.seats && <p className="text-red-500 text-xs mt-2">{errors.seats}</p>}
@@ -245,9 +266,13 @@ export default function BookingClient() {
                     </div>
                   </div>
 
+                  {errors.submit && (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">{errors.submit}</div>
+                  )}
+
                   <div className="flex justify-between">
                     <button onClick={() => setStep(2)} className="gosafe-btn gosafe-btn-secondary"><ChevronLeft className="w-4 h-4" /> Back</button>
-                    <button onClick={handleRazorpayPayment} disabled={paying} className="gosafe-btn gosafe-btn-primary text-base py-3 px-8">
+                    <button onClick={handlePayment} disabled={paying} className="gosafe-btn gosafe-btn-primary text-base py-3 px-8">
                       {paying ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
                       {paying ? 'Processing...' : `Pay ${formatCurrency(total)}`}
                     </button>
@@ -261,10 +286,10 @@ export default function BookingClient() {
                 <BookingSummary
                   operatorName={busData.operatorName}
                   busType={busData.busType}
-                  departureTime={busData.departureTime}
-                  arrivalTime={busData.arrivalTime}
-                  durationMin={busData.durationMin}
-                  baseFare={busData.baseFare}
+                  departureTime={schedule.departureTime}
+                  arrivalTime={schedule.arrivalTime}
+                  durationMin={schedule.durationMin}
+                  baseFare={schedule.baseFare}
                   seatCount={selectedCount}
                   selectedSeats={selectedSeatsData.map(s => s.seatNumber)}
                   insuranceOpted={insuranceOpted}
@@ -272,7 +297,7 @@ export default function BookingClient() {
                   journeyDate={date}
                   source={source}
                   destination={destination}
-                  rating={busData.busRating}
+                  rating={busData.rating}
                 />
               </div>
             </div>

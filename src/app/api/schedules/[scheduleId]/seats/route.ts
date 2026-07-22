@@ -14,12 +14,20 @@ export async function GET(
         bus: { include: { operator: true } },
         seats: true,
         boardingPoints: { orderBy: { sortOrder: 'asc' } },
+        bookings: {
+          where: { status: { not: 'CANCELLED' } },
+          include: { passengers: true },
+        },
       },
     })
 
     if (!schedule) {
       return NextResponse.json({ error: 'Schedule not found' }, { status: 404 })
     }
+
+    const bookedSeatIds = new Set(
+      schedule.bookings.flatMap(b => b.passengers.map(p => p.seatId))
+    )
 
     const seatData = schedule.seats.map(seat => ({
       id: seat.id,
@@ -28,12 +36,11 @@ export async function GET(
       floor: seat.floor,
       rowPos: seat.rowPos,
       colPos: seat.colPos,
-      status: 'AVAILABLE' as const,
+      status: bookedSeatIds.has(seat.id) ? 'BOOKED' as const : 'AVAILABLE' as const,
     }))
 
-    return NextResponse.json({
+    const response = {
       schedule: {
-        id: schedule.id,
         departureTime: schedule.departureTime,
         arrivalTime: schedule.arrivalTime,
         durationMin: schedule.durationMin,
@@ -52,7 +59,9 @@ export async function GET(
       droppingPoints: schedule.boardingPoints
         .filter(bp => bp.type === 'DROPPING')
         .map(bp => ({ name: bp.name, address: bp.address, time: bp.time })),
-    })
+    }
+
+    return NextResponse.json(response)
   } catch (error) {
     console.error('Seats fetch error:', error)
     return NextResponse.json({ error: 'Failed to fetch seats' }, { status: 500 })

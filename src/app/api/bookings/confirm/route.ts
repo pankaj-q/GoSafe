@@ -42,7 +42,6 @@ export async function POST(req: NextRequest) {
         paymentId: razorpayPaymentId,
         signature: razorpaySignature,
       })
-
       if (!isValid) {
         return NextResponse.json({ error: 'Invalid payment signature' }, { status: 400 })
       }
@@ -72,7 +71,6 @@ export async function POST(req: NextRequest) {
     const route = schedule.route
 
     let pdfBuffer: Buffer | undefined
-
     try {
       pdfBuffer = await generateTicketPDF({
         referenceCode: booking.referenceCode,
@@ -111,6 +109,9 @@ export async function POST(req: NextRequest) {
           seatNumbers: booking.passengers.map(p => String(p.seatId)),
           totalAmount: booking.totalAmount,
           pdfBuffer,
+        }).catch(err => {
+          console.error('[Email] Send failed:', err)
+          return { success: false, error: 'Email failed' }
         })
       : Promise.resolve({ success: true, skipped: true })
 
@@ -126,15 +127,18 @@ export async function POST(req: NextRequest) {
       seatNumbers: booking.passengers.map(p => String(p.seatId)),
       passengerNames: booking.passengers.map(p => p.name),
       totalAmount: booking.totalAmount,
+    }).catch(err => {
+      console.error('[WhatsApp] Send failed:', err)
+      return { success: false, error: 'WhatsApp failed' }
     })
 
-    const [emailResult, whatsappResult] = await Promise.allSettled([emailPromise, whatsappPromise])
+    const [emailResult, whatsappResult] = await Promise.all([emailPromise, whatsappPromise])
 
     return NextResponse.json({
       success: true,
       referenceCode: booking.referenceCode,
-      email: emailResult.status === 'fulfilled' ? emailResult.value : { success: false, error: emailResult.reason },
-      whatsapp: whatsappResult.status === 'fulfilled' ? whatsappResult.value : { success: false, error: whatsappResult.reason },
+      email: emailResult,
+      whatsapp: whatsappResult,
     })
   } catch (error) {
     console.error('Booking confirmation error:', error)
