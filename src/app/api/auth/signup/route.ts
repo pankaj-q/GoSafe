@@ -2,8 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { hashPassword } from '@/lib/password'
 
+const MAX_BODY_SIZE = 16384
+
 export async function POST(req: NextRequest) {
   try {
+    const contentLength = parseInt(req.headers.get('content-length') || '0', 10)
+    if (contentLength > MAX_BODY_SIZE) {
+      return NextResponse.json({ error: 'Request body too large' }, { status: 413 })
+    }
+
     const { name, email, phone, password } = await req.json()
 
     if (!name?.trim() || !phone?.trim() || !password?.trim()) {

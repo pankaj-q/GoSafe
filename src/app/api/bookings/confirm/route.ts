@@ -5,8 +5,15 @@ import { generateTicketPDF } from '@/lib/pdf'
 import { sendTicketEmail } from '@/lib/email'
 import { sendWhatsAppMessage } from '@/lib/whatsapp'
 
+const MAX_BODY_SIZE = 65536
+
 export async function POST(req: NextRequest) {
   try {
+    const contentLength = parseInt(req.headers.get('content-length') || '0', 10)
+    if (contentLength > MAX_BODY_SIZE) {
+      return NextResponse.json({ error: 'Request body too large' }, { status: 413 })
+    }
+
     const body = await req.json()
     const { bookingId, razorpayOrderId, razorpayPaymentId, razorpaySignature } = body
 

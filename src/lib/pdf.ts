@@ -1,5 +1,9 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
-import { formatDate, formatCurrency } from '@/lib/utils'
+import { formatDate } from '@/lib/utils'
+
+function formatRupee(amount: number): string {
+  return `Rs. ${amount.toLocaleString('en-IN')}`
+}
 
 interface TicketPDFProps {
   referenceCode: string
@@ -100,7 +104,11 @@ export async function generateTicketPDF(props: TicketPDFProps): Promise<Buffer> 
   // Arrow
   const arrowX = width / 2 - 10
   text('________________________', arrowX, timelineY - 18, { color: midGray, size: 7 })
-  text('➤', arrowX + 110, timelineY - 30, { color: primaryBlue, size: 14 })
+  page.drawSvgPath('M 0 0 L 14 7 L 0 14 Z', {
+    x: arrowX + 104,
+    y: timelineY - 14,
+    color: primaryBlue,
+  })
 
   // To
   text(props.destination, arrowX + 130, timelineY - 18, { font: boldFont, size: 14, color: darkGray })
@@ -146,12 +154,12 @@ export async function generateTicketPDF(props: TicketPDFProps): Promise<Buffer> 
 
   const fareLeft = width - 220
   text('Total Fare', fareLeft, y, { color: midGray, size: 9 })
-  text(formatCurrency(props.totalAmount), fareLeft + 100, y, { font: boldFont, size: 9 })
+  text(formatRupee(props.totalAmount), fareLeft + 100, y, { font: boldFont, size: 9 })
   y -= 15
 
   if (props.insuranceOpted) {
     text('Insurance', fareLeft, y, { color: midGray, size: 9 })
-    text('₹19', fareLeft + 100, y, { font: boldFont, size: 9 })
+    text('Rs. 19', fareLeft + 100, y, { font: boldFont, size: 9 })
     y -= 15
   }
 
@@ -163,7 +171,7 @@ export async function generateTicketPDF(props: TicketPDFProps): Promise<Buffer> 
   })
   y -= 15
   text('Total Paid', fareLeft, y, { font: boldFont, size: 11, color: primaryBlue })
-  text(formatCurrency(props.totalAmount), fareLeft + 100, y, { font: boldFont, size: 11, color: primaryBlue })
+  text(formatRupee(props.totalAmount), fareLeft + 100, y, { font: boldFont, size: 11, color: primaryBlue })
 
   // Footer
   page.drawLine({
