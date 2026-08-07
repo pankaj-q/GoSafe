@@ -1,5 +1,7 @@
 import { Resend } from 'resend'
 
+const IS_PRODUCTION = process.env.NODE_ENV === 'production'
+
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
@@ -21,8 +23,10 @@ interface SendTicketEmailParams {
 
 export async function sendTicketEmail(params: SendTicketEmailParams) {
   if (!resend) {
+    if (IS_PRODUCTION) {
+      throw new Error('Email is not configured (RESEND_API_KEY missing)')
+    }
     console.log('[Email] Mock: ticket email skipped (no RESEND_API_KEY)')
-    console.log('[Email] Would send to:', params.to)
     return { success: true, mock: true }
   }
 

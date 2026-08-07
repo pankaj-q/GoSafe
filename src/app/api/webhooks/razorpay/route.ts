@@ -31,90 +31,113 @@ export async function POST(req: NextRequest) {
 
   await prisma.paymentWebhook.upsert({
     where: { eventId },
-    update: { status: 'PROCESSED', payload: JSON.stringify(payload), rawBody, eventType: event },
+    update: { status: 'PROCESSING', payload: JSON.stringify(payload), rawBody, eventType: event },
     create: {
       eventId,
       eventType: event,
       payload: JSON.stringify(payload),
       rawBody,
-      status: 'PROCESSED',
+      status: 'PROCESSING',
     },
   })
 
-  if (event === 'payment.captured') {
-    const razorpayPaymentId = payment.id
-    const razorpayOrderId = payment.order_id
+  try {
+    if (event === 'payment.captured') {
+      const razorpayPaymentId = payment.id
+      const razorpayOrderId = payment.order_id
 
-    const dbPayment = await prisma.payment.findFirst({
-      where: { razorpayOrderId },
-      include: {
-        booking: {
-          include: {
-            schedule: { include: { bus: { include: { operator: true } }, route: { include: { source: true, dest: true } } } },
-            passengers: true,
+      const dbPayment = await prisma.payment.findFirst({
+        where: { razorpayOrderId },
+        include: {
+          booking: {
+            include: {
+              schedule: { include: { bus: { include: { operator: true } }, route: { include: { source: true, dest: true } } } },
+              passengers: true,
+            },
           },
         },
-      },
-    })
-
-    if (!dbPayment) {
-      return NextResponse.json({ error: 'Payment not found' }, { status: 404 })
-    }
-
-    await prisma.payment.update({
-      where: { id: dbPayment.id },
-      data: {
-        razorpayPaymentId,
-        razorpaySignature: signature,
-        status: 'CAPTURED',
-        gatewayResponse: JSON.stringify(payment),
-      },
-    })
-
-    if (dbPayment.booking.status !== 'CONFIRMED') {
-      await prisma.booking.update({
-        where: { id: dbPayment.booking.id },
-        data: { status: 'CONFIRMED' },
       })
-    }
 
-    const booking = dbPayment.booking
-    const schedule = booking.schedule
-    const bus = schedule.bus
-    const route = schedule.route
+      if (!dbPayment) {
+        await prisma.paymentWebhook.update({
+          where: { eventId },
+          data: { status: 'PROCESSED' },
+        })
+        return NextResponse.json({ error: 'Payment not found' }, { status: 404 })
+      }
 
-    let pdfBuffer: Buffer | undefined
-    try {
-      const { generateTicketPDF } = await import('@/lib/pdf')
-      pdfBuffer = await generateTicketPDF({
-        referenceCode: booking.referenceCode,
-        operatorName: bus.operator.name,
-        busType: bus.busType.replace(/_/g, ' '),
-        busNumber: bus.busNumber,
-        source: route.source.name,
-        destination: route.dest.name,
-        departureTime: schedule.departureTime,
-        arrivalTime: schedule.arrivalTime,
-        journeyDate: booking.journeyDate.toISOString(),
-        passengers: booking.passengers.map(p => ({
-          name: p.name,
-          age: p.age,
-          gender: p.gender,
-          seat: String(p.seatId),
-        })),
-        totalAmount: booking.totalAmount,
-        insuranceOpted: booking.insuranceOpted,
+      await prisma.payment.update({
+        where: { id: dbPayment.id },
+        data: {
+          razorpayPaymentId,
+          razorpaySignature: signature,
+          status: 'CAPTURED',
+          gatewayResponse: JSON.stringify(payment),
+        },
       })
-    } catch (err) {
-      console.error('[Webhook PDF] Generation failed:', err)
-    }
 
-    const notificationPromises: Promise<unknown>[] = []
+      if (dbPayment.booking.status !== 'CONFIRMED') {
+        await prisma.booking.update({
+          where: { id: dbPayment.booking.id },
+          data: { status: 'CONFIRMED' },
+        })
+      }
 
-    if (booking.contactEmail) {
+      const booking = dbPayment.booking
+      const schedule = booking.schedule
+      const bus = schedule.bus
+      const route = schedule.route
+
+      let pdfBuffer: Buffer | undefined
+      try {
+        const { generateTicketPDF } = await import('@/lib/pdf')
+        pdfBuffer = await generateTicketPDF({
+          referenceCode: booking.referenceCode,
+          operatorName: bus.operator.name,
+          busType: bus.busType.replace(/_/g, ' '),
+          busNumber: bus.busNumber,
+          source: route.source.name,
+          destination: route.dest.name,
+          departureTime: schedule.departureTime,
+          arrivalTime: schedule.arrivalTime,
+          journeyDate: booking.journeyDate.toISOString(),
+          passengers: booking.passengers.map(p => ({
+            name: p.name,
+            age: p.age,
+            gender: p.gender,
+            seat: String(p.seatId),
+          })),
+          totalAmount: booking.totalAmount,
+          insuranceOpted: booking.insuranceOpted,
+        })
+      } catch (err) {
+        console.error('[Webhook PDF] Generation failed:', err)
+      }
+
+      const notificationPromises: Promise<unknown>[] = []
+
+      if (booking.contactEmail) {
+        notificationPromises.push(
+          sendTicketEmail({
+            to: booking.contactEmail,
+            referenceCode: booking.referenceCode,
+            operatorName: bus.operator.name,
+            source: route.source.name,
+            destination: route.dest.name,
+            departureTime: schedule.departureTime,
+            arrivalTime: schedule.arrivalTime,
+            journeyDate: booking.journeyDate.toISOString(),
+            passengerNames: booking.passengers.map(p => p.name),
+            seatNumbers: booking.passengers.map(p => String(p.seatId)),
+            totalAmount: booking.totalAmount,
+            pdfBuffer,
+          }).catch(err => console.error('[Webhook Email] Send failed:', err))
+        )
+      }
+
       notificationPromises.push(
-        sendTicketEmail({
-          to: booking.contactEmail,
+        sendWhatsAppMessage({
+          to: booking.contactPhone,
           referenceCode: booking.referenceCode,
           operatorName: bus.operator.name,
           source: route.source.name,
@@ -122,31 +145,19 @@ export async function POST(req: NextRequest) {
           departureTime: schedule.departureTime,
           arrivalTime: schedule.arrivalTime,
           journeyDate: booking.journeyDate.toISOString(),
-          passengerNames: booking.passengers.map(p => p.name),
           seatNumbers: booking.passengers.map(p => String(p.seatId)),
+          passengerNames: booking.passengers.map(p => p.name),
           totalAmount: booking.totalAmount,
-          pdfBuffer,
-        }).catch(err => console.error('[Webhook Email] Send failed:', err))
+        }).catch(err => console.error('[Webhook WhatsApp] Send failed:', err))
       )
+
+      await Promise.allSettled(notificationPromises)
     }
-
-    notificationPromises.push(
-      sendWhatsAppMessage({
-        to: booking.contactPhone,
-        referenceCode: booking.referenceCode,
-        operatorName: bus.operator.name,
-        source: route.source.name,
-        destination: route.dest.name,
-        departureTime: schedule.departureTime,
-        arrivalTime: schedule.arrivalTime,
-        journeyDate: booking.journeyDate.toISOString(),
-        seatNumbers: booking.passengers.map(p => String(p.seatId)),
-        passengerNames: booking.passengers.map(p => p.name),
-        totalAmount: booking.totalAmount,
-      }).catch(err => console.error('[Webhook WhatsApp] Send failed:', err))
-    )
-
-    await Promise.allSettled(notificationPromises)
+  } finally {
+    await prisma.paymentWebhook.update({
+      where: { eventId },
+      data: { status: 'PROCESSED' },
+    })
   }
 
   return NextResponse.json({ status: 'ok' })

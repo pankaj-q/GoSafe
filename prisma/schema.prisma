@@ -71,6 +71,8 @@ model Bus {
   amenities BusAmenity[]
   schedules Schedule[]
   seats     Seat[]
+
+  @@index([operatorId])
 }
 
 model BusImage {
@@ -82,6 +84,8 @@ model BusImage {
   createdAt DateTime @default(now())
 
   bus Bus @relation(fields: [busId], references: [id], onDelete: Cascade)
+
+  @@index([busId])
 }
 
 model Amenity {
@@ -120,6 +124,9 @@ model Schedule {
   seats          Seat[]
   bookings       Booking[]
   holds          BookingHold[]
+
+  @@index([busId])
+  @@index([routeId])
 }
 
 model BoardingPoint {
@@ -132,6 +139,8 @@ model BoardingPoint {
   sortOrder  Int      @default(0)
 
   schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId])
 }
 
 model Seat {

@@ -1,5 +1,7 @@
 import twilio from 'twilio'
 
+const IS_PRODUCTION = process.env.NODE_ENV === 'production'
+
 const twilioClient = (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN)
   ? twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
   : null
@@ -21,6 +23,9 @@ interface SendWhatsAppParams {
 
 export async function sendWhatsAppMessage(params: SendWhatsAppParams) {
   if (!twilioClient) {
+    if (IS_PRODUCTION) {
+      throw new Error('WhatsApp is not configured (TWILIO credentials missing)')
+    }
     console.log('[WhatsApp] Mock: message skipped (no TWILIO credentials)')
     return { success: true, mock: true }
   }
@@ -55,6 +60,9 @@ export async function sendWhatsAppMessage(params: SendWhatsAppParams) {
 
 export async function sendSMS(params: { to: string; message: string }) {
   if (!twilioClient) {
+    if (IS_PRODUCTION) {
+      throw new Error('SMS is not configured (TWILIO credentials missing)')
+    }
     console.log('[SMS] Mock: message skipped (no TWILIO credentials)')
     return { success: true, mock: true }
   }

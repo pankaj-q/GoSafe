@@ -14,6 +14,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'City names must be at least 2 characters' }, { status: 400 })
   }
 
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1)
+  const pageSize = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '10', 10) || 10))
+  const skip = (page - 1) * pageSize
+
   try {
     const route = await prisma.route.findFirst({
       where: {
@@ -26,6 +30,9 @@ export async function GET(req: NextRequest) {
         dest: true,
         schedules: {
           where: { status: 'ACTIVE' },
+          orderBy: { departureTime: 'asc' },
+          skip,
+          take: pageSize,
           include: {
             bus: {
               include: {
@@ -37,7 +44,7 @@ export async function GET(req: NextRequest) {
             boardingPoints: { orderBy: { sortOrder: 'asc' } },
             bookings: {
               where: { status: { not: 'CANCELLED' } },
-              select: { passengerCount: true, journeyDate: true },
+              select: { passengerCount: true },
             },
           },
         },
@@ -45,8 +52,12 @@ export async function GET(req: NextRequest) {
     })
 
     if (!route) {
-      return NextResponse.json({ results: [] })
+      return NextResponse.json({ results: [], total: 0, page, pageSize, totalPages: 0 })
     }
+
+    const totalScheduleCount = await prisma.schedule.count({
+      where: { routeId: route.id, status: 'ACTIVE' },
+    })
 
     const results = route.schedules.map(schedule => {
       const totalSeats = schedule.bus.totalSeats
@@ -77,7 +88,15 @@ export async function GET(req: NextRequest) {
       }
     })
 
-    return NextResponse.json({ results, source: route.source.name, destination: route.dest.name })
+    return NextResponse.json({
+      results,
+      total: totalScheduleCount,
+      page,
+      pageSize,
+      totalPages: Math.ceil(totalScheduleCount / pageSize),
+      source: route.source.name,
+      destination: route.dest.name,
+    })
   } catch (error) {
     console.error('Search error:', error)
     return NextResponse.json({ error: 'Search failed' }, { status: 500 })

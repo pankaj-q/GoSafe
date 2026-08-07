@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { randomUUID } from 'crypto'
 import { auth } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
 import { generateReference, calculateGST } from '@/lib/utils'
@@ -50,6 +51,15 @@ export async function POST(req: NextRequest) {
     }
 
     if (selectedSeatIds && selectedSeatIds.length > 0) {
+      const seats = await prisma.seat.findMany({
+        where: { id: { in: selectedSeatIds }, scheduleId },
+        select: { id: true },
+      })
+
+      if (seats.length !== selectedSeatIds.length) {
+        return NextResponse.json({ error: 'Selected seats do not belong to this schedule' }, { status: 400 })
+      }
+
       const existingBookings = await prisma.booking.findMany({
         where: {
           scheduleId,
@@ -81,42 +91,44 @@ export async function POST(req: NextRequest) {
     const session = await auth()
     const userId = session?.user?.id ? parseInt(session.user.id, 10) : undefined
 
-    const booking = await prisma.booking.create({
-      data: {
-        referenceCode,
-        scheduleId,
-        userId,
-        journeyDate: bookingDate,
-        passengerCount,
-        totalAmount,
-        gstAmount: gst,
-        insuranceAmount,
-        insuranceOpted,
-        status: 'PENDING',
-        contactName,
-        contactPhone,
-        contactEmail: contactEmail || null,
-        passengers: {
-          create: passengers.map((p, i) => ({
-            seatId: selectedSeatIds?.[i] || 0,
-            name: p.name,
-            age: p.age,
-            gender: p.gender,
-          })),
+    const { booking, payment } = await prisma.$transaction(async (tx) => {
+      const booking = await tx.booking.create({
+        data: {
+          referenceCode,
+          scheduleId,
+          userId,
+          journeyDate: bookingDate,
+          passengerCount,
+          totalAmount,
+          gstAmount: gst,
+          insuranceAmount,
+          insuranceOpted,
+          status: 'PENDING',
+          contactName,
+          contactPhone,
+          contactEmail: contactEmail || null,
+          passengers: {
+            create: passengers.map((p, i) => ({
+              seatId: selectedSeatIds?.[i] || 0,
+              name: p.name,
+              age: p.age,
+              gender: p.gender,
+            })),
+          },
         },
-      },
-    })
+      })
 
-    const idempotencyKey = `booking_${referenceCode}_${Date.now()}`
+      const payment = await tx.payment.create({
+        data: {
+          bookingId: booking.id,
+          amount: Math.round(totalAmount * 100),
+          currency: 'INR',
+          status: 'CREATED',
+          idempotencyKey: randomUUID(),
+        },
+      })
 
-    const payment = await prisma.payment.create({
-      data: {
-        bookingId: booking.id,
-        amount: Math.round(totalAmount * 100),
-        currency: 'INR',
-        status: 'CREATED',
-        idempotencyKey,
-      },
+      return { booking, payment }
     })
 
     return NextResponse.json({
@@ -129,7 +141,7 @@ export async function POST(req: NextRequest) {
       payment: {
         id: payment.id,
         amount: payment.amount,
-        idempotencyKey,
+        idempotencyKey: payment.idempotencyKey,
       },
     })
   } catch (error) {

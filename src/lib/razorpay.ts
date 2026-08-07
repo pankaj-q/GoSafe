@@ -3,6 +3,12 @@ import crypto from 'crypto'
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || ''
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || ''
 
+const IS_PRODUCTION = process.env.NODE_ENV === 'production'
+
+function isConfigured(): boolean {
+  return Boolean(RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET)
+}
+
 export function getRazorpayKeyId() {
   return RAZORPAY_KEY_ID
 }
@@ -13,7 +19,10 @@ export async function createRazorpayOrder(params: {
   receipt: string
   notes?: Record<string, string>
 }) {
-  if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+  if (!isConfigured()) {
+    if (IS_PRODUCTION) {
+      throw new Error('Razorpay is not configured (RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET missing)')
+    }
     console.log('[Razorpay] Mock: order creation skipped (no keys)')
     return {
       id: `order_mock_${Date.now()}`,
@@ -73,20 +82,28 @@ export function verifyRazorpayWebhook(body: string, signature: string): boolean 
   return expectedSignature === signature
 }
 
-export function capturePayment(paymentId: string, amount: number) {
-  if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+export async function capturePayment(paymentId: string, amount: number) {
+  if (!isConfigured()) {
+    if (IS_PRODUCTION) {
+      throw new Error('Razorpay is not configured (RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET missing)')
+    }
     console.log('[Razorpay] Mock: payment capture skipped')
     return { success: true, mock: true }
   }
 
   const auth = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString('base64')
 
-  return fetch(`https://api.razorpay.com/v1/payments/${paymentId}/capture`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Basic ${auth}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ amount, currency: 'INR' }),
-  }).then(r => r.json())
+  try {
+    const res = await fetch(`https://api.razorpay.com/v1/payments/${paymentId}/capture`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ amount, currency: 'INR' }),
+    })
+    return await res.json()
+  } catch (err) {
+    throw new Error(`Razorpay capture failed: ${err instanceof Error ? err.message : String(err)}`)
+  }
 }
