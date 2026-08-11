@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyRazorpayPayment } from '@/lib/razorpay'
-import { generateTicketPDF } from '@/lib/pdf'
-import { sendTicketEmail } from '@/lib/email'
-import { sendWhatsAppMessage } from '@/lib/whatsapp'
+import { confirmPaidBooking } from '@/lib/confirmBooking'
 
 const MAX_BODY_SIZE = 65536
 
@@ -23,16 +21,7 @@ export async function POST(req: NextRequest) {
 
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
-      include: {
-        schedule: {
-          include: {
-            bus: { include: { operator: true } },
-            route: { include: { source: true, dest: true } },
-          },
-        },
-        passengers: true,
-        payments: true,
-      },
+      include: { payments: true },
     })
 
     if (!booking) {
@@ -55,11 +44,6 @@ export async function POST(req: NextRequest) {
     }
 
     await prisma.$transaction(async (tx) => {
-      await tx.booking.update({
-        where: { id: booking.id },
-        data: { status: 'CONFIRMED' },
-      })
-
       const payment = booking.payments[0]
       if (payment) {
         await tx.payment.update({
@@ -73,79 +57,13 @@ export async function POST(req: NextRequest) {
       }
     })
 
-    const schedule = booking.schedule
-    const bus = schedule.bus
-    const route = schedule.route
-
-    let pdfBuffer: Buffer | undefined
-    try {
-      pdfBuffer = await generateTicketPDF({
-        referenceCode: booking.referenceCode,
-        operatorName: bus.operator.name,
-        busType: bus.busType.replace(/_/g, ' '),
-        busNumber: bus.busNumber,
-        source: route.source.name,
-        destination: route.dest.name,
-        departureTime: schedule.departureTime,
-        arrivalTime: schedule.arrivalTime,
-        journeyDate: booking.journeyDate.toISOString(),
-        passengers: booking.passengers.map(p => ({
-          name: p.name,
-          age: p.age,
-          gender: p.gender,
-          seat: String(p.seatId),
-        })),
-        totalAmount: booking.totalAmount,
-        insuranceOpted: booking.insuranceOpted,
-      })
-    } catch (err) {
-      console.error('[PDF] Generation failed:', err)
-    }
-
-    const emailPromise = booking.contactEmail
-      ? sendTicketEmail({
-          to: booking.contactEmail,
-          referenceCode: booking.referenceCode,
-          operatorName: bus.operator.name,
-          source: route.source.name,
-          destination: route.dest.name,
-          departureTime: schedule.departureTime,
-          arrivalTime: schedule.arrivalTime,
-          journeyDate: booking.journeyDate.toISOString(),
-          passengerNames: booking.passengers.map(p => p.name),
-          seatNumbers: booking.passengers.map(p => String(p.seatId)),
-          totalAmount: booking.totalAmount,
-          pdfBuffer,
-        }).catch(err => {
-          console.error('[Email] Send failed:', err)
-          return { success: false, error: 'Email failed' }
-        })
-      : Promise.resolve({ success: true, skipped: true })
-
-    const whatsappPromise = sendWhatsAppMessage({
-      to: booking.contactPhone,
-      referenceCode: booking.referenceCode,
-      operatorName: bus.operator.name,
-      source: route.source.name,
-      destination: route.dest.name,
-      departureTime: schedule.departureTime,
-      arrivalTime: schedule.arrivalTime,
-      journeyDate: booking.journeyDate.toISOString(),
-      seatNumbers: booking.passengers.map(p => String(p.seatId)),
-      passengerNames: booking.passengers.map(p => p.name),
-      totalAmount: booking.totalAmount,
-    }).catch(err => {
-      console.error('[WhatsApp] Send failed:', err)
-      return { success: false, error: 'WhatsApp failed' }
-    })
-
-    const [emailResult, whatsappResult] = await Promise.all([emailPromise, whatsappPromise])
+    const result = await confirmPaidBooking(booking.id)
 
     return NextResponse.json({
       success: true,
-      referenceCode: booking.referenceCode,
-      email: emailResult,
-      whatsapp: whatsappResult,
+      referenceCode: result.booking.referenceCode,
+      email: result.email,
+      whatsapp: result.whatsapp,
     })
   } catch (error) {
     console.error('Booking confirmation error:', error)

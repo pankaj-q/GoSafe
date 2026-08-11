@@ -8,10 +8,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-export default function ConfirmationPage() {
+export default async function ConfirmationPage({ params }: { params: Promise<{ bookingId: string }> }) {
+  const { bookingId } = await params
+
   return (
     <Suspense>
-      <ConfirmationClient />
+      <ConfirmationClient bookingId={bookingId} />
     </Suspense>
   )
 }

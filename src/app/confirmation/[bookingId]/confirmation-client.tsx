@@ -11,19 +11,39 @@ function genRef() {
   return `GS${String(Math.floor(10000000 + Math.random() * 90000000))}`
 }
 
-export default function ConfirmationClient() {
+interface BookingData {
+  id: number
+  referenceCode: string
+  status: string
+  totalAmount: number
+  insuranceOpted: boolean
+  journeyDate: string
+  contactName: string
+  source: string
+  destination: string
+  departureTime: string
+  arrivalTime: string
+  durationMin: number
+  busType: string
+  operatorName: string
+  seatNumbers: string[]
+  passengerNames: string[]
+  paymentStatus: string | null
+}
+
+export default function ConfirmationClient({ bookingId }: { bookingId: string }) {
   const searchParams = useSearchParams()
 
-  const source = searchParams.get('source') || 'Delhi'
-  const destination = searchParams.get('destination') || 'Varanasi'
-  const date = searchParams.get('date') || new Date().toISOString().split('T')[0]
+  const source = searchParams.get('source') || ''
+  const destination = searchParams.get('destination') || ''
+  const date = searchParams.get('date') || ''
   const seats = searchParams.get('seats') || ''
-  const total = searchParams.get('amount') || '0'
+  const total = searchParams.get('amount') || ''
   const insurance = searchParams.get('insurance') === 'true'
-  const bookingId = searchParams.get('bookingId') || ''
   const pdfUrl = bookingId ? `/api/bookings/${encodeURIComponent(bookingId)}/ticket` : ''
 
   const [refNo, setRefNo] = useState(bookingId ? '' : genRef())
+  const [booking, setBooking] = useState<BookingData | null>(null)
   const [loading, setLoading] = useState(Boolean(bookingId))
   const [pdfReady, setPdfReady] = useState(false)
   const [sentTo, setSentTo] = useState<{ email?: boolean; whatsapp?: boolean }>({})
@@ -31,14 +51,15 @@ export default function ConfirmationClient() {
   useEffect(() => {
     if (!bookingId) return
 
-    fetch(`/api/bookings/user`)
-      .then(res => res.json())
+    fetch(`/api/bookings/${encodeURIComponent(bookingId)}`)
+      .then(res => (res.ok ? res.json() : null))
       .then(data => {
-        const booking = data.bookings?.find((b: { id: number; referenceCode: string }) =>
-          String(b.id) === bookingId || b.referenceCode === bookingId
-        )
-        if (booking?.referenceCode) setRefNo(booking.referenceCode)
-        else setRefNo(genRef())
+        if (data?.booking) {
+          setBooking(data.booking)
+          setRefNo(data.booking.referenceCode || genRef())
+        } else {
+          setRefNo(genRef())
+        }
       })
       .catch(() => setRefNo(genRef()))
       .finally(() => setLoading(false))
@@ -46,6 +67,20 @@ export default function ConfirmationClient() {
 
   function handleSend(type: 'whatsapp' | 'email') {
     setSentTo(prev => ({ ...prev, [type]: true }))
+  }
+
+  const display = {
+    source: source || booking?.source || 'Delhi',
+    destination: destination || booking?.destination || 'Varanasi',
+    date: date || (booking?.journeyDate ? booking.journeyDate.split('T')[0] : new Date().toISOString().split('T')[0]),
+    seats: seats || booking?.seatNumbers?.join(', ') || '',
+    amount: total || (booking ? String(booking.totalAmount) : '0'),
+    insurance: insurance || booking?.insuranceOpted || false,
+    departureTime: booking?.departureTime || '22:00',
+    arrivalTime: booking?.arrivalTime || '07:30',
+    durationMin: booking?.durationMin || 630,
+    busType: booking?.busType ? booking.busType.replace(/_/g, ' ') : 'AC Sleeper',
+    operatorName: booking?.operatorName || 'Royal Travels',
   }
 
   return (
@@ -132,19 +167,21 @@ export default function ConfirmationClient() {
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="text-center">
-                      <div className="text-xl font-bold">{'22:00'}</div>
-                      <div className="text-[10px] text-blue-200">{source}</div>
+                      <div className="text-xl font-bold">{display.departureTime}</div>
+                      <div className="text-[10px] text-blue-200">{display.source}</div>
                     </div>
                     <div className="flex-1 mx-4">
-                      <div className="text-xs text-blue-200 text-center">10h 30m</div>
+                      <div className="text-xs text-blue-200 text-center">
+                        {Math.floor(display.durationMin / 60)}h {display.durationMin % 60}m
+                      </div>
                       <div className="border-t border-blue-400 border-dashed relative my-1">
                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-blue-300" />
                         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-blue-300" />
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl font-bold">{'07:30'}</div>
-                      <div className="text-[10px] text-blue-200">{destination}</div>
+                      <div className="text-xl font-bold">{display.arrivalTime}</div>
+                      <div className="text-[10px] text-blue-200">{display.destination}</div>
                     </div>
                   </div>
                 </div>
@@ -152,25 +189,25 @@ export default function ConfirmationClient() {
                 <div className="p-5 space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-500">Date</span>
-                    <span className="font-medium text-gray-800">{formatDate(date)}</span>
+                    <span className="font-medium text-gray-800">{formatDate(display.date)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">Bus</span>
-                    <span className="font-medium text-gray-800">Royal Travels · AC Sleeper</span>
+                    <span className="font-medium text-gray-800">{display.operatorName} · {display.busType}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">Seats</span>
-                    <span className="font-medium text-gray-800">{seats}</span>
+                    <span className="font-medium text-gray-800">{display.seats}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">Insurance</span>
-                    <span className={`font-medium ${insurance ? 'text-green-600' : 'text-gray-500'}`}>
-                      {insurance ? 'Covered ✓' : 'Not opted'}
+                    <span className={`font-medium ${display.insurance ? 'text-green-600' : 'text-gray-500'}`}>
+                      {display.insurance ? 'Covered ✓' : 'Not opted'}
                     </span>
                   </div>
                   <div className="flex justify-between pt-2 border-t border-gray-200">
                     <span className="font-semibold text-gray-900">Total Paid</span>
-                    <span className="font-bold text-lg text-blue-600">{formatCurrency(Number(total))}</span>
+                    <span className="font-bold text-lg text-blue-600">{formatCurrency(Number(display.amount))}</span>
                   </div>
                 </div>
               </div>

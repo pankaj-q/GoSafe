@@ -151,15 +151,31 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
         return
       }
 
-      const params = new URLSearchParams({
-        source, destination, date,
-        seats: selectedSeatsData.map(s => s.seatNumber).join(','),
-        amount: String(total),
-        insurance: String(insuranceOpted),
-        bookingId: String(bookingData.booking?.id || bookingData.booking?.referenceCode || ''),
+      const bookingId = String(bookingData.booking?.id || bookingData.booking?.referenceCode || '')
+
+      const checkoutRes = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bookingId,
+          scheduleId,
+          source,
+          destination,
+          date,
+          seats: selectedSeatsData.map(s => s.seatNumber).join(','),
+          insurance: String(insuranceOpted),
+        }),
       })
 
-      router.push(`/confirmation/${scheduleId}?${params.toString()}`)
+      const checkoutData = await checkoutRes.json()
+      if (!checkoutRes.ok || !checkoutData.url) {
+        setErrors({ submit: checkoutData.error || 'Failed to start payment' })
+        setPaying(false)
+        return
+      }
+
+      // Redirect to Stripe Checkout (or the mock success URL in dev)
+      window.location.assign(checkoutData.url)
     } catch {
       setErrors({ submit: 'Something went wrong. Please try again.' })
       setPaying(false)

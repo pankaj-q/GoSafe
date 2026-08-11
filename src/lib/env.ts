@@ -2,6 +2,7 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
 const REQUIRED = ['DATABASE_URL', 'NEXTAUTH_SECRET']
 const RAZORPAY_REQUIRED = ['RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET', 'RAZORPAY_WEBHOOK_SECRET']
+const STRIPE_REQUIRED = ['STRIPE_SECRET_KEY']
 
 export function getMissingEnvVars(): string[] {
   const missing: string[] = []
@@ -13,6 +14,13 @@ export function getMissingEnvVars(): string[] {
   const hasRazorpay = RAZORPAY_REQUIRED.some(k => process.env[k])
   if (hasRazorpay) {
     for (const key of RAZORPAY_REQUIRED) {
+      if (!process.env[key]) missing.push(key)
+    }
+  }
+
+  const hasStripe = STRIPE_REQUIRED.some(k => process.env[k])
+  if (hasStripe) {
+    for (const key of STRIPE_REQUIRED) {
       if (!process.env[key]) missing.push(key)
     }
   }

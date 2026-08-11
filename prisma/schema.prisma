@@ -219,6 +219,8 @@ model Payment {
   razorpayOrderId   String?  @unique
   razorpayPaymentId String?
   razorpaySignature String?
+  stripeSessionId   String?  @unique
+  stripePaymentId   String?
   amount            Int      // in paise
   currency          String   @default("INR")
   status            String   @default("CREATED")
