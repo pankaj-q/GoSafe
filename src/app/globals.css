@@ -567,6 +567,15 @@ body {
   animation: pulse-dot 1.5s ease-in-out infinite;
 }
 
+@keyframes busMove {
+  0% { left: 0%; }
+  100% { left: 55%; }
+}
+
+.animate-bus-move {
+  animation: busMove 4s ease-in-out infinite alternate;
+}
+
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }

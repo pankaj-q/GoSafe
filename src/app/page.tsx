@@ -5,6 +5,7 @@ import SearchBar from '@/components/SearchBar'
 import AdSlot from '@/components/AdSlot'
 import NewsletterSignup from '@/components/NewsletterSignup'
 import TypewriterText from '@/components/TypewriterText'
+import OffersSection from '@/components/OffersSection'
 import Link from 'next/link'
 import {
   ShieldCheck, HeadphonesIcon, TicketCheck, Bus, Clock, ArrowRight,
@@ -172,6 +173,116 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ============ LIVE BUS TRACKING ============ */}
+      <section className="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div className="gosafe-container py-10 sm:py-12">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            {/* Left copy */}
+            <div>
+              <div className="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold px-3 py-1 rounded-full mb-3">
+                <span className="relative flex w-2 h-2">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75 animate-ping" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                Live Bus Tracking
+              </div>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
+                Know exactly where your bus is
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-md">
+                Track your bus in real time on the map, see live location, estimated arrival,
+                and how many seats are left before you board.
+              </p>
+              <ul className="mt-5 space-y-3">
+                {[
+                  { t: 'Live location updates every 30 seconds', d: 'No more waiting at the stop unsure' },
+                  { t: 'Arrival ETA alerts to your phone', d: 'WhatsApp & push notifications before pickup' },
+                  { t: 'Seat availability in real time', d: 'Last-minute seats booked instantly' },
+                ].map(f => (
+                  <li key={f.t} className="flex gap-3">
+                    <span className="w-6 h-6 mt-0.5 shrink-0 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                      <CheckCircle className="w-3.5 h-3.5" />
+                    </span>
+                    <div>
+                      <div className="text-sm font-semibold text-gray-800 dark:text-gray-200">{f.t}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{f.d}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/search"
+                className="mt-6 inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+              >
+                Track my bus <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* Right — animated route card */}
+            <div className="bg-gray-50 dark:bg-gray-800/60 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 sm:p-6">
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center">
+                    <Bus className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-gray-900 dark:text-gray-100">GoSafe Live 4567</div>
+                    <div className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse-dot" /> On time · Delhi → Varanasi
+                    </div>
+                  </div>
+                </div>
+                <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-2.5 py-1 rounded-md">45% seats left</span>
+              </div>
+
+              {/* Route line */}
+              <div className="relative">
+                <div className="flex items-center justify-between mb-3">
+                  {[
+                    { label: 'Delhi', time: '10:30 PM', done: true },
+                    { label: 'Agra', time: '1:15 AM', done: true },
+                    { label: 'Kanpur', time: '4:40 AM', done: false },
+                    { label: 'Varanasi', time: '8:10 AM', done: false },
+                  ].map(pt => (
+                    <div key={pt.label} className="flex flex-col items-center gap-1 z-10">
+                      <div className={`w-2.5 h-2.5 rounded-full ${pt.done ? 'bg-emerald-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
+                      <span className={`text-[10px] font-medium ${pt.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'}`}>{pt.label}</span>
+                      <span className="text-[9px] text-gray-400 dark:text-gray-600">{pt.time}</span>
+                    </div>
+                  ))}
+                </div>
+                {/* Progress track + moving bus */}
+                <div className="relative h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-visible">
+                  <div className="absolute inset-y-0 left-0 w-[55%] bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full" />
+                  <div className="absolute top-1/2 -translate-y-1/2 animate-bus-move">
+                    <div className="w-9 h-9 -ml-4 rounded-full bg-white dark:bg-gray-900 shadow-lg border-2 border-emerald-500 flex items-center justify-center">
+                      <Bus className="w-4 h-4 text-emerald-600" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-3 mt-6">
+                {[
+                  { v: '2h 45m', l: 'Arriving in' },
+                  { v: '412 km', l: 'Distance left' },
+                  { v: '36 km/h', l: 'Avg speed' },
+                ].map(s => (
+                  <div key={s.l} className="text-center bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 px-2 py-3">
+                    <div className="text-sm font-bold text-gray-900 dark:text-gray-100">{s.v}</div>
+                    <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">{s.l}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ OFFERS & COUPONS ============ */}
+      <OffersSection />
+
       {/* ============ HOW IT WORKS ============ */}
       <section className="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
@@ -222,6 +333,81 @@ export default function Home() {
                 </div>
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ TESTIMONIALS ============ */}
+      <section className="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
+        <div className="gosafe-container py-10">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-semibold px-3 py-1 rounded-full mb-3">
+              <Star className="w-3 h-3 fill-current" /> Loved by travellers
+            </div>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">What travellers say</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Real reviews from real journeys</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              {
+                name: 'Priya Sharma',
+                route: 'Delhi → Varanasi',
+                stars: 5,
+                text: 'Booked at 11 PM, got my ticket on WhatsApp in 2 minutes. The live tracking feature saved me — knew exactly when the bus was near.',
+              },
+              {
+                name: 'Rahul Verma',
+                route: 'Mumbai → Pune',
+                stars: 5,
+                text: 'Clean sleeper, on-time, and the seat I picked stayed locked while I paid. Cancellation refund hit my bank same day.',
+              },
+              {
+                name: 'Anjali Nair',
+                route: 'Bangalore → Chennai',
+                stars: 4,
+                text: 'Great prices and the support team is genuinely helpful at 2 AM. Added insurance for ₹19 and travelled worry-free.',
+              },
+              {
+                name: 'Vikram Singh',
+                route: 'Delhi → Jaipur',
+                stars: 5,
+                text: 'My first trip on GoSafe and the GOFIRST20 code actually worked. Driver shared live location — very professional.',
+              },
+              {
+                name: 'Sneha Gupta',
+                route: 'Delhi → Lucknow',
+                stars: 5,
+                text: 'The seat map is so easy to use. Picked my window seat, paid via UPI, instant e-ticket. This is how booking should be.',
+              },
+              {
+                name: 'Arjun Mehta',
+                route: 'Pune → Mumbai',
+                stars: 4,
+                text: 'Free cancellation saved me when plans changed. Refund was processed automatically — no emails, no calls, no hassle.',
+              },
+            ].map(t => (
+              <div key={t.name} className="gosafe-card bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all">
+                <div className="flex items-center gap-1 mb-3">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className={`w-3.5 h-3.5 ${i < t.stars ? 'text-amber-400 fill-amber-400' : 'text-gray-200 dark:text-gray-700'}`} />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">“{t.text}”</p>
+                <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-50 dark:border-gray-700">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center text-xs font-bold">
+                      {t.name[0]}
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-gray-900 dark:text-gray-100">{t.name}</div>
+                      <div className="text-[10px] text-gray-400 dark:text-gray-500">{t.route}</div>
+                    </div>
+                  </div>
+                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
