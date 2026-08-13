@@ -767,3 +767,44 @@ body::-webkit-scrollbar {
   animation: celebrateRing 0.9s ease-out 1;
 }
 
+/* ---- FloatingBus 3D burst ---- */
+@keyframes cubeSpin {
+  from { transform: rotateX(-18deg) rotateY(0deg); }
+  to { transform: rotateX(-18deg) rotateY(360deg); }
+}
+
+.animate-cube-spin {
+  animation: cubeSpin 9s linear infinite;
+}
+
+@keyframes ringSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-ring {
+  animation: ringSpin 16s linear infinite;
+}
+
+.animate-ring-rev {
+  animation: ringSpin 16s linear infinite reverse;
+}
+
+@keyframes bobFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-bob {
+  animation: bobFloat 3.2s ease-in-out infinite;
+}
+
+@keyframes floatOrb {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-16px) scale(1.15); }
+}
+
+.animate-orb {
+  animation: floatOrb 4s ease-in-out infinite;
+}
+
