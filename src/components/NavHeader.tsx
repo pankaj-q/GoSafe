@@ -47,8 +47,10 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
     <header
       className={`bg-white border-b border-gray-200 ${
         sticky ? 'sticky top-0 z-50' : ''
-      } transition-all duration-300 ease-in-out overflow-hidden ${
-        visible || sticky ? 'max-h-20' : 'max-h-0 border-transparent'
+      } transition-all duration-300 ease-in-out ${
+        visible || sticky
+          ? 'max-h-20 overflow-visible'
+          : 'max-h-0 overflow-hidden border-transparent'
       }`}
     >
       <div className="gosafe-container">
