@@ -60,7 +60,7 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
             <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center">
               <Bus className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900">GoSafe</span>
+            <span className="text-xl font-bold text-gray-900 dark:text-white">GoSafe</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
