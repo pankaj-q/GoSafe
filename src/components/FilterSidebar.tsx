@@ -48,7 +48,7 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
         w-72 lg:w-64 bg-white dark:bg-gray-900 border-r lg:border border-gray-200 dark:border-gray-700 lg:rounded-xl lg:shadow-sm
         transition-transform duration-300
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        ${isOpen ? '' : 'lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto'}
+        ${isOpen ? '' : 'lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:no-scrollbar'}
       `}>
         <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-4 py-3 flex items-center justify-between lg:hidden z-10">
           <span className="font-semibold text-sm text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -59,7 +59,7 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
           </button>
         </div>
 
-        <div className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-8rem)]">
+        <div className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-8rem)] no-scrollbar">
           {/* Quick Price Toggles */}
           <div className="mb-2">
             <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">Quick price</span>

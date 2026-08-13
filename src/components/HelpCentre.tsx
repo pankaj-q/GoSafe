@@ -232,7 +232,7 @@ export default function HelpCentre() {
             {trimmed && (
               <div ref={resultsRef} className="max-w-md mx-auto mt-3 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 text-left overflow-hidden animate-fade-in">
                 {results.length > 0 ? (
-                  <ul className="max-h-72 overflow-y-auto divide-y divide-gray-50 dark:divide-gray-800">
+                  <ul className="max-h-72 overflow-y-auto no-scrollbar divide-y divide-gray-50 dark:divide-gray-800">
                     {results.map(r => (
                       <li key={r.id}>
                         <button

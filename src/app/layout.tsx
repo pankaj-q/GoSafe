@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { jsonLdOrganisation, jsonLdWebsite } from '@/lib/seo'
 import PWARegister from '@/components/PWARegister'
 import BookingProvider from '@/components/BookingProvider'
+import FloatingBus from '@/components/FloatingBus'
 import './globals.css'
 
 const geistSans = Geist({
@@ -116,6 +117,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-50`}>
         <BookingProvider>
           {children}
+          <FloatingBus />
           <PWARegister />
         </BookingProvider>
       </body>

@@ -49,6 +49,50 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Hide the vertical scrollbar while keeping scrollability.
+   Horizontal scrollbars (marquee, carousels) remain visible. */
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Reusable: hide scrollbars on inner containers while keeping scroll */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.35);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.6);
+}
+
 .dark body {
   background: #0b1220;
   color: #e2e8f0;
@@ -587,6 +631,42 @@ body {
 
 .animate-bus-move {
   animation: busMove 4s ease-in-out infinite alternate;
+}
+
+@keyframes floatBus {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-float-bus {
+  animation: floatBus 3.2s ease-in-out infinite;
+}
+
+@keyframes wheelSpin {
+  0% { background-position: 0 0; }
+  100% { background-position: 12px 0; }
+}
+
+.animate-wheel-spin {
+  animation: wheelSpin 0.9s linear infinite;
+}
+
+@keyframes headlight {
+  0%, 100% { opacity: 1; box-shadow: 0 0 3px 1px rgba(253, 224, 71, 0.6); }
+  50% { opacity: 0.5; box-shadow: 0 0 6px 2px rgba(253, 224, 71, 0.9); }
+}
+
+.animate-headlight {
+  animation: headlight 1.2s ease-in-out infinite;
+}
+
+@keyframes trail {
+  0%, 100% { opacity: 0.6; transform: translate(-2px, -50%); }
+  50% { opacity: 0.15; transform: translate(-6px, -50%); }
+}
+
+.animate-trail {
+  animation: trail 1.6s ease-in-out infinite;
 }
 
 @keyframes blink {

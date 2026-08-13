@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Bus, Phone, Menu, X, User, LogOut, Calendar, Search, Radio, ChevronDown } from 'lucide-react'
+import { Bus, Phone, Menu, X, User, LogOut, Calendar, Search, Radio, ChevronDown, BadgePercent } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -78,7 +78,11 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
             </Link>
             <Link href="/search" className={`${navLink} flex items-center gap-1.5`}>
               <span className={iconWrap}><Search className="w-3.5 h-3.5" /></span>
-              Book Tickets
+              Buses
+            </Link>
+            <Link href="/offers" className={`${navLink} flex items-center gap-1.5`}>
+              <span className={iconWrap}><BadgePercent className="w-3.5 h-3.5 text-amber-500" /></span>
+              Offers
             </Link>
             <Link href="/track" className={`${navLink} flex items-center gap-1.5`}>
               <span className={iconWrap}><Radio className="w-3.5 h-3.5 text-emerald-500" /></span>
@@ -159,7 +163,10 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
                 Home
               </Link>
               <Link href="/search" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
-                Book Tickets
+                Buses
+              </Link>
+              <Link href="/offers" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
+                Offers
               </Link>
               <Link href="/track" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
                 Live Tracking

@@ -96,7 +96,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
 
   const inp = 'w-full px-3 py-2.5 sm:py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all placeholder:text-gray-400'
   const ico = 'absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none'
-  const dd = 'absolute z-50 top-full mt-1 left-0 right-0 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-elevated max-h-56 overflow-y-auto animate-fade-in'
+  const dd = 'absolute z-50 top-full mt-1 left-0 right-0 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-elevated max-h-56 overflow-y-auto no-scrollbar animate-fade-in'
 
   return (
     <form onSubmit={handleSearch}>
