@@ -1,10 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { Bus, Phone, Menu, X, User, LogOut, Calendar } from 'lucide-react'
+import { Bus, Phone, Menu, X, User, LogOut, Calendar, Search, Radio, ChevronDown } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import ThemeToggle from '@/components/ThemeToggle'
+import OperatorTicker from '@/components/OperatorTicker'
 
 export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
   const { data: session } = useSession()
@@ -44,38 +45,51 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
   const name = session?.user?.name
   const initial = name?.[0]?.toUpperCase() || 'U'
 
+  const navLink = 'text-sm font-bold text-gray-700 hover:text-blue-600 transition-colors dark:text-gray-200 dark:hover:text-blue-400'
+  const iconWrap = 'w-6 h-6 rounded-md flex items-center justify-center'
+
   return (
     <header
       className={`bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 ${
         sticky ? 'sticky top-0 z-50' : ''
       } transition-all duration-300 ease-in-out ${
         visible || sticky
-          ? 'max-h-20 overflow-visible'
+          ? 'max-h-40 overflow-visible'
           : 'max-h-0 overflow-hidden border-transparent'
       }`}
     >
+      <OperatorTicker />
       <div className="gosafe-container">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center">
+          {/* Brand */}
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md shadow-blue-600/20 group-hover:shadow-blue-600/40 transition-shadow">
               <Bus className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-white">GoSafe</span>
+            <span className="text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+              Go<span className="text-blue-600">Safe</span>
+            </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="/" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-5">
+            <Link href="/" className={navLink}>
               Home
             </Link>
-            <Link href="/search" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">
+            <Link href="/search" className={`${navLink} flex items-center gap-1.5`}>
+              <span className={iconWrap}><Search className="w-3.5 h-3.5" /></span>
               Book Tickets
             </Link>
-            <Link href="/track" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">
+            <Link href="/track" className={`${navLink} flex items-center gap-1.5`}>
+              <span className={iconWrap}><Radio className="w-3.5 h-3.5 text-emerald-500" /></span>
               Live Tracking
             </Link>
-            <a href="tel:+918000123456" className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">
-              <Phone className="w-3.5 h-3.5" />
-              <span className="hidden lg:inline">1800-800-1234</span>
+            <Link href="/help" className={navLink}>
+              Help
+            </Link>
+            <a href="tel:+918000123456" className={`${navLink} flex items-center gap-1.5`}>
+              <Phone className="w-3.5 h-3.5 text-blue-600" />
+              <span className="hidden lg:inline tracking-wide">1800-800-1234</span>
             </a>
 
             <ThemeToggle />
@@ -84,12 +98,13 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
               <div ref={userMenuRef} className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors text-sm font-medium dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-500/20"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors text-sm font-bold dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-500/20"
                 >
-                  <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center text-xs font-black">
                     {initial}
                   </div>
                   <span className="max-w-24 truncate">{name}</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {userMenuOpen && (
                   <div className="absolute right-0 top-full mt-1.5 w-48 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-elevated z-30 py-1 animate-fade-in">
@@ -101,10 +116,10 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
                       <Calendar className="w-4 h-4 text-gray-400" />
                       My Bookings
                     </Link>
-                    <hr className="my-1 border-gray-100" />
+                    <hr className="my-1 border-gray-100 dark:border-gray-800" />
                     <button
                       onClick={() => signOut()}
-                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
                       Sign Out
@@ -115,7 +130,7 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm font-semibold shadow-sm"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm font-bold shadow-sm shadow-blue-600/20"
               >
                 <User className="w-3.5 h-3.5" />
                 Sign In
@@ -123,6 +138,7 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
             )}
           </nav>
 
+          {/* Mobile toggle */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -139,33 +155,36 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
             <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Appearance</span>
             <ThemeToggle />
           </div>
-          <Link href="/" className="text-sm font-medium text-gray-600 px-2 py-1.5 dark:text-gray-300" onClick={() => setMenuOpen(false)}>
+          <Link href="/" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
                 Home
               </Link>
-              <Link href="/search" className="text-sm font-medium text-gray-600 px-2 py-1.5" onClick={() => setMenuOpen(false)}>
+              <Link href="/search" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
                 Book Tickets
               </Link>
-              <Link href="/track" className="text-sm font-medium text-gray-600 px-2 py-1.5 dark:text-gray-300" onClick={() => setMenuOpen(false)}>
+              <Link href="/track" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
                 Live Tracking
+              </Link>
+              <Link href="/help" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
+                Help Centre
               </Link>
               {session ? (
                 <>
-                  <Link href="/my-bookings" className="text-sm font-medium text-gray-600 px-2 py-1.5" onClick={() => setMenuOpen(false)}>
+                  <Link href="/my-bookings" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
                     My Bookings
                   </Link>
                   <button
                     onClick={() => { setMenuOpen(false); signOut() }}
-                    className="text-left text-sm font-medium text-red-600 px-2 py-1.5"
+                    className="text-left text-sm font-bold text-red-600 px-2 py-1.5"
                   >
                     Sign Out
                   </button>
                 </>
               ) : (
-                <Link href="/login" className="text-sm font-medium text-blue-600 px-2 py-1.5" onClick={() => setMenuOpen(false)}>
+                <Link href="/login" className="text-sm font-bold text-blue-600 px-2 py-1.5" onClick={() => setMenuOpen(false)}>
                   Sign In
                 </Link>
               )}
-              <a href="tel:+918000123456" className="text-sm font-medium text-gray-600 px-2 py-1.5" onClick={() => setMenuOpen(false)}>
+              <a href="tel:+918000123456" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
                 Contact: 1800-800-1234
               </a>
             </div>

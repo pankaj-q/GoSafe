@@ -567,6 +567,19 @@ body {
   animation: pulse-dot 1.5s ease-in-out infinite;
 }
 
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 @keyframes busMove {
   0% { left: 0%; }
   100% { left: 55%; }
