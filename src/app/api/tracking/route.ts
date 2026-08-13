@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { cacheGet, cacheSet } from '@/lib/cache'
 
 interface LiveStop {
   name: string
@@ -59,6 +60,12 @@ function minutesToLabel(mins: number): string {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const scheduleIdParam = searchParams.get('scheduleId')
+  const cacheKey = `tracking:${scheduleIdParam || 'all'}`
+
+  const cached = await cacheGet(cacheKey)
+  if (cached && typeof cached === 'object' && 'buses' in cached) {
+    return NextResponse.json(cached)
+  }
 
   try {
     const where = {
@@ -82,7 +89,9 @@ export async function GET(req: NextRequest) {
     })
 
     if (!schedules.length) {
-      return NextResponse.json({ buses: [], now: new Date().toISOString() })
+      const empty = { buses: [], now: new Date().toISOString() }
+      await cacheSet(cacheKey, empty, 20_000)
+      return NextResponse.json(empty)
     }
 
     const now = new Date()
@@ -175,7 +184,9 @@ export async function GET(req: NextRequest) {
       return 0
     })
 
-    return NextResponse.json({ buses: ordered, now: new Date().toISOString() })
+    const payload = { buses: ordered, now: new Date().toISOString() }
+    await cacheSet(cacheKey, payload, 20_000)
+    return NextResponse.json(payload)
   } catch (error) {
     console.error('Tracking error:', error)
     return NextResponse.json({ error: 'Failed to fetch tracking data' }, { status: 500 })

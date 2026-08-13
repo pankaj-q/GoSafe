@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyRazorpayPayment } from '@/lib/razorpay'
+import { confirmPaidBooking } from '@/lib/confirmBooking'
 
 const MAX_BODY_SIZE = 65536
 
@@ -55,10 +56,9 @@ export async function POST(req: NextRequest) {
     })
 
     if (razorpayPaymentId) {
-      await prisma.booking.update({
-        where: { id: bookingId },
-        data: { status: 'CONFIRMED' },
-      })
+      // Mark captured AND deliver the ticket (PDF + email + WhatsApp) via the
+      // shared, idempotent confirm path — not a bare status flip.
+      await confirmPaidBooking(bookingId)
     }
 
     return NextResponse.json({ success: true, payment })

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { cacheGet, cacheSet } from '@/lib/cache'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -17,6 +18,12 @@ export async function GET(req: NextRequest) {
   const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1)
   const pageSize = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '10', 10) || 10))
   const skip = (page - 1) * pageSize
+
+  const cacheKey = `search:${source.toLowerCase()}:${destination.toLowerCase()}:${page}:${pageSize}`
+  const cached = await cacheGet(cacheKey)
+  if (cached && typeof cached === 'object' && 'results' in cached) {
+    return NextResponse.json(cached)
+  }
 
   try {
     const route = await prisma.route.findFirst({
@@ -52,7 +59,9 @@ export async function GET(req: NextRequest) {
     })
 
     if (!route) {
-      return NextResponse.json({ results: [], total: 0, page, pageSize, totalPages: 0 })
+      const empty = { results: [], total: 0, page, pageSize, totalPages: 0 }
+      await cacheSet(cacheKey, empty, 10_000)
+      return NextResponse.json(empty)
     }
 
     const totalScheduleCount = await prisma.schedule.count({
@@ -88,7 +97,7 @@ export async function GET(req: NextRequest) {
       }
     })
 
-    return NextResponse.json({
+    const payload = {
       results,
       total: totalScheduleCount,
       page,
@@ -96,7 +105,9 @@ export async function GET(req: NextRequest) {
       totalPages: Math.ceil(totalScheduleCount / pageSize),
       source: route.source.name,
       destination: route.dest.name,
-    })
+    }
+    await cacheSet(cacheKey, payload, 10_000)
+    return NextResponse.json(payload)
   } catch (error) {
     console.error('Search error:', error)
     return NextResponse.json({ error: 'Search failed' }, { status: 500 })

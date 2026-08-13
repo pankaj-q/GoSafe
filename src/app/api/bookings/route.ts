@@ -8,6 +8,14 @@ import { bookingFormSchema } from '@/lib/validations'
 const MAX_PASSENGERS = 10
 const MAX_BODY_SIZE = 65536
 
+class SeatConflictError extends Error {
+  conflictSeats: number[]
+  constructor(message: string, conflictSeats: number[]) {
+    super(message)
+    this.conflictSeats = conflictSeats
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const contentLength = parseInt(req.headers.get('content-length') || '0', 10)
@@ -60,37 +68,6 @@ export async function POST(req: NextRequest) {
       if (seats.length !== selectedSeatIds.length) {
         return NextResponse.json({ error: 'Selected seats do not belong to this schedule' }, { status: 400 })
       }
-
-      const existingBookings = await prisma.booking.findMany({
-        where: {
-          scheduleId,
-          status: { not: 'CANCELLED' },
-          passengers: {
-            some: { seatId: { in: selectedSeatIds } },
-          },
-        },
-        select: { id: true, passengers: { select: { seatId: true } } },
-      })
-
-      if (existingBookings.length > 0) {
-        return NextResponse.json({ error: 'Some seats are already booked', conflictSeats: existingBookings.flatMap(b => b.passengers.map(p => p.seatId)) }, { status: 409 })
-      }
-
-      // Reject seats actively held by a different session
-      if (sessionId) {
-        const heldElsewhere = await prisma.bookingHold.findMany({
-          where: {
-            scheduleId,
-            seatId: { in: selectedSeatIds },
-            sessionId: { not: sessionId },
-            expiresAt: { gt: new Date() },
-          },
-          select: { seatId: true },
-        })
-        if (heldElsewhere.length > 0) {
-          return NextResponse.json({ error: 'Some seats were just taken', conflictSeats: heldElsewhere.map(h => h.seatId) }, { status: 409 })
-        }
-      }
     }
 
     const bookingDate = journeyDate ? new Date(journeyDate) : new Date()
@@ -108,7 +85,41 @@ export async function POST(req: NextRequest) {
     const session = await auth()
     const userId = session?.user?.id ? parseInt(session.user.id, 10) : undefined
 
+    // Atomic: seat conflict check + booking creation happen in ONE transaction
+    // so two concurrent requests can't both pass the availability check.
     const { booking, payment } = await prisma.$transaction(async (tx) => {
+      if (selectedSeatIds && selectedSeatIds.length > 0) {
+        const existingBookings = await tx.booking.findMany({
+          where: {
+            scheduleId,
+            status: { not: 'CANCELLED' },
+            passengers: {
+              some: { seatId: { in: selectedSeatIds } },
+            },
+          },
+          select: { id: true, passengers: { select: { seatId: true } } },
+        })
+
+        if (existingBookings.length > 0) {
+          throw new SeatConflictError('Some seats are already booked', existingBookings.flatMap(b => b.passengers.map(p => p.seatId)))
+        }
+
+        if (sessionId) {
+          const heldElsewhere = await tx.bookingHold.findMany({
+            where: {
+              scheduleId,
+              seatId: { in: selectedSeatIds },
+              sessionId: { not: sessionId },
+              expiresAt: { gt: new Date() },
+            },
+            select: { seatId: true },
+          })
+          if (heldElsewhere.length > 0) {
+            throw new SeatConflictError('Some seats were just taken', heldElsewhere.map(h => h.seatId))
+          }
+        }
+      }
+
       const booking = await tx.booking.create({
         data: {
           referenceCode,
@@ -169,6 +180,12 @@ export async function POST(req: NextRequest) {
       },
     })
   } catch (error) {
+    if (error instanceof SeatConflictError) {
+      return NextResponse.json(
+        { error: error.message, conflictSeats: error.conflictSeats },
+        { status: 409 }
+      )
+    }
     console.error('Booking creation error:', error)
     return NextResponse.json({ error: 'Failed to create booking' }, { status: 500 })
   }

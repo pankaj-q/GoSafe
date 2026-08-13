@@ -30,11 +30,24 @@ export async function confirmPaidBooking(bookingId: number) {
     throw new Error('Booking not found')
   }
 
-  if (booking.status !== 'CONFIRMED') {
-    await prisma.booking.update({
-      where: { id: booking.id },
-      data: { status: 'CONFIRMED' },
-    })
+  // Atomic status flip acts as a one-time gate: only the caller that transitions
+  // PENDING → CONFIRMED delivers the ticket. Webhook replays / double-confirm
+  // calls become no-ops so email + WhatsApp are never sent twice.
+  const flipped = await prisma.booking.updateMany({
+    where: { id: booking.id, status: 'PENDING' },
+    data: { status: 'CONFIRMED' },
+  })
+
+  const justConfirmed = flipped.count === 1
+
+  // Idempotent re-entry: already confirmed → return without re-sending anything.
+  if (!justConfirmed && booking.status === 'CONFIRMED') {
+    return { booking, alreadyConfirmed: true, email: { success: true, skipped: true }, whatsapp: { success: true, skipped: true } }
+  }
+
+  // Edge: booking is CANCELLED or in another non-PENDING state — never resurrect.
+  if (booking.status !== 'PENDING') {
+    return { booking, alreadyConfirmed: true, email: { success: true, skipped: true }, whatsapp: { success: true, skipped: true } }
   }
 
   const schedule = booking.schedule
