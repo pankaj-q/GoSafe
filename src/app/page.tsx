@@ -90,15 +90,15 @@ export default function Home() {
       <NavHeader />
 
       {/* ============ HERO ============ */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900">
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-[#12335C] to-[#080F1F]">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-72 h-72 rounded-full bg-white blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-blue-300 blur-3xl" />
+          <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-accent blur-3xl" />
         </div>
         <div className="relative gosafe-container py-10 sm:py-14">
           <div className="max-w-2xl mx-auto text-center mb-8">
-            <div className="inline-flex items-center gap-1.5 bg-blue-500/30 text-blue-100 text-xs font-medium px-3 py-1 rounded-full mb-4 animate-fade-up" style={{ animationDelay: '50ms' }}>
+            <div className="inline-flex items-center gap-1.5 bg-accent/20 text-orange-200 text-xs font-medium px-3 py-1 rounded-full mb-4 animate-fade-up" style={{ animationDelay: '50ms' }}>
               <TrendingUp className="w-3 h-3" /> India&apos;s Trusted Bus Platform
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-3 leading-tight whitespace-nowrap animate-fade-up" style={{ animationDelay: '150ms' }}>
@@ -108,7 +108,7 @@ export default function Home() {
               </span>{' '}
               Across India
             </h1>
-            <p className="text-blue-200 text-sm sm:text-base max-w-lg mx-auto animate-fade-up" style={{ animationDelay: '250ms' }}>
+            <p className="text-blue-100 text-sm sm:text-base max-w-lg mx-auto animate-fade-up" style={{ animationDelay: '250ms' }}>
               Safe, reliable & affordable bus travel for every route in India — AC Sleeper, Volvo, Non-AC.
               Instant e-tickets, free cancellation, 24/7 support.
             </p>
@@ -125,10 +125,10 @@ export default function Home() {
               const Icon = s.icon
               return (
                 <div key={s.label} className="flex items-center gap-2 justify-center sm:justify-start bg-white/10 rounded-xl px-3 py-2.5 backdrop-blur-sm">
-                  <Icon className="w-5 h-5 text-blue-200 shrink-0" />
+                  <Icon className="w-5 h-5 text-orange-300 shrink-0" />
                   <div>
                     <div className="text-sm font-bold text-white">{s.value}</div>
-                    <div className="text-[10px] text-blue-200">{s.label}</div>
+                    <div className="text-[10px] text-blue-100">{s.label}</div>
                   </div>
                 </div>
               )
@@ -149,7 +149,7 @@ export default function Home() {
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Popular Bus Routes</h2>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Most searched routes by travellers</p>
           </div>
-          <Link href="/search" className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1">
+          <Link href="/search" className="text-sm font-medium text-accent hover:text-accent-dark flex items-center gap-1">
             View All <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -158,12 +158,12 @@ export default function Home() {
             <Link
               key={i}
               href={`/search?source=${encodeURIComponent(route.from)}&destination=${encodeURIComponent(route.to)}&date=${new Date().toISOString().split('T')[0]}`}
-              className="group relative gosafe-card p-3.5 hover:border-blue-200 dark:bg-gray-900 dark:border-gray-800 transition-all hover:-translate-y-0.5"
+              className="group relative gosafe-card p-3.5 hover:border-accent/40 dark:bg-gray-900 dark:border-gray-800 transition-all hover:-translate-y-0.5"
               aria-label={`Bus from ${route.from} to ${route.to}`}
             >
               <div className="flex items-center gap-1.5 text-sm font-medium text-gray-800 dark:text-gray-300">
                 <span>{route.from}</span>
-                <ArrowRight className="w-3 h-3 text-blue-400 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-3 h-3 text-accent group-hover:translate-x-0.5 transition-transform" />
                 <span>{route.to}</span>
               </div>
               <div className="flex items-center justify-between mt-2 text-xs text-gray-500 dark:text-gray-400">
@@ -171,7 +171,7 @@ export default function Home() {
                   <Clock className="w-3 h-3" />
                   {route.duration}
                 </span>
-                <span className="font-semibold text-blue-600 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-md text-[11px]">
+                <span className="font-semibold text-accent-dark bg-accent-light dark:bg-orange-500/10 px-2 py-0.5 rounded-md text-[11px]">
                   {route.fare}
                 </span>
               </div>
@@ -187,10 +187,10 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             {/* Left copy */}
             <div>
-              <div className="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold px-3 py-1 rounded-full mb-3">
+              <div className="inline-flex items-center gap-1.5 bg-success-light dark:bg-success/10 text-success dark:text-emerald-400 text-[11px] font-semibold px-3 py-1 rounded-full mb-3">
                 <span className="relative flex w-2 h-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75 animate-ping" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-success opacity-75 animate-ping" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-success" />
                 </span>
                 Live Bus Tracking
               </div>
@@ -208,7 +208,7 @@ export default function Home() {
                   { t: 'Seat availability in real time', d: 'Last-minute seats booked instantly' },
                 ].map(f => (
                   <li key={f.t} className="flex gap-3">
-                    <span className="w-6 h-6 mt-0.5 shrink-0 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                    <span className="w-6 h-6 mt-0.5 shrink-0 rounded-full bg-success-light dark:bg-success/10 text-success dark:text-emerald-400 flex items-center justify-center">
                       <CheckCircle className="w-3.5 h-3.5" />
                     </span>
                     <div>
@@ -220,7 +220,7 @@ export default function Home() {
               </ul>
               <Link
                 href="/track"
-                className="mt-6 inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+                className="mt-6 inline-flex items-center gap-2 bg-success hover:bg-success-dark text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
               >
                 Track my bus <ArrowRight className="w-4 h-4" />
               </Link>
@@ -250,11 +250,11 @@ export default function Home() {
                   {i < howItWorks.length - 1 && (
                     <div className="hidden sm:block absolute top-8 left-[60%] w-[80%] h-0.5 border-t-2 border-dashed border-gray-200 dark:border-gray-700" />
                   )}
-                  <div className="w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mx-auto mb-3 relative">
-                    <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
+                  <div className="w-14 h-14 rounded-full bg-primary-light dark:bg-primary/30 flex items-center justify-center mx-auto mb-3 relative">
+                    <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-accent text-white text-[10px] font-bold flex items-center justify-center">
                       {i + 1}
                     </div>
-                    <Icon className="w-6 h-6 text-blue-600" />
+                    <Icon className="w-6 h-6 text-primary dark:text-blue-300" />
                   </div>
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-1">{step.title}</h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400">{step.desc}</p>
@@ -276,9 +276,9 @@ export default function Home() {
             {features.map((f, i) => {
               const Icon = f.icon
               return (
-                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-800 hover:border-blue-100 hover:shadow-sm transition-all">
-                  <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-3">
-                    <Icon className="w-5 h-5 text-blue-600" />
+                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-800 hover:border-accent/40 hover:shadow-sm transition-all">
+                  <div className="w-10 h-10 rounded-lg bg-primary-light dark:bg-primary/30 flex items-center justify-center mb-3">
+                    <Icon className="w-5 h-5 text-primary dark:text-blue-300" />
                   </div>
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-1">{f.title}</h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{f.desc}</p>
@@ -293,7 +293,7 @@ export default function Home() {
       <section className="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-semibold px-3 py-1 rounded-full mb-3">
+            <div className="inline-flex items-center gap-1.5 bg-accent-light dark:bg-accent/15 text-accent-dark dark:text-orange-400 text-[11px] font-semibold px-3 py-1 rounded-full mb-3">
               <Star className="w-3 h-3 fill-current" /> Loved by travellers
             </div>
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">What travellers say</h2>
@@ -342,13 +342,13 @@ export default function Home() {
               <div key={t.name} className="gosafe-card bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all">
                 <div className="flex items-center gap-1 mb-3">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className={`w-3.5 h-3.5 ${i < t.stars ? 'text-amber-400 fill-amber-400' : 'text-gray-200 dark:text-gray-700'}`} />
+                    <Star key={i} className={`w-3.5 h-3.5 ${i < t.stars ? 'text-accent fill-accent' : 'text-gray-200 dark:text-gray-700'}`} />
                   ))}
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">“{t.text}”</p>
                 <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-50 dark:border-gray-700">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center text-xs font-bold">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-[#12335C] text-white flex items-center justify-center text-xs font-bold">
                       {t.name[0]}
                     </div>
                     <div>
@@ -356,7 +356,7 @@ export default function Home() {
                       <div className="text-[10px] text-gray-400 dark:text-gray-500">{t.route}</div>
                     </div>
                   </div>
-                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                 </div>
               </div>
             ))}
@@ -370,38 +370,38 @@ export default function Home() {
       </div>
 
       {/* ============ APP DOWNLOAD CTA ============ */}
-      <section className="bg-gradient-to-r from-blue-600 to-indigo-700">
+      <section className="bg-gradient-to-r from-primary to-[#12335C]">
         <div className="gosafe-container py-10 sm:py-12">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="text-center sm:text-left">
               <h2 className="text-xl font-bold text-white mb-2">Get the GoSafe App</h2>
-              <p className="text-blue-200 text-sm max-w-md">
+              <p className="text-blue-100 text-sm max-w-md">
                 Download now for faster booking, exclusive app-only offers, and real-time bus tracking on the go.
               </p>
               <div className="flex flex-wrap items-center gap-3 mt-5">
-                <span className="flex items-center gap-1.5 text-xs text-blue-200">
+                <span className="flex items-center gap-1.5 text-xs text-blue-100">
                   <CheckCircle className="w-3.5 h-3.5" /> Instant booking
                 </span>
-                <span className="flex items-center gap-1.5 text-xs text-blue-200">
+                <span className="flex items-center gap-1.5 text-xs text-blue-100">
                   <CheckCircle className="w-3.5 h-3.5" /> Live tracking
                 </span>
-                <span className="flex items-center gap-1.5 text-xs text-blue-200">
+                <span className="flex items-center gap-1.5 text-xs text-blue-100">
                   <CheckCircle className="w-3.5 h-3.5" /> Exclusive deals
                 </span>
               </div>
             </div>
             <div className="flex items-center gap-3 shrink-0">
-              <button className="flex items-center gap-2 bg-black text-white px-5 py-3 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity">
+              <button className="flex items-center gap-2 bg-accent text-white px-5 py-3 rounded-xl text-sm font-medium hover:bg-accent-dark transition-colors">
                 <SmartphoneIcon className="w-5 h-5" />
                 <div className="text-left">
-                  <div className="text-[10px] text-gray-400">Download on</div>
+                  <div className="text-[10px] text-orange-100">Download on</div>
                   <div className="text-xs font-semibold -mt-0.5">App Store</div>
                 </div>
               </button>
-              <button className="flex items-center gap-2 bg-black text-white px-5 py-3 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity">
+              <button className="flex items-center gap-2 bg-accent text-white px-5 py-3 rounded-xl text-sm font-medium hover:bg-accent-dark transition-colors">
                 <SmartphoneIcon className="w-5 h-5" />
                 <div className="text-left">
-                  <div className="text-[10px] text-gray-400">Get it on</div>
+                  <div className="text-[10px] text-orange-100">Get it on</div>
                   <div className="text-xs font-semibold -mt-0.5">Google Play</div>
                 </div>
               </button>
@@ -418,7 +418,7 @@ export default function Home() {
           {/* LEFT — FAQ questions */}
           <div className="lg:col-span-3">
             <div className="mb-6">
-              <div className="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[11px] font-semibold px-3 py-1 rounded-full mb-3">
+              <div className="inline-flex items-center gap-1.5 bg-primary-light dark:bg-primary/30 text-primary dark:text-blue-300 text-[11px] font-semibold px-3 py-1 rounded-full mb-3">
                 <HeadphonesIcon className="w-3 h-3" /> FAQs
               </div>
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
@@ -426,7 +426,7 @@ export default function Home() {
             </div>
             <div className="space-y-2.5">
               {faqData.map((faq, i) => (
-                <details key={i} className="group bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 open:border-blue-200 dark:open:border-blue-500/40 open:shadow-sm transition-all">
+                <details key={i} className="group bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 open:border-accent/40 dark:open:border-accent/30 open:shadow-sm transition-all">
                   <summary className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer list-none flex items-center justify-between gap-4">
                     {faq.question}
                     <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 group-open:rotate-90 transition-transform shrink-0" />
@@ -437,9 +437,9 @@ export default function Home() {
             </div>
 
             {/* Support CTA */}
-            <div className="mt-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-500/10 dark:to-indigo-500/10 border border-blue-100 dark:border-blue-500/20 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="mt-6 rounded-2xl bg-gradient-to-r from-accent-light to-orange-50 dark:from-accent/15 dark:to-accent/5 border border-accent/30 dark:border-accent/20 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3 text-center sm:text-left">
-                <div className="w-10 h-10 shrink-0 rounded-xl bg-blue-600 flex items-center justify-center">
+                <div className="w-10 h-10 shrink-0 rounded-xl bg-accent flex items-center justify-center">
                   <HeadphonesIcon className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -448,10 +448,10 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <a href="tel:+918000123456" className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/30 rounded-lg px-3.5 py-2 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors">
+                <a href="tel:+918000123456" className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white dark:bg-gray-900 text-accent-dark dark:text-orange-400 border border-accent/40 dark:border-accent/30 rounded-lg px-3.5 py-2 hover:bg-orange-50 dark:hover:bg-accent/10 transition-colors">
                   <HeadphonesIcon className="w-3.5 h-3.5" /> Call 1800-800-1234
                 </a>
-                <Link href="/help" className="inline-flex items-center gap-1.5 text-xs font-semibold bg-blue-600 text-white rounded-lg px-3.5 py-2 hover:bg-blue-700 transition-colors">
+                <Link href="/help" className="inline-flex items-center gap-1.5 text-xs font-semibold bg-accent text-white rounded-lg px-3.5 py-2 hover:bg-accent-dark transition-colors">
                   Visit Help Centre <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -461,9 +461,9 @@ export default function Home() {
           {/* RIGHT — exciting bus facts & travel tips */}
           <div className="lg:col-span-2 space-y-5 lg:sticky lg:top-24">
             {/* Did you know? */}
-            <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg">
+            <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-primary to-[#12335C] text-white shadow-lg">
               <div className="p-5">
-                <div className="flex items-center gap-2 text-blue-200 text-xs font-semibold mb-3">
+                <div className="flex items-center gap-2 text-orange-300 text-xs font-semibold mb-3">
                   <Sparkles className="w-4 h-4" /> Did you know?
                 </div>
                 <div className="space-y-4">
@@ -489,7 +489,7 @@ export default function Home() {
             {/* Travel tips */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-5">
               <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-gray-100 mb-4">
-                <Backpack className="w-4 h-4 text-emerald-500" /> Smart travel tips
+                <Backpack className="w-4 h-4 text-success" /> Smart travel tips
               </div>
               <ul className="space-y-3">
                 {[
@@ -499,7 +499,7 @@ export default function Home() {
                   { t: 'Use insurance for just ₹19', d: 'Covers baggage loss, medicals & trip cancellation.' },
                 ].map(tip => (
                   <li key={tip.t} className="flex gap-2.5">
-                    <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <CheckCircle className="w-4 h-4 text-success shrink-0 mt-0.5" />
                     <div>
                       <div className="text-sm font-medium text-gray-800 dark:text-gray-200">{tip.t}</div>
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{tip.d}</div>
@@ -518,7 +518,7 @@ export default function Home() {
                 { v: '4.6★', l: 'Traveller rating' },
               ].map(s => (
                 <div key={s.l} className="bg-gray-50 dark:bg-gray-800/60 rounded-xl border border-gray-100 dark:border-gray-700 p-4 text-center">
-                  <div className="text-lg font-bold text-blue-600 dark:text-blue-400">{s.v}</div>
+                  <div className="text-lg font-bold text-accent dark:text-orange-400">{s.v}</div>
                   <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">{s.l}</div>
                 </div>
               ))}

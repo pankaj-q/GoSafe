@@ -94,7 +94,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
   const today = new Date().toISOString().split('T')[0]
   const disabled = !source || !dest || !date || source.toLowerCase() === dest.toLowerCase()
 
-  const inp = 'w-full px-3 py-2.5 sm:py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all placeholder:text-gray-400'
+  const inp = 'w-full px-3 py-2.5 sm:py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100 focus:border-accent focus:ring-2 focus:ring-accent/15 outline-none transition-all placeholder:text-gray-400'
   const ico = 'absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none'
   const dd = 'absolute z-50 top-full mt-1 left-0 right-0 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-elevated max-h-56 overflow-y-auto no-scrollbar animate-fade-in'
 
@@ -104,7 +104,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
       <div className="hidden sm:flex items-end gap-2">
         <div ref={sourceRef} className="relative flex-1 min-w-0">
           <div className="relative">
-            <MapPin className={`${ico} text-blue-400`} />
+            <MapPin className={`${ico} text-accent`} />
             <input
               ref={sourceInputRef} type="text" value={source}
               onChange={e => handleSourceChange(e.target.value)}
@@ -120,7 +120,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
             <div className={dd} role="listbox" id="src-suggestions">
               {sourceSuggestions.map((city, i) => (
                 <button key={city} type="button" role="option" aria-selected={i === sourceIdx}
-                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${i === sourceIdx ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${i === sourceIdx ? 'bg-accent-light dark:bg-accent/15 text-accent-dark dark:text-orange-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
                   onMouseDown={e => { e.preventDefault(); selectSource(city) }}>
                   <MapPin className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 shrink-0" />
                   <span>{city}</span>
@@ -153,7 +153,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
             <div className={dd} role="listbox" id="dest-suggestions">
               {destSuggestions.map((city, i) => (
                 <button key={city} type="button" role="option" aria-selected={i === destIdx}
-                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${i === destIdx ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${i === destIdx ? 'bg-accent-light dark:bg-accent/15 text-accent-dark dark:text-orange-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
                   onMouseDown={e => { e.preventDefault(); selectDest(city) }}>
                   <MapPin className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 shrink-0" />
                   <span>{city}</span>
@@ -170,7 +170,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
 
         <button type="submit" disabled={disabled}
           className={`shrink-0 px-5 py-2.5 sm:py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
-            disabled ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg active:scale-[0.98]'
+            disabled ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg active:scale-[0.98]'
           }`}>
           <Search className="w-4 h-4" />
           {updateMode ? 'Update Search' : 'Search'}
@@ -181,7 +181,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
       <div className="sm:hidden space-y-2.5">
         <div ref={sourceRef} className="relative">
           <div className="relative">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-400 pointer-events-none" />
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-accent pointer-events-none" />
             <input ref={sourceInputRef} type="text" value={source}
               onChange={e => handleSourceChange(e.target.value)}
               onFocus={() => { setSourceActive(true); if (source) setSourceSuggestions(filterCities(source)) }}
@@ -196,7 +196,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
             <div className={dd} role="listbox" id="src-suggestions-m">
               {sourceSuggestions.map((city, i) => (
                 <button key={city} type="button" role="option" aria-selected={i === sourceIdx}
-                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${i === sourceIdx ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${i === sourceIdx ? 'bg-accent-light dark:bg-accent/15 text-accent-dark dark:text-orange-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
                   onMouseDown={e => { e.preventDefault(); selectSource(city) }}>
                   <MapPin className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 shrink-0" /> {city}
                 </button>
@@ -226,7 +226,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
               <div className={dd} role="listbox" id="dest-suggestions-m">
                 {destSuggestions.map((city, i) => (
                 <button key={city} type="button" role="option" aria-selected={i === destIdx}
-                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${i === destIdx ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+                  className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${i === destIdx ? 'bg-accent-light dark:bg-accent/15 text-accent-dark dark:text-orange-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
                   onMouseDown={e => { e.preventDefault(); selectDest(city) }}>
                   <MapPin className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 shrink-0" /> {city}
                 </button>
@@ -243,7 +243,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
           </div>
           <button type="submit" disabled={disabled}
             className={`px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
-              disabled ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-md'
+              disabled ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-primary text-white hover:bg-primary-dark shadow-md'
             }`}>
             <Search className="w-4 h-4" />
             {updateMode ? 'Update' : 'Go'}
@@ -257,7 +257,7 @@ export default function SearchBar({ compact = false, initialSource = '', initial
           <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Popular:</span>
           {[['Delhi', 'Varanasi'], ['Mumbai', 'Pune'], ['Delhi', 'Jaipur'], ['Bangalore', 'Chennai']].map(([from, to]) => (
             <button key={`${from}-${to}`} type="button" onClick={() => handlePopularRoute(from, to)}
-              className="text-xs px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all">
+              className="text-xs px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-accent hover:text-accent hover:bg-accent-light dark:hover:bg-accent/10 transition-all">
               {from} → {to}
             </button>
           ))}

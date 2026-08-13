@@ -11,16 +11,18 @@
 }
 
 @theme inline {
-  --color-background: #ffffff;
-  --color-foreground: #0f172a;
-  --color-primary: #1a56db;
-  --color-primary-dark: #1347b0;
-  --color-primary-light: #e8effd;
+  --color-background: #F7F9FC;
+  --color-foreground: #111827;
+  --color-primary: #0B1F3A;
+  --color-primary-dark: #080F1F;
+  --color-primary-light: #DFE9F7;
   --color-secondary: #f8fafc;
-  --color-accent: #f59e0b;
-  --color-accent-dark: #d97706;
-  --color-success: #10b981;
-  --color-success-light: #d1fae5;
+  --color-accent: #FF6B35;
+  --color-accent-dark: #E14E18;
+  --color-accent-light: #FFEBE0;
+  --color-success: #16A34A;
+  --color-success-light: #DCFCE7;
+  --color-success-dark: #0F7A35;
   --color-warning: #f59e0b;
   --color-warning-light: #fef3c7;
   --color-danger: #ef4444;
@@ -36,9 +38,53 @@
   --radius-sm: 8px;
   --radius-lg: 16px;
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-card-hover: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05);
-  --shadow-elevated: 0 20px 40px rgba(0, 0, 0, 0.12);
+  --shadow-card-hover: 0 10px 25px rgba(11, 31, 58, 0.1), 0 4px 10px rgba(11, 31, 58, 0.05);
+  --shadow-elevated: 0 20px 40px rgba(11, 31, 58, 0.12);
   --shadow-button: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  /* ---- Default palette re-mapped to the GoSafe brand ---- */
+  --color-blue-50: #f2f5fb;
+  --color-blue-100: #e5ecf6;
+  --color-blue-200: #cdd9eb;
+  --color-blue-300: #a8bcd9;
+  --color-blue-400: #7c97be;
+  --color-blue-500: #46628d;
+  --color-blue-600: #0b1f3a;
+  --color-blue-700: #12335c;
+  --color-blue-800: #0e2742;
+  --color-blue-900: #081231;
+  --color-blue-950: #050b18;
+  --color-indigo-50: #eef1fa;
+  --color-indigo-100: #dce3f5;
+  --color-indigo-200: #bcc9e9;
+  --color-indigo-300: #92a7d8;
+  --color-indigo-400: #8aa5c9;
+  --color-indigo-500: #5f7bad;
+  --color-indigo-600: #12335c;
+  --color-indigo-700: #0b1f3a;
+  --color-indigo-800: #0c1a30;
+  --color-indigo-900: #050b18;
+  --color-indigo-950: #040812;
+  --color-emerald-50: #e8f9f0;
+  --color-emerald-100: #d1f2e0;
+  --color-emerald-200: #a6e6c3;
+  --color-emerald-300: #6fd6a2;
+  --color-emerald-400: #3fbe80;
+  --color-emerald-500: #16a34a;
+  --color-emerald-600: #11873d;
+  --color-emerald-700: #0f6e34;
+  --color-emerald-800: #0c5a2c;
+  --color-emerald-900: #081f11;
+  --color-amber-50: #fff4ec;
+  --color-amber-100: #ffe8db;
+  --color-amber-200: #ffd0bb;
+  --color-amber-300: #ffb394;
+  --color-amber-400: #ff6b35;
+  --color-amber-500: #ff6b35;
+  --color-amber-600: #e14e18;
+  --color-amber-700: #c44115;
+  --color-amber-800: #9a330f;
+  --color-amber-900: #7a290c;
 }
 
 body {
@@ -94,7 +140,7 @@ body::-webkit-scrollbar {
 }
 
 .dark body {
-  background: #0b1220;
+  background: #0a1628;
   color: #e2e8f0;
 }
 
@@ -147,7 +193,7 @@ body::-webkit-scrollbar {
 
   .gosafe-btn-primary:hover {
     background: var(--color-primary-dark);
-    box-shadow: 0 4px 12px rgba(26, 86, 219, 0.3);
+    box-shadow: 0 4px 12px rgba(11, 31, 58, 0.3);
   }
 
   .gosafe-btn-primary:disabled {
@@ -193,7 +239,7 @@ body::-webkit-scrollbar {
 
   .gosafe-input:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+    box-shadow: 0 0 0 3px rgba(11, 31, 58, 0.1);
   }
 
   .gosafe-input-error {
@@ -301,11 +347,11 @@ body::-webkit-scrollbar {
     transform: scale(0.94);
   }
   .seat-sleeper-selected {
-    background: linear-gradient(180deg, #3b82f6, #2563eb);
+    background: linear-gradient(180deg, #12335c, #0b1f3a);
     color: white;
-    border-color: #1d4ed8;
+    border-color: #0b1f3a;
     transform: scale(1.04);
-    box-shadow: 0 6px 16px -2px rgba(37,99,235,0.5);
+    box-shadow: 0 6px 16px -2px rgba(11,31,58,0.5);
   }
   .seat-sleeper-selected::before {
     background: linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0.25));
@@ -417,11 +463,11 @@ body::-webkit-scrollbar {
     transform: scale(0.94);
   }
   .seat-seater-selected {
-    background: linear-gradient(180deg, #3b82f6, #2563eb);
+    background: linear-gradient(180deg, #12335c, #0b1f3a);
     color: white;
-    border-color: #1d4ed8;
+    border-color: #0b1f3a;
     transform: scale(1.04);
-    box-shadow: 0 6px 16px -2px rgba(37,99,235,0.5);
+    box-shadow: 0 6px 16px -2px rgba(11,31,58,0.5);
   }
   .seat-seater-selected::before {
     background: linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0.25));
@@ -513,7 +559,7 @@ body::-webkit-scrollbar {
   color: #34d399;
 }
 .dark .seat-sleeper-selected {
-  background: linear-gradient(180deg, #2563eb, #1d4ed8);
+  background: linear-gradient(180deg, #12335c, #0b1f3a);
   color: white;
 }
 .dark .seat-sleeper-booked {
@@ -546,7 +592,7 @@ body::-webkit-scrollbar {
   color: #34d399;
 }
 .dark .seat-seater-selected {
-  background: linear-gradient(180deg, #2563eb, #1d4ed8);
+  background: linear-gradient(180deg, #12335c, #0b1f3a);
   color: white;
 }
 .dark .seat-seater-booked {
@@ -694,7 +740,7 @@ body::-webkit-scrollbar {
 
 @keyframes pricePop {
   0% { transform: scale(1); }
-  40% { transform: scale(1.18); color: #2563eb; }
+  40% { transform: scale(1.18); color: #e14e18; }
   100% { transform: scale(1); }
 }
 

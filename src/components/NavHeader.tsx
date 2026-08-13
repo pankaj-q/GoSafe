@@ -45,7 +45,7 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
   const name = session?.user?.name
   const initial = name?.[0]?.toUpperCase() || 'U'
 
-  const navLink = 'text-sm font-bold text-gray-700 hover:text-blue-600 transition-colors dark:text-gray-200 dark:hover:text-blue-400'
+  const navLink = 'text-sm font-bold text-gray-700 hover:text-accent transition-colors dark:text-gray-200 dark:hover:text-orange-400'
   const iconWrap = 'w-6 h-6 rounded-md flex items-center justify-center'
 
   return (
@@ -63,11 +63,11 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
         <div className="flex items-center justify-between h-16">
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md shadow-blue-600/20 group-hover:shadow-blue-600/40 transition-shadow">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-[#12335C] flex items-center justify-center shadow-md shadow-primary/20 group-hover:shadow-primary/40 transition-shadow">
               <Bus className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-              Go<span className="text-blue-600">Safe</span>
+              Go<span className="text-accent">Safe</span>
             </span>
           </Link>
 
@@ -81,7 +81,7 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
               Buses
             </Link>
             <Link href="/offers" className={`${navLink} flex items-center gap-1.5`}>
-              <span className={iconWrap}><BadgePercent className="w-3.5 h-3.5 text-amber-500" /></span>
+              <span className={iconWrap}><BadgePercent className="w-3.5 h-3.5 text-accent" /></span>
               Offers
             </Link>
             <Link href="/track" className={`${navLink} flex items-center gap-1.5`}>
@@ -92,7 +92,7 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
               Help
             </Link>
             <a href="tel:+918000123456" className={`${navLink} flex items-center gap-1.5`}>
-              <Phone className="w-3.5 h-3.5 text-blue-600" />
+              <Phone className="w-3.5 h-3.5 text-accent" />
               <span className="hidden lg:inline tracking-wide">8449309324</span>
             </a>
 
@@ -102,9 +102,9 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
               <div ref={userMenuRef} className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors text-sm font-bold dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-500/20"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent-light text-accent-dark hover:bg-accent/15 transition-colors text-sm font-bold dark:bg-accent/15 dark:text-orange-400 dark:hover:bg-accent/25"
                 >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center text-xs font-black">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-[#12335C] text-white flex items-center justify-center text-xs font-black">
                     {initial}
                   </div>
                   <span className="max-w-24 truncate">{name}</span>
@@ -134,7 +134,7 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm font-bold shadow-sm shadow-blue-600/20"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent text-white hover:bg-accent-dark transition-colors text-sm font-bold shadow-sm shadow-accent/25"
               >
                 <User className="w-3.5 h-3.5" />
                 Sign In

@@ -51,25 +51,25 @@ export default function Footer() {
           {/* Brand column */}
           <div className="col-span-2 md:col-span-3 lg:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
                 <Bus className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-lg text-white">GoSafe</span>
+              <span className="font-bold text-lg text-white">Go<span className="text-accent">Safe</span></span>
             </div>
             <p className="text-sm leading-relaxed mb-4">
               India&apos;s fastest growing bus booking platform. Safe, reliable & affordable bus travel across 80+ cities with real-time tracking, instant e-tickets & 24/7 support.
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-blue-400" />
+                <Mail className="w-3.5 h-3.5 text-accent" />
                 <a href="mailto:support@gosafe.in" className="hover:text-white transition-colors">support@gosafe.in</a>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-blue-400" />
+                <Phone className="w-3.5 h-3.5 text-accent" />
                 <a href="tel:+918000123456" className="hover:text-white transition-colors">+91 8449309324</a>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-blue-400" />
+                <MapPin className="w-3.5 h-3.5 text-accent" />
                 <span>New Delhi, India</span>
               </div>
             </div>
@@ -153,7 +153,7 @@ export default function Footer() {
                     key={s.label}
                     href={s.href}
                     aria-label={s.label}
-                    className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all"
+                    className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center hover:bg-accent hover:text-white transition-all"
                   >
                     <Icon className="w-4 h-4" />
                   </a>

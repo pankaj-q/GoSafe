@@ -35,9 +35,9 @@ export async function sendTicketEmail(params: SendTicketEmailParams) {
 
   const html = `
     <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto;">
-      <div style="background: #1a56db; padding: 20px; border-radius: 12px 12px 0 0;">
+      <div style="background: #0b1f3a; padding: 20px; border-radius: 12px 12px 0 0;">
         <h1 style="color: white; margin: 0; font-size: 22px;">GoSafe</h1>
-        <p style="color: #93c5fd; margin: 4px 0 0;">Bus Booking Confirmed</p>
+        <p style="color: #ffb394; margin: 4px 0 0;">Bus Booking Confirmed</p>
       </div>
       <div style="background: #f8fafc; padding: 24px; border: 1px solid #e2e8f0;">
         <p style="font-size: 14px; color: #475569;">Hi ${params.passengerNames[0]},</p>
@@ -45,7 +45,7 @@ export async function sendTicketEmail(params: SendTicketEmailParams) {
 
         <div style="background: white; border-radius: 8px; padding: 16px; margin: 16px 0;">
           <p style="margin: 0 0 4px; font-size: 11px; color: #64748b;">Reference No.</p>
-          <p style="margin: 0; font-size: 20px; font-weight: bold; color: #1a56db;">${params.referenceCode}</p>
+          <p style="margin: 0; font-size: 20px; font-weight: bold; color: #0b1f3a;">${params.referenceCode}</p>
         </div>
 
         <table style="width: 100%; border-collapse: collapse;">
@@ -73,7 +73,7 @@ export async function sendTicketEmail(params: SendTicketEmailParams) {
         </div>
 
         <div style="text-align: center; margin: 16px 0;">
-          <a href="#" style="background: #1a56db; color: white; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-size: 14px;">
+          <a href="#" style="background: #0b1f3a; color: white; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-size: 14px;">
             Download E-Ticket PDF
           </a>
         </div>

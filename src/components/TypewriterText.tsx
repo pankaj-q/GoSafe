@@ -62,7 +62,7 @@ export default function TypewriterText({
   return (
     <span className={className}>
       {words[state.wordIndex].slice(0, state.charIndex)}
-      <span className="animate-blink text-blue-200 font-light">|</span>
+      <span className="animate-blink text-orange-300 font-light">|</span>
     </span>
   )
 }

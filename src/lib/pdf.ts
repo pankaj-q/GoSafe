@@ -34,14 +34,14 @@ export async function generateTicketPDF(props: TicketPDFProps): Promise<Buffer> 
   const font = await doc.embedFont(StandardFonts.Helvetica)
   const boldFont = await doc.embedFont(StandardFonts.HelveticaBold)
 
-  const primaryBlue = rgb(0.09, 0.3, 0.82)
+  const primaryBlue = rgb(0.043, 0.12, 0.23)
   const darkGray = rgb(0.15, 0.2, 0.26)
   const midGray = rgb(0.44, 0.49, 0.54)
   const lightGray = rgb(0.92, 0.94, 0.96)
   const softFill = rgb(0.965, 0.98, 1)
   const white = rgb(1, 1, 1)
   const borderColor = rgb(0.85, 0.87, 0.9)
-  const green = rgb(0.05, 0.62, 0.35)
+  const green = rgb(0.1, 0.64, 0.29)
   const red = rgb(0.85, 0.2, 0.2)
 
   const MARGIN = 40
