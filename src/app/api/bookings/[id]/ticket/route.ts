@@ -16,6 +16,7 @@ export async function GET(
           include: {
             bus: { include: { operator: true } },
             route: { include: { source: true, dest: true } },
+            seats: { select: { id: true, seatNumber: true } },
           },
         },
         passengers: true,
@@ -29,6 +30,7 @@ export async function GET(
     const schedule = booking.schedule
     const bus = schedule.bus
     const route = schedule.route
+    const seatIdToNumber = new Map(schedule.seats.map(s => [s.id, s.seatNumber]))
 
     const pdfBuffer = await generateTicketPDF({
       referenceCode: booking.referenceCode,
@@ -44,7 +46,7 @@ export async function GET(
         name: p.name,
         age: p.age,
         gender: p.gender,
-        seat: String(p.seatId),
+        seat: seatIdToNumber.get(p.seatId) ?? String(p.seatId),
       })),
       totalAmount: booking.totalAmount,
       insuranceOpted: booking.insuranceOpted,

@@ -79,24 +79,25 @@ export async function POST(req: NextRequest) {
 
       case 'checkout.session.expired':
       case 'payment_intent.payment_failed': {
-        const session = event.data.object as { id?: string; metadata?: Record<string, string> | null }
+        const object = event.data.object as {
+          id?: string
+          metadata?: Record<string, string> | null
+        }
 
-        const lookupId =
-          session.id ||
-          (event.type === 'payment_intent.payment_failed'
-            ? (event.data.object as { metadata?: Record<string, string> }).metadata?.bookingId
-            : undefined)
-
-        if (lookupId) {
-          const dbPayment = await prisma.payment.findUnique({
-            where: { stripeSessionId: lookupId },
-          })
-          if (dbPayment && dbPayment.status !== 'CAPTURED') {
-            await prisma.payment.update({
-              where: { id: dbPayment.id },
-              data: { status: 'FAILED', gatewayResponse: JSON.stringify(event.data.object) },
+        const isPaymentIntent = event.type === 'payment_intent.payment_failed'
+        const dbPayment = isPaymentIntent
+          ? await prisma.payment.findFirst({
+              where: { stripePaymentId: object.id },
             })
-          }
+          : await prisma.payment.findUnique({
+              where: { stripeSessionId: object.id },
+            })
+
+        if (dbPayment && dbPayment.status !== 'CAPTURED') {
+          await prisma.payment.update({
+            where: { id: dbPayment.id },
+            data: { status: 'FAILED', gatewayResponse: JSON.stringify(event.data.object) },
+          })
         }
 
         await prisma.paymentWebhook.update({

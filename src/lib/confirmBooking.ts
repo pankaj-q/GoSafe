@@ -3,16 +3,11 @@ import { generateTicketPDF } from '@/lib/pdf'
 import { sendTicketEmail } from '@/lib/email'
 import { sendWhatsAppMessage } from '@/lib/whatsapp'
 
-interface ConfirmOptions {
-  /** Skip the DB status update and only send notifications */
-  notifyOnly?: boolean
-}
-
 /**
  * Confirm a booking as paid and deliver notifications (PDF + email + WhatsApp).
  * Safe to call more than once — it checks the current status first.
  */
-export async function confirmPaidBooking(bookingId: number, options: ConfirmOptions = {}) {
+export async function confirmPaidBooking(bookingId: number) {
   const booking = await prisma.booking.findUnique({
     where: { id: bookingId },
     include: {
@@ -20,10 +15,10 @@ export async function confirmPaidBooking(bookingId: number, options: ConfirmOpti
         include: {
           bus: { include: { operator: true } },
           route: { include: { source: true, dest: true } },
+          seats: { select: { id: true, seatNumber: true } },
         },
       },
       passengers: true,
-      payments: true,
     },
   })
 
@@ -31,7 +26,7 @@ export async function confirmPaidBooking(bookingId: number, options: ConfirmOpti
     throw new Error('Booking not found')
   }
 
-  if (!options.notifyOnly && booking.status !== 'CONFIRMED') {
+  if (booking.status !== 'CONFIRMED') {
     await prisma.booking.update({
       where: { id: booking.id },
       data: { status: 'CONFIRMED' },
@@ -41,6 +36,8 @@ export async function confirmPaidBooking(bookingId: number, options: ConfirmOpti
   const schedule = booking.schedule
   const bus = schedule.bus
   const route = schedule.route
+  const seatIdToNumber = new Map(schedule.seats.map(s => [s.id, s.seatNumber]))
+  const seatNumbers = booking.passengers.map(p => seatIdToNumber.get(p.seatId) ?? String(p.seatId))
 
   let pdfBuffer: Buffer | undefined
   try {
@@ -54,11 +51,11 @@ export async function confirmPaidBooking(bookingId: number, options: ConfirmOpti
       departureTime: schedule.departureTime,
       arrivalTime: schedule.arrivalTime,
       journeyDate: booking.journeyDate.toISOString(),
-      passengers: booking.passengers.map(p => ({
+      passengers: booking.passengers.map((p, i) => ({
         name: p.name,
         age: p.age,
         gender: p.gender,
-        seat: String(p.seatId),
+        seat: seatNumbers[i],
       })),
       totalAmount: booking.totalAmount,
       insuranceOpted: booking.insuranceOpted,
@@ -78,7 +75,7 @@ export async function confirmPaidBooking(bookingId: number, options: ConfirmOpti
         arrivalTime: schedule.arrivalTime,
         journeyDate: booking.journeyDate.toISOString(),
         passengerNames: booking.passengers.map(p => p.name),
-        seatNumbers: booking.passengers.map(p => String(p.seatId)),
+        seatNumbers,
         totalAmount: booking.totalAmount,
         pdfBuffer,
       }).catch(err => {
@@ -96,7 +93,7 @@ export async function confirmPaidBooking(bookingId: number, options: ConfirmOpti
     departureTime: schedule.departureTime,
     arrivalTime: schedule.arrivalTime,
     journeyDate: booking.journeyDate.toISOString(),
-    seatNumbers: booking.passengers.map(p => String(p.seatId)),
+    seatNumbers,
     passengerNames: booking.passengers.map(p => p.name),
     totalAmount: booking.totalAmount,
   }).catch(err => {
