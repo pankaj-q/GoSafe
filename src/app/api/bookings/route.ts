@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
 
     const { scheduleId, journeyDate, selectedSeatIds } = body
     const { contactName, contactPhone, contactEmail, insuranceOpted, passengers } = parsed.data
+    const sessionId = typeof body.sessionId === 'string' ? body.sessionId : ''
 
     if (!scheduleId) {
       return NextResponse.json({ error: 'Schedule ID is required' }, { status: 400 })
@@ -73,6 +74,22 @@ export async function POST(req: NextRequest) {
 
       if (existingBookings.length > 0) {
         return NextResponse.json({ error: 'Some seats are already booked', conflictSeats: existingBookings.flatMap(b => b.passengers.map(p => p.seatId)) }, { status: 409 })
+      }
+
+      // Reject seats actively held by a different session
+      if (sessionId) {
+        const heldElsewhere = await prisma.bookingHold.findMany({
+          where: {
+            scheduleId,
+            seatId: { in: selectedSeatIds },
+            sessionId: { not: sessionId },
+            expiresAt: { gt: new Date() },
+          },
+          select: { seatId: true },
+        })
+        if (heldElsewhere.length > 0) {
+          return NextResponse.json({ error: 'Some seats were just taken', conflictSeats: heldElsewhere.map(h => h.seatId) }, { status: 409 })
+        }
       }
     }
 
@@ -127,6 +144,13 @@ export async function POST(req: NextRequest) {
           idempotencyKey: randomUUID(),
         },
       })
+
+      // The booking itself now reserves these seats — release our holds
+      if (sessionId) {
+        await tx.bookingHold.deleteMany({
+          where: { scheduleId, sessionId, seatId: { in: selectedSeatIds || [] } },
+        })
+      }
 
       return { booking, payment }
     })

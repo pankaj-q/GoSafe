@@ -6,6 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ scheduleId: string }> }
 ) {
   const { scheduleId } = await params
+  const sessionId = new URL(req.url).searchParams.get('session') || ''
 
   try {
     const schedule = await prisma.schedule.findUnique({
@@ -25,19 +26,45 @@ export async function GET(
       return NextResponse.json({ error: 'Schedule not found' }, { status: 404 })
     }
 
+    // Clear stale holds so they don't block seats forever
+    await prisma.bookingHold.deleteMany({
+      where: { scheduleId: schedule.id, expiresAt: { lt: new Date() } },
+    })
+
     const bookedSeatIds = new Set(
       schedule.bookings.flatMap(b => b.passengers.map(p => p.seatId))
     )
 
-    const seatData = schedule.seats.map(seat => ({
-      id: seat.id,
-      seatNumber: seat.seatNumber,
-      seatType: seat.seatType,
-      floor: seat.floor,
-      rowPos: seat.rowPos,
-      colPos: seat.colPos,
-      status: bookedSeatIds.has(seat.id) ? 'BOOKED' as const : 'AVAILABLE' as const,
-    }))
+    // Seats actively held by OTHER sessions render as PENDING
+    const heldSeatIds = new Set(
+      sessionId
+        ? (await prisma.bookingHold.findMany({
+            where: {
+              scheduleId: schedule.id,
+              sessionId: { not: sessionId },
+              expiresAt: { gt: new Date() },
+            },
+            select: { seatId: true },
+          })).map(h => h.seatId)
+        : []
+    )
+
+    const seatData = schedule.seats.map(seat => {
+      const status = bookedSeatIds.has(seat.id)
+        ? 'BOOKED' as const
+        : heldSeatIds.has(seat.id)
+          ? 'PENDING' as const
+          : 'AVAILABLE' as const
+      return {
+        id: seat.id,
+        seatNumber: seat.seatNumber,
+        seatType: seat.seatType,
+        floor: seat.floor,
+        rowPos: seat.rowPos,
+        colPos: seat.colPos,
+        status,
+      }
+    })
 
     const response = {
       schedule: {

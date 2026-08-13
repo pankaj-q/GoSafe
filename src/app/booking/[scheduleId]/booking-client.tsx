@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import NavHeader from '@/components/NavHeader'
 import SeatLayout from '@/components/SeatLayout'
@@ -44,7 +44,8 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetch(`/api/schedules/${scheduleId}/seats`)
+    const sessionId = getSessionId()
+    fetch(`/api/schedules/${scheduleId}/seats?session=${encodeURIComponent(sessionId)}`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to load schedule')
         return res.json()
@@ -55,6 +56,7 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
         console.error('Schedule fetch error:', err)
       })
       .finally(() => setLoading(false))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scheduleId])
 
   const [selectedSeatIds, setSelectedSeatIds] = useState<number[]>(initialSeatIds)
@@ -67,8 +69,32 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
   const [paying, setPaying] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  const sessionIdRef = useRef<string | null>(null)
+  const seatHoldsRef = useRef<Set<number>>(new Set())
+
+  function getSessionId(): string {
+    if (sessionIdRef.current) return sessionIdRef.current
+    const stored = sessionStorage.getItem(`gosafe-session-${scheduleId}`)
+    if (stored) {
+      sessionIdRef.current = stored
+      return stored
+    }
+    const fresh = crypto.randomUUID()
+    sessionStorage.setItem(`gosafe-session-${scheduleId}`, fresh)
+    sessionIdRef.current = fresh
+    return fresh
+  }
+
   const insurancePremium = 19
   const insuranceCoverage = 500000
+
+  // Hold seats that came in via the query string (e.g. after a payment redirect)
+  useEffect(() => {
+    if (scheduleData && initialSeatIds.length > 0 && seatHoldsRef.current.size === 0) {
+      syncHolds(initialSeatIds)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scheduleData])
 
   if (loading) {
     return (
@@ -100,9 +126,46 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
   const seats = scheduleData.seats
 
   function handleSeatToggle(seatId: number) {
-    setSelectedSeatIds(prev =>
-      prev.includes(seatId) ? prev.filter(id => id !== seatId) : [...prev, seatId]
-    )
+    setSelectedSeatIds(prev => {
+      const next = prev.includes(seatId)
+        ? prev.filter(id => id !== seatId)
+        : [...prev, seatId]
+      syncHolds(next)
+      return next
+    })
+  }
+
+  function syncHolds(seatIds: number[]) {
+    const sessionId = getSessionId()
+    const selectedSet = new Set(seatIds)
+    const toRelease = [...seatHoldsRef.current].filter(id => !selectedSet.has(id))
+    const toHold = seatIds.filter(id => !seatHoldsRef.current.has(id))
+
+    if (toRelease.length > 0) {
+      fetch(`/api/holds?scheduleId=${scheduleId}&sessionId=${encodeURIComponent(sessionId)}&seatIds=${toRelease.join(',')}`, { method: 'DELETE' })
+        .catch(() => {})
+      toRelease.forEach(id => seatHoldsRef.current.delete(id))
+    }
+
+    if (toHold.length > 0) {
+      fetch('/api/holds', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scheduleId, sessionId, seatIds: toHold }),
+      })
+        .then(async res => {
+          if (!res.ok) {
+            const data = await res.json().catch(() => null)
+            const conflicts = (data?.conflictSeats as number[]) || toHold
+            if (conflicts.length > 0) {
+              setSelectedSeatIds(prev => prev.filter(id => !conflicts.includes(id)))
+              setErrors(prev => ({ ...prev, seats: 'Some seats are no longer available. Please pick others.' }))
+            }
+          }
+        })
+        .catch(() => {})
+      toHold.forEach(id => seatHoldsRef.current.add(id))
+    }
   }
 
   const selectedSeatsData = seats.filter(s => selectedSeatIds.includes(s.id))
@@ -141,6 +204,7 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
           insuranceOpted,
           passengers: passengers.filter(p => p.name.trim()),
           selectedSeatIds,
+          sessionId: getSessionId(),
         }),
       })
 

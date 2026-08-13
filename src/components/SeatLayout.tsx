@@ -1,5 +1,8 @@
 'use client'
 
+import { useMemo } from 'react'
+import { Bed, Armchair } from 'lucide-react'
+
 interface Seat {
   id: number
   seatNumber: string
@@ -18,8 +21,8 @@ interface SeatLayoutProps {
 }
 
 export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatLayoutProps) {
-  const lowerSeats = seats.filter(s => s.floor === 1)
-  const upperSeats = seats.filter(s => s.floor === 2)
+  const lowerSeats = useMemo(() => seats.filter(s => s.floor === 1), [seats])
+  const upperSeats = useMemo(() => seats.filter(s => s.floor === 2), [seats])
   const hasUpper = upperSeats.length > 0
 
   function renderSeat(seat: Seat, index: number) {
@@ -48,15 +51,28 @@ export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatL
         }}
         className={`${cls} animate-seat-in`}
         style={{ animationDelay: `${index * 20}ms` }}
-        title={`${seat.seatNumber} - ${seat.status === 'AVAILABLE' ? 'Available' : seat.status === 'BOOKED' ? 'Booked' : seat.status === 'PENDING' ? 'Pending' : 'Not available'}`}
+        title={`${seat.seatNumber} - ${seat.status === 'AVAILABLE' ? 'Available' : seat.status === 'BOOKED' ? 'Booked' : seat.status === 'PENDING' ? 'Held by another user' : 'Not available'}`}
         disabled={seat.status !== 'AVAILABLE'}
+        aria-label={`Seat ${seat.seatNumber}`}
       >
-        {label}
+        {isSleeperStyle && seat.status === 'AVAILABLE' && !isSelected && (
+          <Bed className="w-3 h-3 mb-0.5 text-green-400" />
+        )}
+        {isSleeperStyle && seat.status === 'AVAILABLE' && isSelected && (
+          <Bed className="w-3 h-3 mb-0.5 text-blue-200" />
+        )}
+        {!isSleeperStyle && seat.status === 'AVAILABLE' && !isSelected && (
+          <Armchair className="w-3 h-3 mb-0.5 text-green-400" />
+        )}
+        {!isSleeperStyle && seat.status === 'AVAILABLE' && isSelected && (
+          <Armchair className="w-3 h-3 mb-0.5 text-blue-200" />
+        )}
+        <span>{label}</span>
       </button>
     )
   }
 
-  function renderDeck(deckSeats: Seat[], label: string) {
+  function renderDeck(deckSeats: Seat[], label: string, isSleeper: boolean) {
     if (deckSeats.length === 0) return null
 
     const maxRow = Math.max(...deckSeats.map(s => s.rowPos))
@@ -76,7 +92,7 @@ export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatL
     })
 
     const firstSeat = deckSeats.find(s => s.seatType) || deckSeats[0]
-    const isSleeperStyle = firstSeat?.seatType === 'SLEEPER'
+    const isSleeperStyle = isSleeper || firstSeat?.seatType === 'SLEEPER'
     const cellH = isSleeperStyle ? 'h-9 sm:h-11' : 'h-9 sm:h-10'
     const seatW = isSleeperStyle ? 'w-11 sm:w-14' : 'w-9 sm:w-10'
     const prefix = isSleeperStyle ? 'seat-sleeper' : 'seat-seater'
@@ -84,7 +100,10 @@ export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatL
     return (
       <div>
         {label && (
-          <div className="text-[11px] font-semibold text-gray-500 mb-1.5">{label}</div>
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-500 mb-2">
+            {isSleeperStyle ? <Bed className="w-3.5 h-3.5 text-indigo-400" /> : <Armchair className="w-3.5 h-3.5 text-blue-400" />}
+            {label}
+          </div>
         )}
         <div
           className="grid gap-0.5 sm:gap-1 mx-auto"
@@ -132,11 +151,22 @@ export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatL
         </span>
         <span className="flex items-center gap-1">
           <span className="w-3 h-3 rounded border border-amber-400 bg-amber-50" />
-          Pending
+          Held by other
         </span>
         <span className="flex items-center gap-1">
           <span className="w-3 h-3 rounded bg-gray-100 border border-dashed border-gray-300" />
           Not Available
+        </span>
+      </div>
+
+      <div className="flex items-center gap-3 mb-3 text-[11px] flex-wrap">
+        <span className="flex items-center gap-1 text-gray-400">
+          <Bed className="w-3.5 h-3.5 text-indigo-400" />
+          Sleeper berth (lying)
+        </span>
+        <span className="flex items-center gap-1 text-gray-400">
+          <Armchair className="w-3.5 h-3.5 text-blue-400" />
+          Seater (sitting)
         </span>
       </div>
 
@@ -160,8 +190,8 @@ export default function SeatLayout({ seats, selectedSeats, onSeatToggle }: SeatL
 
         <div className="flex justify-center">
           <div className="space-y-5">
-            {renderDeck(lowerSeats, hasUpper ? 'Lower — Seater (Sitting)' : '')}
-            {hasUpper && renderDeck(upperSeats, 'Upper — Sleeper (Lying)')}
+            {renderDeck(lowerSeats, hasUpper ? 'Lower Deck — Seater (Sitting)' : 'Seater (Sitting)', false)}
+            {hasUpper && renderDeck(upperSeats, 'Upper Deck — Sleeper (Lying)', true)}
           </div>
         </div>
       </div>

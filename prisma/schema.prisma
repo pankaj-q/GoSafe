@@ -172,6 +172,7 @@ model BookingHold {
   seat     Seat     @relation(fields: [seatId], references: [id], onDelete: Cascade)
   schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
 
+  @@unique([sessionId, seatId, scheduleId])
   @@index([scheduleId, sessionId])
   @@index([expiresAt])
 }
