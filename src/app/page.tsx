@@ -6,6 +6,7 @@ import AdSlot from '@/components/AdSlot'
 import NewsletterSignup from '@/components/NewsletterSignup'
 import TypewriterText from '@/components/TypewriterText'
 import OffersSection from '@/components/OffersSection'
+import LiveBusCard from '@/components/LiveBusCard'
 import Link from 'next/link'
 import {
   ShieldCheck, HeadphonesIcon, TicketCheck, Bus, Clock, ArrowRight,
@@ -218,71 +219,15 @@ export default function Home() {
                 ))}
               </ul>
               <Link
-                href="/search"
+                href="/track"
                 className="mt-6 inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
               >
                 Track my bus <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
-            {/* Right — animated route card */}
-            <div className="bg-gray-50 dark:bg-gray-800/60 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 sm:p-6">
-              <div className="flex items-center justify-between mb-5">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center">
-                    <Bus className="w-4 h-4 text-white" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-gray-900 dark:text-gray-100">GoSafe Live 4567</div>
-                    <div className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse-dot" /> On time · Delhi → Varanasi
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-2.5 py-1 rounded-md">45% seats left</span>
-              </div>
-
-              {/* Route line */}
-              <div className="relative">
-                <div className="flex items-center justify-between mb-3">
-                  {[
-                    { label: 'Delhi', time: '10:30 PM', done: true },
-                    { label: 'Agra', time: '1:15 AM', done: true },
-                    { label: 'Kanpur', time: '4:40 AM', done: false },
-                    { label: 'Varanasi', time: '8:10 AM', done: false },
-                  ].map(pt => (
-                    <div key={pt.label} className="flex flex-col items-center gap-1 z-10">
-                      <div className={`w-2.5 h-2.5 rounded-full ${pt.done ? 'bg-emerald-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
-                      <span className={`text-[10px] font-medium ${pt.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'}`}>{pt.label}</span>
-                      <span className="text-[9px] text-gray-400 dark:text-gray-600">{pt.time}</span>
-                    </div>
-                  ))}
-                </div>
-                {/* Progress track + moving bus */}
-                <div className="relative h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-visible">
-                  <div className="absolute inset-y-0 left-0 w-[55%] bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full" />
-                  <div className="absolute top-1/2 -translate-y-1/2 animate-bus-move">
-                    <div className="w-9 h-9 -ml-4 rounded-full bg-white dark:bg-gray-900 shadow-lg border-2 border-emerald-500 flex items-center justify-center">
-                      <Bus className="w-4 h-4 text-emerald-600" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-3 mt-6">
-                {[
-                  { v: '2h 45m', l: 'Arriving in' },
-                  { v: '412 km', l: 'Distance left' },
-                  { v: '36 km/h', l: 'Avg speed' },
-                ].map(s => (
-                  <div key={s.l} className="text-center bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 px-2 py-3">
-                    <div className="text-sm font-bold text-gray-900 dark:text-gray-100">{s.v}</div>
-                    <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">{s.l}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Right — live tracking card (real backend data) */}
+            <LiveBusCard />
           </div>
         </div>
       </section>

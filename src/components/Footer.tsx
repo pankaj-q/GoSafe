@@ -10,6 +10,7 @@ const footerLinks = {
   ],
   support: [
     { label: 'Help Centre', href: '/help' },
+    { label: 'Live Bus Tracking', href: '/track' },
     { label: 'Contact Us', href: '/contact' },
     { label: 'Cancellation Policy', href: '/cancellation' },
     { label: 'Refund Policy', href: '/refund' },

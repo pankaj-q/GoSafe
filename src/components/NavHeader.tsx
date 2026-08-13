@@ -70,6 +70,9 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
             <Link href="/search" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">
               Book Tickets
             </Link>
+            <Link href="/track" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">
+              Live Tracking
+            </Link>
             <a href="tel:+918000123456" className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">
               <Phone className="w-3.5 h-3.5" />
               <span className="hidden lg:inline">1800-800-1234</span>
@@ -141,6 +144,9 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
               </Link>
               <Link href="/search" className="text-sm font-medium text-gray-600 px-2 py-1.5" onClick={() => setMenuOpen(false)}>
                 Book Tickets
+              </Link>
+              <Link href="/track" className="text-sm font-medium text-gray-600 px-2 py-1.5 dark:text-gray-300" onClick={() => setMenuOpen(false)}>
+                Live Tracking
               </Link>
               {session ? (
                 <>
