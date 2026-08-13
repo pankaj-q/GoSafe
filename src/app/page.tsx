@@ -10,7 +10,7 @@ import Link from 'next/link'
 import {
   ShieldCheck, HeadphonesIcon, TicketCheck, Bus, Clock, ArrowRight,
   Search, CreditCard, Star, Users, ChevronRight,
-  SmartphoneIcon, CheckCircle, TrendingUp, MapPin,
+  SmartphoneIcon, CheckCircle, TrendingUp, MapPin, Sparkles, Lightbulb, Backpack,
 } from 'lucide-react'
 import { jsonLdFAQ, jsonLdBreadcrumb } from '@/lib/seo'
 
@@ -60,11 +60,18 @@ const stats = [
 ]
 
 const faqData = [
-  { question: 'How to book bus tickets online in India?', answer: 'Simply enter your source and destination cities, select travel date, choose from available buses, pick seats, enter passenger details, and pay. You will receive e-ticket via email and WhatsApp instantly.' },
-  { question: 'Can I cancel my bus ticket and get a refund?', answer: 'Yes. Cancel up to 6 hours before departure for 90% refund, up to 2 hours for 50% refund. Cancellations within 2 hours of departure are non-refundable.' },
-  { question: 'What bus types are available on GoSafe?', answer: 'We offer AC Sleeper, Non-AC Sleeper, AC Seater, Non-AC Seater, Volvo AC, Volvo AC Sleeper, and AC Semi-Sleeper buses across all major routes in India.' },
-  { question: 'Is bus travel insurance available?', answer: 'Yes. You can add travel insurance for just ₹19 per seat, covering accidental death, medical expenses, baggage loss, and journey cancellation.' },
-  { question: 'How do I get my bus ticket after booking?', answer: 'Your e-ticket is sent via email and WhatsApp immediately after booking confirmation. You can also download the PDF ticket from the confirmation page.' },
+  { question: 'How to book bus tickets online in India?', answer: 'Simply enter your source and destination cities, select travel date, compare available buses, pick seats, add optional insurance, and pay. Your e-ticket arrives via email and WhatsApp instantly — just show it on board.' },
+  { question: 'What is the seat hold feature?', answer: 'When you select a seat, GoSafe locks it for you for 10 minutes free of cost. You can safely enter passenger details and pay without someone else grabbing your preferred seat. Your seats stay reserved until you complete payment or the timer runs out.' },
+  { question: 'Can I track my bus in real time?', answer: 'Yes. Every GoSafe bus is GPS-tracked. On the booking page and in My Bookings, you can see the live location of your bus, the number of stops it has covered, and the estimated arrival time — so you always know when to head to the boarding point.' },
+  { question: 'Can I cancel my bus ticket and get a refund?', answer: 'Yes. Cancel up to 6 hours before departure for a 90% refund, and up to 2 hours before for 50%. Cancellations within 2 hours of departure are non-refundable. UPI refunds are processed within 24 hours.' },
+  { question: 'What bus types are available on GoSafe?', answer: 'We offer AC Sleeper, Non-AC Sleeper, AC Seater, Non-AC Seater, Volvo AC, Volvo AC Sleeper, and AC Semi-Sleeper buses across routes in India. Use the seater/sleeper and amenity filters to find exactly what you need.' },
+  { question: 'What do the seat colors mean?', answer: 'Green means the seat is available, blue means you have selected it, red with an ✕ is already booked, amber is held by another user for the next 10 minutes, and grey dashed means the berth is not available for sale.' },
+  { question: 'Is bus travel insurance available?', answer: 'Yes. Add travel insurance for just ₹19 per seat, covering accidental death, medical expenses, baggage loss, and journey cancellation. It’s optional, added in one tap at the seat-selection step.' },
+  { question: 'How do I get my ticket after booking?', answer: 'Your e-ticket is sent via email and WhatsApp immediately after confirmation. You can also download the PDF ticket from the confirmation page or from My Bookings anytime. No need to print it — just show the ticket on your phone at boarding.' },
+  { question: 'How do GoSafe Points and member tiers work?', answer: 'Every member earns 1 GoSafe Point per ₹10 spent. As you travel more, you move up from Explorer to Silver, Gold, and Platinum tiers — unlocking priority refunds, special fares, and exclusive seasonal offers.' },
+  { question: 'What payment methods do you accept?', answer: 'We accept UPI, credit/debit cards, and netbanking through our secure Stripe gateway. Payments are PCI-DSS compliant, and offers like GOFIRST20 (20% off first trip) can be applied at checkout.' },
+  { question: 'Is GoSafe available as a mobile app?', answer: 'Not yet — but the website is fully optimised for mobile and works like an app. Add it to your home screen for one-tap access, and the native Android and iOS apps are coming soon.' },
+  { question: 'How do I contact support if I have a problem?', answer: 'Our support team is available 24×7 over call at 1800-800-1234 and on WhatsApp. For quick self-help, visit the Help Centre at Help page, or reach us from the contact page.' },
 ]
 
 export default function Home() {
@@ -462,20 +469,116 @@ export default function Home() {
 
       {/* ============ FAQ ============ */}
       <section className="gosafe-container py-8 sm:py-10">
-        <div className="text-center mb-6">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Everything you need to know about bus booking on GoSafe</p>
-        </div>
-        <div className="max-w-2xl mx-auto space-y-2.5">
-          {faqData.map((faq, i) => (
-            <details key={i} className="group bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 open:border-blue-200 dark:open:border-blue-500/40 open:shadow-sm transition-all">
-              <summary className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer list-none flex items-center justify-between gap-4">
-                {faq.question}
-                <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 group-open:rotate-90 transition-transform shrink-0" />
-              </summary>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{faq.answer}</p>
-            </details>
-          ))}
+        <div className="grid lg:grid-cols-5 gap-8 items-start">
+          {/* LEFT — FAQ questions */}
+          <div className="lg:col-span-3">
+            <div className="mb-6">
+              <div className="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[11px] font-semibold px-3 py-1 rounded-full mb-3">
+                <HeadphonesIcon className="w-3 h-3" /> FAQs
+              </div>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Everything you need to know about bus booking on GoSafe</p>
+            </div>
+            <div className="space-y-2.5">
+              {faqData.map((faq, i) => (
+                <details key={i} className="group bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 open:border-blue-200 dark:open:border-blue-500/40 open:shadow-sm transition-all">
+                  <summary className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer list-none flex items-center justify-between gap-4">
+                    {faq.question}
+                    <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 group-open:rotate-90 transition-transform shrink-0" />
+                  </summary>
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{faq.answer}</p>
+                </details>
+              ))}
+            </div>
+
+            {/* Support CTA */}
+            <div className="mt-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-500/10 dark:to-indigo-500/10 border border-blue-100 dark:border-blue-500/20 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3 text-center sm:text-left">
+                <div className="w-10 h-10 shrink-0 rounded-xl bg-blue-600 flex items-center justify-center">
+                  <HeadphonesIcon className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">Still have questions?</div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Our team is here 24×7 to help you with anything.</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <a href="tel:+918000123456" className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/30 rounded-lg px-3.5 py-2 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors">
+                  <HeadphonesIcon className="w-3.5 h-3.5" /> Call 1800-800-1234
+                </a>
+                <Link href="/help" className="inline-flex items-center gap-1.5 text-xs font-semibold bg-blue-600 text-white rounded-lg px-3.5 py-2 hover:bg-blue-700 transition-colors">
+                  Visit Help Centre <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT — exciting bus facts & travel tips */}
+          <div className="lg:col-span-2 space-y-5 lg:sticky lg:top-24">
+            {/* Did you know? */}
+            <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg">
+              <div className="p-5">
+                <div className="flex items-center gap-2 text-blue-200 text-xs font-semibold mb-3">
+                  <Sparkles className="w-4 h-4" /> Did you know?
+                </div>
+                <div className="space-y-4">
+                  {[
+                    { t: 'Buses save the planet', d: 'One full bus takes ~40 cars off the road and cuts carbon emissions by up to 80% per passenger.' },
+                    { t: 'Sleepers are built for night runs', d: 'A horizontal berth lets you sleep 6–7 hours — wake up refreshed at your destination.' },
+                    { t: 'Our fastest corridor', d: 'Mumbai → Pune averages just 3h 30m, with 4 buses departing every hour.' },
+                  ].map(f => (
+                    <div key={f.t} className="flex gap-3">
+                      <div className="w-7 h-7 shrink-0 rounded-lg bg-white/15 flex items-center justify-center">
+                        <Lightbulb className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold leading-snug">{f.t}</div>
+                        <div className="text-[11px] text-blue-100 mt-0.5 leading-relaxed">{f.d}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Travel tips */}
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-5">
+              <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-gray-100 mb-4">
+                <Backpack className="w-4 h-4 text-emerald-500" /> Smart travel tips
+              </div>
+              <ul className="space-y-3">
+                {[
+                  { t: 'Book window seats first', d: 'Rows 2–4 on the seater deck give the smoothest ride.' },
+                  { t: 'Board 15 minutes early', d: 'Buses leave on time — track your bus live before you head out.' },
+                  { t: 'Apply a coupon at checkout', d: 'GOFIRST20 gives new travellers 20% off their first trip.' },
+                  { t: 'Use insurance for just ₹19', d: 'Covers baggage loss, medicals & trip cancellation.' },
+                ].map(tip => (
+                  <li key={tip.t} className="flex gap-2.5">
+                    <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-sm font-medium text-gray-800 dark:text-gray-200">{tip.t}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{tip.d}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Quick stats */}
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { v: '2M+', l: 'Travellers monthly' },
+                { v: '500+', l: 'Cities connected' },
+                { v: '10 min', l: 'Free seat hold' },
+                { v: '4.6★', l: 'Traveller rating' },
+              ].map(s => (
+                <div key={s.l} className="bg-gray-50 dark:bg-gray-800/60 rounded-xl border border-gray-100 dark:border-gray-700 p-4 text-center">
+                  <div className="text-lg font-bold text-blue-600 dark:text-blue-400">{s.v}</div>
+                  <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">{s.l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
