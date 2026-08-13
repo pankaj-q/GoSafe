@@ -39,12 +39,18 @@ export function SeatGridSkeleton() {
         ))}
       </div>
       <div className="text-center mb-3">
-        <div className="inline-block h-5 bg-gray-200 dark:bg-gray-800 rounded-t-lg px-8 w-20" />
+        <div className="inline-block h-5 bg-gray-200 dark:bg-gray-800 rounded-t-lg px-8 w-24" />
       </div>
-      <div className="grid grid-cols-4 gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-        {Array.from({ length: 16 }).map((_, i) => (
-          <div key={i} className="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700" />
-        ))}
+      <div className="bg-gradient-to-b from-blue-50 to-blue-100/60 dark:from-blue-950/40 dark:to-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-4">
+        <div className="flex justify-center gap-2 mb-4">
+          <div className="w-10 h-6 rounded bg-gray-200 dark:bg-gray-800" />
+          <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-800" />
+        </div>
+        <div className="flex flex-wrap justify-center gap-2">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="w-12 h-20 rounded-lg bg-gray-200 dark:bg-gray-700" />
+          ))}
+        </div>
       </div>
     </div>
   )

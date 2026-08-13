@@ -284,15 +284,15 @@ body::-webkit-scrollbar {
   }
 
   .seat-sleeper {
-    width: 3.5rem;
-    height: 2rem;
+    width: 5rem;
+    height: 2.5rem;
     border-radius: 0.75rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 0.05rem;
-    font-size: 0.5rem;
+    gap: 0.3rem;
+    font-size: 0.5625rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -304,21 +304,21 @@ body::-webkit-scrollbar {
   }
   @media (min-width: 640px) {
     .seat-sleeper {
-      width: 4.25rem;
-      height: 2.25rem;
-      font-size: 0.5625rem;
+      width: 5.75rem;
+      height: 2.75rem;
+      font-size: 0.625rem;
       border-radius: 0.875rem;
     }
   }
   .seat-sleeper::before {
     content: '';
     position: absolute;
-    left: 0.5rem;
-    right: 0.5rem;
     top: 50%;
+    left: 0.45rem;
+    right: 0.45rem;
     transform: translateY(-50%);
-    height: 0.3rem;
-    border-radius: 0.15rem;
+    height: 0.35rem;
+    border-radius: 0.2rem;
     z-index: 0;
   }
   .seat-sleeper > span {
@@ -349,9 +349,9 @@ body::-webkit-scrollbar {
   .seat-sleeper-selected {
     background: linear-gradient(180deg, #12335c, #0b1f3a);
     color: white;
-    border-color: #0b1f3a;
+    border-color: #ff6b35;
     transform: scale(1.04);
-    box-shadow: 0 6px 16px -2px rgba(11,31,58,0.5);
+    box-shadow: 0 6px 18px -2px rgba(255,107,53,0.45), 0 0 0 3px rgba(255,107,53,0.25);
   }
   .seat-sleeper-selected::before {
     background: linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0.25));
@@ -398,6 +398,26 @@ body::-webkit-scrollbar {
   }
   .seat-sleeper-locked::before {
     background: #e5e7eb;
+  }
+  .seat-sleeper.seat-double {
+    border-radius: 0.625rem;
+    box-shadow: inset 0 0 0 1px rgba(255,107,53,0.35);
+  }
+  .seat-double-slots {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .seat-double-slots .seat-sleeper {
+    width: 5rem;
+    height: 2.5rem;
+  }
+  @media (min-width: 640px) {
+    .seat-double-slots .seat-sleeper {
+      width: 5.75rem;
+      height: 2.75rem;
+    }
   }
 
   .seat-seater {
@@ -465,9 +485,13 @@ body::-webkit-scrollbar {
   .seat-seater-selected {
     background: linear-gradient(180deg, #12335c, #0b1f3a);
     color: white;
-    border-color: #0b1f3a;
+    border-color: #ff6b35;
     transform: scale(1.04);
-    box-shadow: 0 6px 16px -2px rgba(11,31,58,0.5);
+    box-shadow: 0 6px 18px -2px rgba(255,107,53,0.45), 0 0 0 3px rgba(255,107,53,0.25);
+  }
+
+  .seat-seater.seat-double {
+    border-radius: 0.5rem;
   }
   .seat-seater-selected::before {
     background: linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0.25));
@@ -517,8 +541,8 @@ body::-webkit-scrollbar {
   }
 
   .seat-layout-compact .seat-sleeper {
-    width: 2.5rem;
-    height: 1.5rem;
+    width: 3.4rem;
+    height: 1.8rem;
     border-radius: 0.5rem;
     font-size: 0.4rem;
   }
@@ -544,8 +568,8 @@ body::-webkit-scrollbar {
   }
   @media (min-width: 640px) {
     .seat-layout-compact .seat-sleeper {
-      width: 3rem;
-      height: 1.75rem;
+      width: 4rem;
+      height: 2.1rem;
     }
     .seat-layout-compact .seat-seater {
       width: 1.8rem;
