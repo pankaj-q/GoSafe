@@ -8,6 +8,7 @@ import PassengerForm from '@/components/PassengerForm'
 import InsuranceSelector from '@/components/InsuranceSelector'
 import BookingSummary from '@/components/BookingSummary'
 import { CreditCard, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { SkeletonBusCard, SkeletonBooking, SeatGridSkeleton } from '@/components/LoadingSkeleton'
 import { formatCurrency } from '@/lib/utils'
 import type { PassengerData } from '@/lib/validations'
 
@@ -100,8 +101,23 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
     return (
       <>
         <NavHeader />
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+          <div className="gosafe-container py-0">
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 pb-4 pt-4">
+              <SkeletonBusCard />
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start py-6">
+              <div className="lg:col-span-2 space-y-5">
+                <SkeletonBusCard />
+                <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4">
+                  <SeatGridSkeleton />
+                </div>
+              </div>
+              <div className="lg:col-span-1">
+                <SkeletonBooking />
+              </div>
+            </div>
+          </div>
         </div>
       </>
     )

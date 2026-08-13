@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import NavHeader from '@/components/NavHeader'
+import { SkeletonBusCard, SkeletonDestination } from '@/components/LoadingSkeleton'
 import {
   Bus, Clock, MapPin, Users, Gauge, Route as RouteIcon, RefreshCw, ChevronRight, Search, ArrowRight, Zap,
 } from 'lucide-react'
@@ -186,10 +187,7 @@ export default function TrackPage() {
             {loading ? (
               <div className="space-y-3">
                 {[0, 1, 2].map(i => (
-                  <div key={i} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 animate-pulse">
-                    <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-2/3 mb-2" />
-                    <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-1/2" />
-                  </div>
+                  <SkeletonBusCard key={i} />
                 ))}
               </div>
             ) : filtered.length === 0 ? (
@@ -233,7 +231,9 @@ export default function TrackPage() {
 
           {/* RIGHT — focused live bus detail */}
           <div className="lg:col-span-2">
-            {!focused ? (
+            {loading ? (
+              <SkeletonDestination />
+            ) : !focused ? (
               <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-10 text-center">
                 <div className="text-sm font-medium text-gray-900 dark:text-gray-100">No buses running today</div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Check back later or search for a trip instead.</p>

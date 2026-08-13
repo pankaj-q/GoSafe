@@ -89,7 +89,7 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
             </Link>
             <a href="tel:+918000123456" className={`${navLink} flex items-center gap-1.5`}>
               <Phone className="w-3.5 h-3.5 text-blue-600" />
-              <span className="hidden lg:inline tracking-wide">1800-800-1234</span>
+              <span className="hidden lg:inline tracking-wide">8449309324</span>
             </a>
 
             <ThemeToggle />
@@ -184,8 +184,8 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
                   Sign In
                 </Link>
               )}
-              <a href="tel:+918000123456" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
-                Contact: 1800-800-1234
+              <a href="tel:+918449309324" className="text-sm font-bold text-gray-700 px-2 py-1.5 dark:text-gray-200" onClick={() => setMenuOpen(false)}>
+                Contact: 8449309324
               </a>
             </div>
           </div>
