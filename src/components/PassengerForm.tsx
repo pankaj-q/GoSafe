@@ -28,24 +28,24 @@ export default function PassengerForm({ count, passengers, onChange }: Passenger
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-gray-900">Passenger Details</h3>
-        <span className="text-xs text-gray-500">{passengers.length} of {count} added</span>
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100">Passenger Details</h3>
+        <span className="text-xs text-gray-500 dark:text-gray-400">{passengers.length} of {count} added</span>
       </div>
 
       {passengers.map((p, i) => (
-        <div key={i} className="gosafe-card p-4 animate-fade-in">
+        <div key={i} className="gosafe-card dark:bg-gray-900 dark:border-gray-800 p-4 animate-fade-in">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center">
                 <User className="w-3.5 h-3.5 text-blue-600" />
               </div>
-              <span className="font-medium text-sm text-gray-800">Passenger {i + 1}</span>
+              <span className="font-medium text-sm text-gray-800 dark:text-gray-300">Passenger {i + 1}</span>
             </div>
             {passengers.length > 1 && (
               <button
                 type="button"
                 onClick={() => removePassenger(i)}
-                className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                className="text-gray-400 dark:text-gray-500 hover:text-red-500 transition-colors p-1"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -60,7 +60,7 @@ export default function PassengerForm({ count, passengers, onChange }: Passenger
                 value={p.name}
                 onChange={e => updatePassenger(i, 'name', e.target.value)}
                 placeholder="Enter passenger name"
-                className="gosafe-input"
+                className="gosafe-input dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                 required
               />
             </div>
@@ -72,7 +72,7 @@ export default function PassengerForm({ count, passengers, onChange }: Passenger
                 onChange={e => updatePassenger(i, 'age', Math.max(1, Math.min(120, parseInt(e.target.value) || 0)))}
                 min={1}
                 max={120}
-                className="gosafe-input"
+                className="gosafe-input dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                 required
               />
             </div>
@@ -81,7 +81,7 @@ export default function PassengerForm({ count, passengers, onChange }: Passenger
               <select
                 value={p.gender}
                 onChange={e => updatePassenger(i, 'gender', e.target.value)}
-                className="gosafe-input"
+                className="gosafe-input dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
               >
                 <option value="MALE">Male</option>
                 <option value="FEMALE">Female</option>
@@ -96,7 +96,7 @@ export default function PassengerForm({ count, passengers, onChange }: Passenger
         <button
           type="button"
           onClick={addPassenger}
-          className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-sm text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-2"
+          className="w-full py-3 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-sm text-gray-500 dark:text-gray-400 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-2"
         >
           <Plus className="w-4 h-4" />
           Add Passenger {passengers.length + 1}

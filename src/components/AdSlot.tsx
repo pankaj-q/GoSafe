@@ -14,12 +14,12 @@ export default function AdSlot({ format = 'banner', className = '' }: AdSlotProp
 
   return (
     <div
-      className={`${sizes[format]} ${className} bg-gray-50 border border-dashed border-gray-200 rounded-xl flex items-center justify-center select-none`}
+      className={`${sizes[format]} ${className} bg-gray-50 dark:bg-gray-900/60 border border-dashed border-gray-200 dark:border-gray-800 rounded-xl flex items-center justify-center select-none`}
       aria-hidden="true"
     >
       <div className="text-center">
-        <div className="text-[10px] uppercase tracking-widest text-gray-300 font-medium">Advertisement</div>
-        <div className="text-[11px] text-gray-200 mt-0.5">Your Ad Here</div>
+        <div className="text-[10px] uppercase tracking-widest text-gray-300 dark:text-gray-600 font-medium">Advertisement</div>
+        <div className="text-[11px] text-gray-200 dark:text-gray-700 mt-0.5">Your Ad Here</div>
       </div>
     </div>
   )

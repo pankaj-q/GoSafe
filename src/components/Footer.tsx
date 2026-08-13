@@ -35,15 +35,15 @@ const paymentMethods = [
 ]
 
 const socialLinks = [
-  { icon: Globe, href: '#', label: 'Facebook' },
-  { icon: MessageCircle, href: '#', label: 'Twitter' },
-  { icon: Globe, href: '#', label: 'Instagram' },
-  { icon: Video, href: '#', label: 'Youtube' },
+  { icon: Globe, href: 'https://www.facebook.com/gosafe', label: 'Facebook' },
+  { icon: MessageCircle, href: 'https://x.com/gosafe', label: 'Twitter' },
+  { icon: Globe, href: 'https://www.instagram.com/gosafe', label: 'Instagram' },
+  { icon: Video, href: 'https://www.youtube.com/@gosafe', label: 'Youtube' },
 ]
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-950 text-gray-400">
+    <footer className="bg-gray-950 dark:bg-gray-950 text-gray-400">
       {/* Main Footer */}
       <div className="gosafe-container py-12">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">

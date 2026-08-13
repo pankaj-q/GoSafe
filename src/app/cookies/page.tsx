@@ -72,19 +72,19 @@ export default function CookiesPage() {
       </section>
 
       {/* What are cookies */}
-      <section className="gosafe-container py-8 border-b border-gray-100">
+      <section className="gosafe-container py-8 border-b border-gray-100 dark:border-gray-800">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center gap-2 mb-3">
             <HelpCircle className="w-5 h-5 text-blue-600" />
-            <h2 className="text-base font-bold text-gray-900">What Are Cookies?</h2>
+            <h2 className="text-base font-bold text-gray-900 dark:text-gray-100">What Are Cookies?</h2>
           </div>
-          <p className="text-sm text-gray-600 leading-relaxed">
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
             Cookies are small text files stored on your device (computer, tablet, or mobile) when you visit a website.
             They help the website remember your actions and preferences over time, so you do not have to re-enter
             them every time you return. Cookies also help us improve your browsing experience and understand how
             our platform is used.
           </p>
-          <p className="text-sm text-gray-600 leading-relaxed mt-3">
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
             We also use similar technologies such as web beacons, pixel tags, and local storage for the same purposes.
             References to &ldquo;cookies&rdquo; in this policy include these similar technologies.
           </p>
@@ -93,30 +93,30 @@ export default function CookiesPage() {
 
       {/* Types of cookies */}
       <section className="gosafe-container py-10">
-        <h2 className="text-base font-bold text-gray-900 mb-6">Types of Cookies We Use</h2>
+        <h2 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-6">Types of Cookies We Use</h2>
         <div className="space-y-4 max-w-3xl">
           {cookieTypes.map(ct => {
             const Icon = ct.icon
             return (
-              <div key={ct.title} className="bg-white rounded-xl p-5 border border-gray-100">
+              <div key={ct.title} className="bg-white dark:bg-gray-900 rounded-xl p-5 border border-gray-100 dark:border-gray-800">
                 <div className="flex items-start justify-between gap-4 mb-3">
                   <div className="flex items-center gap-2.5">
                     <Icon className="w-5 h-5 text-blue-600" />
-                    <h3 className="font-semibold text-gray-900 text-sm">{ct.title}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{ct.title}</h3>
                   </div>
-                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${ct.canDisable ? 'bg-amber-50 text-amber-600' : 'bg-green-50 text-green-600'}`}>
+                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${ct.canDisable ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400' : 'bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400'}`}>
                     {ct.canDisable ? 'Optional' : 'Required'}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mb-2">{ct.purpose}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{ct.purpose}</p>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {ct.examples.map((ex, i) => (
-                    <span key={i} className="text-[10px] bg-gray-50 text-gray-600 px-2 py-0.5 rounded border border-gray-100">
+                    <span key={i} className="text-[10px] bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded border border-gray-100 dark:border-gray-800">
                       {ex}
                     </span>
                   ))}
                 </div>
-                <p className="text-[10px] text-gray-400">Duration: {ct.duration}</p>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500">Duration: {ct.duration}</p>
               </div>
             )
           })}
@@ -124,14 +124,14 @@ export default function CookiesPage() {
       </section>
 
       {/* Manage preferences */}
-      <section className="bg-gray-50 border-y border-gray-100">
+      <section className="bg-gray-50 dark:bg-gray-900/60 border-y border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
           <div className="max-w-3xl mx-auto">
             <div className="flex items-center gap-2 mb-4">
               <Settings className="w-5 h-5 text-blue-600" />
-              <h2 className="text-base font-bold text-gray-900">Managing Your Cookie Preferences</h2>
+              <h2 className="text-base font-bold text-gray-900 dark:text-gray-100">Managing Your Cookie Preferences</h2>
             </div>
-            <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
+            <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
               <p>
                 You can manage your cookie preferences at any time through our cookie consent banner
                 (accessible via the &ldquo;Cookie Settings&rdquo; link in the website footer).
@@ -169,8 +169,8 @@ export default function CookiesPage() {
       {/* Third-party cookies */}
       <section className="gosafe-container py-8">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-base font-bold text-gray-900 mb-3">Third-Party Cookies</h2>
-          <p className="text-sm text-gray-600 leading-relaxed">
+          <h2 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-3">Third-Party Cookies</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
             We use third-party services such as Google Analytics, Razorpay, and social media platforms
             that may set their own cookies on our platform. These third-party cookies are governed by
             the respective privacy policies of these services. We recommend reviewing their policies

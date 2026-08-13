@@ -100,7 +100,7 @@ export default function HelpPage() {
               <input
                 type="text"
                 placeholder="Search for help topics..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm border-0 focus:ring-2 focus:ring-blue-400"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm border-0 dark:bg-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-400"
               />
             </div>
           </div>
@@ -113,21 +113,21 @@ export default function HelpPage() {
           {categories.map(cat => {
             const Icon = cat.icon
             return (
-              <div key={cat.title} className="bg-white rounded-xl border border-gray-100 p-5 hover:border-blue-100 hover:shadow-sm transition-all">
+              <div key={cat.title} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-5 hover:border-blue-100 hover:shadow-sm transition-all">
                 <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center">
                     <Icon className="w-4.5 h-4.5 text-blue-600" />
                   </div>
                   <div>
-                    <h2 className="font-semibold text-gray-900 text-sm">{cat.title}</h2>
-                    <p className="text-[10px] text-gray-500">{cat.desc}</p>
+                    <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{cat.title}</h2>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400">{cat.desc}</p>
                   </div>
                 </div>
                 <ul className="space-y-2">
                   {cat.articles.map((article, i) => (
                     <li key={i}>
-                      <a href="#" className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-blue-600 transition-colors">
-                        <ChevronRight className="w-3 h-3 text-gray-300" />
+                      <a href="#faqs" className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors">
+                        <ChevronRight className="w-3 h-3 text-gray-300 dark:text-gray-600" />
                         {article}
                       </a>
                     </li>
@@ -140,17 +140,17 @@ export default function HelpPage() {
       </section>
 
       {/* Quick FAQs */}
-      <section className="bg-gray-50 border-y border-gray-100">
+      <section id="faqs" className="bg-gray-50 dark:bg-gray-900/60 border-y border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
-          <h2 className="text-lg font-bold text-gray-900 text-center mb-6">Frequently Asked Questions</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 text-center mb-6">Frequently Asked Questions</h2>
           <div className="max-w-2xl mx-auto space-y-2.5">
             {faqs.map((faq, i) => (
-              <details key={i} className="group bg-white rounded-xl border border-gray-100 p-4 open:border-blue-200 open:shadow-sm transition-all">
-                <summary className="font-medium text-sm text-gray-900 cursor-pointer list-none flex items-center justify-between gap-4">
+              <details key={i} className="group bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 open:border-blue-200 dark:open:border-blue-500/40 open:shadow-sm transition-all">
+                <summary className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer list-none flex items-center justify-between gap-4">
                   {faq.q}
-                  <ChevronRight className="w-4 h-4 text-gray-400 group-open:rotate-90 transition-transform shrink-0" />
+                  <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 group-open:rotate-90 transition-transform shrink-0" />
                 </summary>
-                <p className="mt-2 text-sm text-gray-600 leading-relaxed">{faq.a}</p>
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{faq.a}</p>
               </details>
             ))}
           </div>
@@ -159,16 +159,16 @@ export default function HelpPage() {
 
       {/* Contact */}
       <section className="gosafe-container py-10 text-center">
-        <h2 className="text-lg font-bold text-gray-900 mb-1">Still need help?</h2>
-        <p className="text-sm text-gray-500 mb-6">Our support team is available 24/7</p>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">Still need help?</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Our support team is available 24/7</p>
         <div className="flex flex-wrap justify-center gap-3">
           <a href="tel:+918000123456" className="inline-flex items-center gap-2 bg-blue-600 text-white font-medium px-5 py-2.5 rounded-xl text-sm hover:bg-blue-700 transition-colors">
             <Phone className="w-4 h-4" /> +91 8000 123 456
           </a>
-          <a href="mailto:support@gosafe.in" className="inline-flex items-center gap-2 bg-white text-gray-700 font-medium px-5 py-2.5 rounded-xl text-sm border border-gray-200 hover:border-blue-200 transition-colors">
+          <a href="mailto:support@gosafe.in" className="inline-flex items-center gap-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-medium px-5 py-2.5 rounded-xl text-sm border border-gray-200 dark:border-gray-800 hover:border-blue-200 transition-colors">
             <Mail className="w-4 h-4" /> support@gosafe.in
           </a>
-          <a href="#" className="inline-flex items-center gap-2 bg-white text-gray-700 font-medium px-5 py-2.5 rounded-xl text-sm border border-gray-200 hover:border-blue-200 transition-colors">
+          <a href="https://wa.me/918000123456" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-medium px-5 py-2.5 rounded-xl text-sm border border-gray-200 dark:border-gray-800 hover:border-blue-200 transition-colors">
             <MessageCircle className="w-4 h-4" /> WhatsApp
           </a>
         </div>

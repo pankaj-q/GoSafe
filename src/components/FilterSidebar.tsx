@@ -18,6 +18,8 @@ const timeSlots = [
 const operators = ['Royal Travels', 'Shree Balaji', 'Hans Travels', 'Varanasi Express', 'Maa Vaishno', 'Pawna Travels']
 const boardingPoints = ['ISBT Kashmere Gate', 'Anand Vihar', 'DND Flyway', 'Sarai Kale Khan', 'Karol Bagh']
 const droppingPoints = ['Varanasi Junction', 'Lanka (BHU)', 'Mughal Sarai', 'Sarnath']
+const priceRanges = ['Under ₹499', '₹500 – ₹999', '₹1,000 – ₹1,499', '₹1,500+']
+const amenities = ['Wi-Fi', 'Charging Point', 'Water Bottle', 'Blanket', 'Reading Light', 'Live Tracking', 'Entertainment']
 
 interface FilterSidebarProps {
   isOpen: boolean
@@ -31,6 +33,11 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
   })
   const toggle = (key: string) => setExpanded(p => ({ ...p, [key]: !p[key] }))
 
+  const [quickPrices, setQuickPrices] = useState<string[]>([])
+  const [quickAmenities, setQuickAmenities] = useState<string[]>([])
+  const togglePrice = (p: string) => setQuickPrices(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p])
+  const toggleAmenity = (a: string) => setQuickAmenities(prev => prev.includes(a) ? prev.filter(x => x !== a) : [...prev, a])
+
   return (
     <>
       {isOpen && (
@@ -38,26 +45,72 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
       )}
       <aside className={`
         fixed lg:sticky top-0 lg:top-24 z-50 lg:z-0
-        w-72 lg:w-64 bg-white border-r lg:border border-gray-200 lg:rounded-xl lg:shadow-sm
+        w-72 lg:w-64 bg-white dark:bg-gray-900 border-r lg:border border-gray-200 dark:border-gray-700 lg:rounded-xl lg:shadow-sm
         transition-transform duration-300
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         ${isOpen ? '' : 'lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto'}
       `}>
-        <div className="sticky top-0 bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between lg:hidden z-10">
-          <span className="font-semibold text-sm text-gray-900 flex items-center gap-2">
+        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-4 py-3 flex items-center justify-between lg:hidden z-10">
+          <span className="font-semibold text-sm text-gray-900 dark:text-gray-100 flex items-center gap-2">
             Filters
           </span>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg">
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <div className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-8rem)]">
+          {/* Quick Price Toggles */}
+          <div className="mb-2">
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">Quick price</span>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {priceRanges.map(p => {
+                const active = quickPrices.includes(p)
+                return (
+                  <button
+                    key={p}
+                    onClick={() => togglePrice(p)}
+                    className={`text-xs px-2.5 py-1.5 rounded-full border transition-all ${
+                      active
+                        ? 'border-blue-600 bg-blue-600 text-white shadow-sm'
+                        : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 dark:hover:text-blue-400'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Quick Amenity Toggles */}
+          <div className="mb-2">
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">Amenities</span>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {amenities.map(a => {
+                const active = quickAmenities.includes(a)
+                return (
+                  <button
+                    key={a}
+                    onClick={() => toggleAmenity(a)}
+                    className={`text-xs px-2.5 py-1.5 rounded-full border transition-all ${
+                      active
+                        ? 'border-blue-600 bg-blue-600 text-white shadow-sm'
+                        : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 dark:hover:text-blue-400'
+                    }`}
+                  >
+                    {a}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
           {/* Popular Routes */}
           <FilterSection title="Popular Routes" icon={TrendingUp} expanded={expanded.popular} onToggle={() => toggle('popular')}>
             <div className="flex flex-wrap gap-1.5">
               {popularRoutes.map(([from, to]) => (
-                <button key={`${from}-${to}`} className="text-xs px-2.5 py-1.5 rounded-full border border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all">
+                <button key={`${from}-${to}`} className="text-xs px-2.5 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 dark:hover:text-blue-400 transition-all">
                   {from} → {to}
                 </button>
               ))}
@@ -70,7 +123,7 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
               {busTypes.map(type => (
                 <label key={type} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{type}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100">{type}</span>
                 </label>
               ))}
             </div>
@@ -82,7 +135,7 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
               {seatTypes.map(st => (
                 <label key={st} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{st}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100">{st}</span>
                 </label>
               ))}
             </div>
@@ -95,7 +148,7 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
                 <label key={ts.label} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
                   <span className="text-sm text-gray-700 group-hover:text-gray-900">
-                    {ts.label} <span className="text-gray-400 text-xs">({ts.sub})</span>
+                    {ts.label} <span className="text-gray-400 dark:text-gray-500 text-xs">({ts.sub})</span>
                   </span>
                 </label>
               ))}
@@ -109,7 +162,7 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
                 <label key={ts.label} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
                   <span className="text-sm text-gray-700 group-hover:text-gray-900">
-                    {ts.label} <span className="text-gray-400 text-xs">({ts.sub})</span>
+                    {ts.label} <span className="text-gray-400 dark:text-gray-500 text-xs">({ts.sub})</span>
                   </span>
                 </label>
               ))}
@@ -122,7 +175,7 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
               {boardingPoints.map(bp => (
                 <label key={bp} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{bp}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100">{bp}</span>
                 </label>
               ))}
             </div>
@@ -134,7 +187,7 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
               {droppingPoints.map(dp => (
                 <label key={dp} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{dp}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100">{dp}</span>
                 </label>
               ))}
             </div>
@@ -146,7 +199,7 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
               {operators.map(op => (
                 <label key={op} className="flex items-center gap-2.5 cursor-pointer group py-0.5">
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900">{op}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100">{op}</span>
                 </label>
               ))}
             </div>
@@ -154,8 +207,8 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
         </div>
 
         {/* Apply / Clear — sticky at bottom */}
-        <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 flex gap-2">
-          <button className="flex-1 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+        <div className="sticky bottom-0 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 p-4 flex gap-2">
+          <button className="flex-1 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
             Clear
           </button>
           <button className="flex-1 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
@@ -169,17 +222,17 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
 
 function FilterSection({ title, icon: Icon, expanded, onToggle, children }: { title: string; icon?: React.ComponentType<{ className?: string }>; expanded: boolean; onToggle: () => void; children: React.ReactNode }) {
   return (
-    <div className="border-b border-gray-50 last:border-0">
+    <div className="border-b border-gray-50 dark:border-gray-800 last:border-0">
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between py-2.5 text-sm font-semibold text-gray-900"
+        className="w-full flex items-center justify-between py-2.5 text-sm font-semibold text-gray-900 dark:text-gray-100"
       >
         <span className="flex items-center gap-2">
-          {Icon && <Icon className="w-3.5 h-3.5 text-gray-400" />}
+          {Icon && <Icon className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />}
           {title}
         </span>
-        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform ${expanded ? 'rotate-180' : ''}`} />
       </button>
       {expanded && <div className="pb-3">{children}</div>}
     </div>

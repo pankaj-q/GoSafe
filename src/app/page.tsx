@@ -105,7 +105,7 @@ export default function Home() {
           </div>
 
           {/* Search card */}
-          <div className="max-w-3xl mx-auto bg-white rounded-2xl p-4 sm:p-6 shadow-2xl ring-1 ring-black/5">
+          <div className="max-w-3xl mx-auto bg-white dark:bg-gray-900 rounded-2xl p-4 sm:p-6 shadow-2xl ring-1 ring-black/5">
             <SearchBar />
           </div>
 
@@ -136,8 +136,8 @@ export default function Home() {
       <section className="gosafe-container py-8 sm:py-10">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Popular Bus Routes</h2>
-            <p className="text-xs text-gray-500 mt-0.5">Most searched routes by travellers</p>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Popular Bus Routes</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Most searched routes by travellers</p>
           </div>
           <Link href="/search" className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1">
             View All <ArrowRight className="w-3.5 h-3.5" />
@@ -148,20 +148,20 @@ export default function Home() {
             <Link
               key={i}
               href={`/search?source=${encodeURIComponent(route.from)}&destination=${encodeURIComponent(route.to)}&date=${new Date().toISOString().split('T')[0]}`}
-              className="group relative gosafe-card p-3.5 hover:border-blue-200 transition-all hover:-translate-y-0.5"
+              className="group relative gosafe-card p-3.5 hover:border-blue-200 dark:bg-gray-900 dark:border-gray-800 transition-all hover:-translate-y-0.5"
               aria-label={`Bus from ${route.from} to ${route.to}`}
             >
-              <div className="flex items-center gap-1.5 text-sm font-medium text-gray-800">
+              <div className="flex items-center gap-1.5 text-sm font-medium text-gray-800 dark:text-gray-300">
                 <span>{route.from}</span>
                 <ArrowRight className="w-3 h-3 text-blue-400 group-hover:translate-x-0.5 transition-transform" />
                 <span>{route.to}</span>
               </div>
-              <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+              <div className="flex items-center justify-between mt-2 text-xs text-gray-500 dark:text-gray-400">
                 <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   {route.duration}
                 </span>
-                <span className="font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md text-[11px]">
+                <span className="font-semibold text-blue-600 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-md text-[11px]">
                   {route.fare}
                 </span>
               </div>
@@ -172,11 +172,11 @@ export default function Home() {
       </section>
 
       {/* ============ HOW IT WORKS ============ */}
-      <section className="bg-white border-t border-gray-100">
+      <section className="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
           <div className="text-center mb-8">
-            <h2 className="text-lg font-bold text-gray-900">How GoSafe Works</h2>
-            <p className="text-xs text-gray-500 mt-1">Book your bus ticket in 3 simple steps</p>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">How GoSafe Works</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Book your bus ticket in 3 simple steps</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto">
             {howItWorks.map((step, i) => {
@@ -184,16 +184,16 @@ export default function Home() {
               return (
                 <div key={i} className="text-center relative">
                   {i < howItWorks.length - 1 && (
-                    <div className="hidden sm:block absolute top-8 left-[60%] w-[80%] h-0.5 border-t-2 border-dashed border-gray-200" />
+                    <div className="hidden sm:block absolute top-8 left-[60%] w-[80%] h-0.5 border-t-2 border-dashed border-gray-200 dark:border-gray-700" />
                   )}
-                  <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-3 relative">
+                  <div className="w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mx-auto mb-3 relative">
                     <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
                       {i + 1}
                     </div>
                     <Icon className="w-6 h-6 text-blue-600" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1">{step.title}</h3>
-                  <p className="text-xs text-gray-500">{step.desc}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-1">{step.title}</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{step.desc}</p>
                 </div>
               )
             })}
@@ -202,22 +202,22 @@ export default function Home() {
       </section>
 
       {/* ============ FEATURES ============ */}
-      <section className="bg-gray-50 border-t border-gray-100">
+      <section className="bg-gray-50 dark:bg-gray-900/60 border-t border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
           <div className="text-center mb-8">
-            <h2 className="text-lg font-bold text-gray-900">Why Choose GoSafe?</h2>
-            <p className="text-xs text-gray-500 mt-1">Everything you need for a safe, comfortable journey</p>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Why Choose GoSafe?</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Everything you need for a safe, comfortable journey</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {features.map((f, i) => {
               const Icon = f.icon
               return (
-                <div key={i} className="bg-white rounded-xl p-5 border border-gray-100 hover:border-blue-100 hover:shadow-sm transition-all">
-                  <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
+                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-800 hover:border-blue-100 hover:shadow-sm transition-all">
+                  <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-3">
                     <Icon className="w-5 h-5 text-blue-600" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1">{f.title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">{f.desc}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-1">{f.title}</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{f.desc}</p>
                 </div>
               )
             })}
@@ -276,17 +276,17 @@ export default function Home() {
       {/* ============ FAQ ============ */}
       <section className="gosafe-container py-8 sm:py-10">
         <div className="text-center mb-6">
-          <h2 className="text-lg font-bold text-gray-900">Frequently Asked Questions</h2>
-          <p className="text-xs text-gray-500 mt-0.5">Everything you need to know about bus booking on GoSafe</p>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Everything you need to know about bus booking on GoSafe</p>
         </div>
         <div className="max-w-2xl mx-auto space-y-2.5">
           {faqData.map((faq, i) => (
-            <details key={i} className="group bg-white rounded-xl border border-gray-100 p-4 open:border-blue-200 open:shadow-sm transition-all">
-              <summary className="font-medium text-sm text-gray-900 cursor-pointer list-none flex items-center justify-between gap-4">
+            <details key={i} className="group bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 open:border-blue-200 dark:open:border-blue-500/40 open:shadow-sm transition-all">
+              <summary className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer list-none flex items-center justify-between gap-4">
                 {faq.question}
-                <ChevronRight className="w-4 h-4 text-gray-400 group-open:rotate-90 transition-transform shrink-0" />
+                <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 group-open:rotate-90 transition-transform shrink-0" />
               </summary>
-              <p className="mt-2 text-sm text-gray-600 leading-relaxed">{faq.answer}</p>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{faq.answer}</p>
             </details>
           ))}
         </div>

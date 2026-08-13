@@ -89,17 +89,17 @@ export default function CareersPage() {
       </section>
 
       {/* Perks */}
-      <section className="bg-white border-b border-gray-100">
+      <section className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
-          <h2 className="text-lg font-bold text-gray-900 text-center mb-6">Why Join GoSafe?</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 text-center mb-6">Why Join GoSafe?</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
             {perks.map(p => {
               const Icon = p.icon
               return (
                 <div key={p.title} className="text-center">
                   <Icon className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-                  <h3 className="font-semibold text-gray-900 text-sm mb-0.5">{p.title}</h3>
-                  <p className="text-xs text-gray-500">{p.desc}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-0.5">{p.title}</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{p.desc}</p>
                 </div>
               )
             })}
@@ -110,8 +110,8 @@ export default function CareersPage() {
       {/* Culture */}
       <section className="gosafe-container py-10">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Our Culture</h2>
-          <div className="text-sm text-gray-600 leading-relaxed space-y-3">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Our Culture</h2>
+          <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed space-y-3">
             <p>
               At GoSafe, we believe great work happens when people have autonomy, trust, and purpose.
               We are a remote-first team spread across India — from Delhi to Bangalore, Jaipur to Pune.
@@ -131,27 +131,27 @@ export default function CareersPage() {
       </section>
 
       {/* Openings */}
-      <section className="bg-gray-50 border-y border-gray-100">
+      <section className="bg-gray-50 dark:bg-gray-900/60 border-y border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
-          <h2 className="text-lg font-bold text-gray-900 text-center mb-6">Open Positions</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 text-center mb-6">Open Positions</h2>
           <div className="max-w-3xl mx-auto space-y-3">
             {openings.map((job, i) => (
-              <div key={i} className="bg-white rounded-xl p-5 border border-gray-100 hover:border-blue-100 hover:shadow-sm transition-all">
+              <div key={i} className="bg-white dark:bg-gray-900 rounded-xl p-5 border border-gray-100 dark:border-gray-800 hover:border-blue-100 hover:shadow-sm transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                   <div>
-                    <h3 className="font-semibold text-gray-900 text-sm">{job.title}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{job.title}</h3>
                     <div className="flex flex-wrap items-center gap-3 mt-1.5">
-                      <span className="flex items-center gap-1 text-xs text-gray-500">
+                      <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                         <Briefcase className="w-3 h-3" /> {job.dept}
                       </span>
-                      <span className="flex items-center gap-1 text-xs text-gray-500">
+                      <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                         <MapPin className="w-3 h-3" /> {job.location}
                       </span>
-                      <span className="flex items-center gap-1 text-xs text-gray-500">
+                      <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                         <Clock className="w-3 h-3" /> {job.type}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-2 leading-relaxed">{job.desc}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">{job.desc}</p>
                   </div>
                   <button className="shrink-0 bg-blue-600 text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                     Apply Now
@@ -165,8 +165,8 @@ export default function CareersPage() {
 
       {/* CTA */}
       <section className="gosafe-container py-10 text-center">
-        <h2 className="text-lg font-bold text-gray-900 mb-1">Don&apos;t see the right role?</h2>
-        <p className="text-sm text-gray-500 mb-4">We&apos;re always looking for great people. Send us your resume.</p>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">Don&apos;t see the right role?</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">We&apos;re always looking for great people. Send us your resume.</p>
         <a
           href="mailto:careers@gosafe.in"
           className="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm hover:bg-blue-700 transition-colors"

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { Metadata } from 'next'
 import NavHeader from '@/components/NavHeader'
 import Footer from '@/components/Footer'
@@ -53,11 +54,11 @@ const pressReleases = [
 ]
 
 const mediaMentions = [
-  { outlet: 'YourStory', headline: 'How GoSafe is Making Bus Travel Safer in India', url: '#' },
-  { outlet: 'The Hindu BusinessLine', headline: 'Bus Booking Gets a Tech Upgrade with GoSafe', url: '#' },
-  { outlet: 'Inc42', headline: 'Inside GoSafe\'s Playbook for Bus Booking in Bharat', url: '#' },
-  { outlet: 'Business Insider India', headline: 'These 5 Indian Travel Startups Are Disrupting Bus Travel', url: '#' },
-  { outlet: 'Outlook Traveller', headline: 'GoSafe: A New Chapter in Indian Bus Travel', url: '#' },
+  { outlet: 'YourStory', headline: 'How GoSafe is Making Bus Travel Safer in India', url: 'https://yourstory.com' },
+  { outlet: 'The Hindu BusinessLine', headline: 'Bus Booking Gets a Tech Upgrade with GoSafe', url: 'https://www.thehindubusinessline.com' },
+  { outlet: 'Inc42', headline: 'Inside GoSafe\'s Playbook for Bus Booking in Bharat', url: 'https://inc42.com' },
+  { outlet: 'Business Insider India', headline: 'These 5 Indian Travel Startups Are Disrupting Bus Travel', url: 'https://www.businessinsider.in' },
+  { outlet: 'Outlook Traveller', headline: 'GoSafe: A New Chapter in Indian Bus Travel', url: 'https://www.outlookindia.com' },
 ]
 
 export default function PressPage() {
@@ -87,16 +88,16 @@ export default function PressPage() {
       <section className="gosafe-container py-10">
         <div className="flex items-center gap-2 mb-6">
           <Award className="w-5 h-5 text-blue-600" />
-          <h2 className="text-lg font-bold text-gray-900">Press Releases</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Press Releases</h2>
         </div>
         <div className="space-y-4 max-w-3xl">
           {pressReleases.map((pr, i) => (
-            <div key={i} className="bg-white rounded-xl p-5 border border-gray-100 hover:border-blue-100 hover:shadow-sm transition-all">
+            <div key={i} className="bg-white dark:bg-gray-900 rounded-xl p-5 border border-gray-100 dark:border-gray-800 hover:border-blue-100 hover:shadow-sm transition-all">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1.5">{pr.title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed mb-2">{pr.excerpt}</p>
-                  <div className="flex items-center gap-3 text-[10px] text-gray-400">
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-1.5">{pr.title}</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-2">{pr.excerpt}</p>
+                  <div className="flex items-center gap-3 text-[10px] text-gray-400 dark:text-gray-500">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" /> {pr.date}
                     </span>
@@ -105,9 +106,9 @@ export default function PressPage() {
                     </span>
                   </div>
                 </div>
-                <a href="#" className="shrink-0 text-blue-600 hover:text-blue-700 p-1" aria-label="Read full article">
+                <Link href="/blog" className="shrink-0 text-blue-600 hover:text-blue-700 p-1" aria-label="Read full article">
                   <ExternalLink className="w-4 h-4" />
-                </a>
+                </Link>
               </div>
             </div>
           ))}
@@ -115,25 +116,25 @@ export default function PressPage() {
       </section>
 
       {/* Media Mentions */}
-      <section className="bg-gray-50 border-y border-gray-100">
+      <section className="bg-gray-50 dark:bg-gray-900/60 border-y border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
           <div className="flex items-center gap-2 mb-6">
             <TrendingUp className="w-5 h-5 text-blue-600" />
-            <h2 className="text-lg font-bold text-gray-900">Media Mentions</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Media Mentions</h2>
           </div>
           <div className="space-y-3 max-w-3xl">
             {mediaMentions.map((m, i) => (
               <a
                 key={i}
                 href={m.url}
-                className="block bg-white rounded-xl p-4 border border-gray-100 hover:border-blue-100 hover:shadow-sm transition-all"
+                className="block bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-100 dark:border-gray-800 hover:border-blue-100 hover:shadow-sm transition-all"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <span className="text-xs font-semibold text-blue-600">{m.outlet}</span>
-                    <p className="text-sm text-gray-900 mt-0.5">{m.headline}</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100 mt-0.5">{m.headline}</p>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-gray-400 shrink-0" />
+                  <ExternalLink className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0" />
                 </div>
               </a>
             ))}
@@ -143,8 +144,8 @@ export default function PressPage() {
 
       {/* Contact */}
       <section className="gosafe-container py-10 text-center">
-        <h2 className="text-lg font-bold text-gray-900 mb-1">Media Inquiries</h2>
-        <p className="text-sm text-gray-500 mb-4">For press and media related queries</p>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">Media Inquiries</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">For press and media related queries</p>
         <a
           href="mailto:press@gosafe.in"
           className="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm hover:bg-blue-700 transition-colors"

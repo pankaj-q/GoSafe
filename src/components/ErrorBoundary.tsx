@@ -35,11 +35,11 @@ export default class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="flex flex-col items-center justify-center min-h-[300px] p-8 text-center">
-          <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mb-4">
+          <div className="w-14 h-14 rounded-full bg-red-100 dark:bg-red-500/10 flex items-center justify-center mb-4">
             <AlertTriangle className="w-7 h-7 text-red-500" />
           </div>
-          <h2 className="text-lg font-bold text-gray-900 mb-1">Something went wrong</h2>
-          <p className="text-sm text-gray-500 mb-4 max-w-md">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">Something went wrong</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 max-w-md">
             We encountered an unexpected error. Please try again.
           </p>
           <button

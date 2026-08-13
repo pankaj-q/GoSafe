@@ -100,7 +100,7 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
     return (
       <>
         <NavHeader />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
       </>
@@ -111,9 +111,9 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
     return (
       <>
         <NavHeader />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-gray-500 text-sm mb-4">{error || 'Data not available'}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">{error || 'Data not available'}</p>
             <button onClick={() => router.back()} className="text-blue-600 font-medium text-sm">Go back</button>
           </div>
         </div>
@@ -249,17 +249,17 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
   return (
     <>
       <NavHeader />
-      <main className="min-h-screen bg-gray-50 pb-24">
-        <div className="bg-white border-b border-gray-200">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-950 pb-24">
+        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
           <div className="gosafe-container py-3">
             <div className="flex items-center gap-2 text-sm">
               {[1, 2, 3].map(s => (
                 <div key={s} className="flex items-center gap-1.5 flex-1">
-                  <div className={`flex items-center gap-1.5 ${step >= s ? 'text-blue-600' : 'text-gray-400'}`}>
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= s ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}>{s}</div>
+                  <div className={`flex items-center gap-1.5 ${step >= s ? 'text-blue-600' : 'text-gray-400 dark:text-gray-500'}`}>
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= s ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400'}`}>{s}</div>
                     <span className="hidden sm:inline font-medium">{['Seats', 'Details', 'Pay'][s - 1]}</span>
                   </div>
-                  {s < 3 && <div className={`flex-1 h-px ${step > s ? 'bg-blue-600' : 'bg-gray-200'}`} />}
+                  {s < 3 && <div className={`flex-1 h-px ${step > s ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-800'}`} />}
                 </div>
               ))}
             </div>
@@ -271,10 +271,10 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
             <div className="lg:col-span-2 space-y-5">
               {step === 1 && (
                 <div className="animate-fade-in">
-                  <div className="gosafe-card p-5">
+                  <div className="gosafe-card dark:bg-gray-900 dark:border-gray-800 p-5">
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="font-bold text-gray-900">Select Your Seats</h2>
-                      <div className="text-xs text-gray-500">{busData.operatorName} · {schedule.departureTime} - {schedule.arrivalTime}</div>
+                      <h2 className="font-bold text-gray-900 dark:text-gray-100">Select Your Seats</h2>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{busData.operatorName} · {schedule.departureTime} - {schedule.arrivalTime}</div>
                     </div>
                     <SeatLayout seats={seats} selectedSeats={selectedSeatIds} onSeatToggle={handleSeatToggle} />
                     {errors.seats && <p className="text-red-500 text-xs mt-2">{errors.seats}</p>}
@@ -289,22 +289,22 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
 
               {step === 2 && (
                 <div className="animate-fade-in space-y-5">
-                  <div className="gosafe-card p-5">
-                    <h2 className="font-bold text-gray-900 mb-4">Contact Details</h2>
+                  <div className="gosafe-card dark:bg-gray-900 dark:border-gray-800 p-5">
+                    <h2 className="font-bold text-gray-900 dark:text-gray-100 mb-4">Contact Details</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="sm:col-span-2">
                         <label className="gosafe-label">Full Name</label>
-                        <input type="text" value={contactName} onChange={e => setContactName(e.target.value)} placeholder="Your name" className={`gosafe-input ${errors.contactName ? 'gosafe-input-error' : ''}`} />
+                        <input type="text" value={contactName} onChange={e => setContactName(e.target.value)} placeholder="Your name" className={`gosafe-input dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 ${errors.contactName ? 'gosafe-input-error' : ''}`} />
                         {errors.contactName && <p className="text-red-500 text-xs mt-1">{errors.contactName}</p>}
                       </div>
                       <div>
                         <label className="gosafe-label">Phone Number</label>
-                        <input type="tel" value={contactPhone} onChange={e => setContactPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="10-digit mobile number" className={`gosafe-input ${errors.contactPhone ? 'gosafe-input-error' : ''}`} />
+                        <input type="tel" value={contactPhone} onChange={e => setContactPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="10-digit mobile number" className={`gosafe-input dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 ${errors.contactPhone ? 'gosafe-input-error' : ''}`} />
                         {errors.contactPhone && <p className="text-red-500 text-xs mt-1">{errors.contactPhone}</p>}
                       </div>
                       <div>
                         <label className="gosafe-label">Email (optional)</label>
-                        <input type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} placeholder="email@example.com" className={`gosafe-input ${errors.contactEmail ? 'gosafe-input-error' : ''}`} />
+                        <input type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} placeholder="email@example.com" className={`gosafe-input dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 ${errors.contactEmail ? 'gosafe-input-error' : ''}`} />
                         {errors.contactEmail && <p className="text-red-500 text-xs mt-1">{errors.contactEmail}</p>}
                       </div>
                     </div>
@@ -324,30 +324,30 @@ export default function BookingClient({ scheduleId }: { scheduleId: number }) {
 
               {step === 3 && (
                 <div className="animate-fade-in space-y-5">
-                  <div className="gosafe-card p-5">
-                    <h2 className="font-bold text-gray-900 mb-4">Review & Pay</h2>
+                  <div className="gosafe-card dark:bg-gray-900 dark:border-gray-800 p-5">
+                    <h2 className="font-bold text-gray-900 dark:text-gray-100 mb-4">Review & Pay</h2>
                     <div className="space-y-3 text-sm">
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-500">Contact</span>
+                      <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                        <span className="text-gray-500 dark:text-gray-400">Contact</span>
                         <span className="font-medium">{contactName} · {contactPhone}</span>
                       </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-500">Passengers</span>
+                      <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                        <span className="text-gray-500 dark:text-gray-400">Passengers</span>
                         <span className="font-medium">{passengers.filter(p => p.name).map(p => p.name).join(', ')}</span>
                       </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-500">Seats</span>
+                      <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                        <span className="text-gray-500 dark:text-gray-400">Seats</span>
                         <span className="font-medium">{selectedSeatsData.map(s => s.seatNumber).join(', ')}</span>
                       </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-500">Insurance</span>
+                      <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                        <span className="text-gray-500 dark:text-gray-400">Insurance</span>
                         <span className="font-medium">{insuranceOpted ? formatCurrency(insurancePremium) : 'Not opted'}</span>
                       </div>
                     </div>
                   </div>
 
                   {errors.submit && (
-                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">{errors.submit}</div>
+                    <div className="p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg text-sm text-red-600 dark:text-red-400">{errors.submit}</div>
                   )}
 
                   <div className="flex justify-between">

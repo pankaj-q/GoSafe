@@ -139,6 +139,7 @@ export default function MyBookingsPage() {
   const stats = computeStats(bookings)
   const upcoming = stats.upcoming
   const daysToGo = upcoming ? daysUntil(upcoming.journeyDate) : 0
+  const destCity = upcoming?.schedule.route.dest.name || stats.topSource || 'India'
 
   function copyCode(code: string) {
     navigator.clipboard?.writeText(code).catch(() => {})
@@ -150,7 +151,7 @@ export default function MyBookingsPage() {
     return (
       <>
         <NavHeader />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
       </>
@@ -166,12 +167,12 @@ export default function MyBookingsPage() {
   return (
     <>
       <NavHeader />
-      <main className="min-h-screen bg-gray-50">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
         <div className="gosafe-container py-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">My Account</h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Account</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 {name ? `Hello, ${name}` : 'Your booking history'}
               </p>
             </div>
@@ -187,7 +188,7 @@ export default function MyBookingsPage() {
           ) : (
             <div className="space-y-6">
               {bookings.length > 0 && (
-                <section className="rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <section className="rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
                   <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 px-6 py-6 text-white">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                       <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-xl font-bold shrink-0">
@@ -218,20 +219,20 @@ export default function MyBookingsPage() {
               <AdSlot format="leaderboard" className="my-1" />
 
               {upcoming && (
-                <section className="rounded-2xl border border-blue-100 bg-white shadow-sm p-5">
+                <section className="rounded-2xl border border-blue-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm p-5">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center shrink-0">
                         <Flame className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide">
                           Your next trip {daysToGo === 0 ? 'is today' : `in ${daysToGo} day${daysToGo > 1 ? 's' : ''}`}
                         </p>
-                        <p className="font-bold text-gray-900 mt-0.5">
+                        <p className="font-bold text-gray-900 dark:text-gray-100 mt-0.5">
                           {upcoming.schedule.route.source.name} → {upcoming.schedule.route.dest.name}
                         </p>
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                           {formatDate(upcoming.journeyDate)} · {upcoming.schedule.departureTime}
                         </p>
                       </div>
@@ -274,25 +275,25 @@ export default function MyBookingsPage() {
               )}
 
               {bookings.length > 0 && stats.popularRoutes.length > 0 && (
-                <section className="rounded-2xl border border-gray-100 bg-white shadow-sm p-5">
+                <section className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm p-5">
                   <div className="flex items-center gap-2 mb-4">
                     <TrendingDown className="w-4 h-4 text-emerald-600" />
-                    <h3 className="font-bold text-gray-900">Save on your regular routes</h3>
+                    <h3 className="font-bold text-gray-900 dark:text-gray-100">Save on your regular routes</h3>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {stats.popularRoutes.slice(0, 4).map(r => (
                       <Link
                         key={`deal-${r.source}-${r.dest}`}
                         href={`/search?source=${encodeURIComponent(r.source)}&destination=${encodeURIComponent(r.dest)}`}
-                        className="rounded-xl border border-dashed border-emerald-200 bg-emerald-50/50 p-4 hover:bg-emerald-50 hover:border-emerald-300 transition-colors"
+                        className="rounded-xl border border-dashed border-emerald-200 dark:border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-500/10 p-4 hover:bg-emerald-50 dark:hover:bg-emerald-500/20 hover:border-emerald-300 transition-colors"
                       >
                         <div className="flex items-center justify-between">
-                          <p className="font-semibold text-gray-900 text-sm">{r.source} → {r.dest}</p>
-                          <span className="text-xs font-bold text-emerald-700 bg-emerald-100 rounded-full px-2 py-0.5">
+                          <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{r.source} → {r.dest}</p>
+                          <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-500/20 rounded-full px-2 py-0.5">
                             Up to 12% off
                           </span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1.5">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
                           You travelled this {r.count} time{r.count > 1 ? 's' : ''} · Book again for member pricing
                         </p>
                       </Link>
@@ -305,11 +306,11 @@ export default function MyBookingsPage() {
 
               <section>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                  <h3 className="font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                     <Gift className="w-4 h-4 text-blue-600" />
                     Offers for you
                   </h3>
-                  <span className="text-xs text-gray-400">Tap a code to copy</span>
+                  <span className="text-xs text-gray-400 dark:text-gray-500">Tap a code to copy</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {offers.map(offer => (
@@ -335,7 +336,7 @@ export default function MyBookingsPage() {
               {bookings.length > 0 && stats.popularRoutes.length > 0 && (
                 <section>
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                    <h3 className="font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                       <Route className="w-4 h-4 text-blue-600" />
                       Your favourite routes
                     </h3>
@@ -348,20 +349,20 @@ export default function MyBookingsPage() {
                       <Link
                         key={`${r.source}-${r.dest}`}
                         href={`/search?source=${encodeURIComponent(r.source)}&destination=${encodeURIComponent(r.dest)}`}
-                        className="flex items-center gap-3 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all p-4"
+                        className="flex items-center gap-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-blue-100 transition-all p-4"
                       >
-                        <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center shrink-0">
                           <Bus className="w-5 h-5 text-blue-600" />
                         </div>
                         <div className="min-w-0">
-                          <p className="font-semibold text-gray-900 text-sm truncate">
+                          <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm truncate">
                             {r.source} → {r.dest}
                           </p>
-                          <p className="text-xs text-gray-400 mt-0.5">
+                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                             Travelled {r.count} time{r.count > 1 ? 's' : ''}
                           </p>
                         </div>
-                        <ChevronRight className="w-4 h-4 text-gray-300 ml-auto shrink-0" />
+                        <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-600 ml-auto shrink-0" />
                       </Link>
                     ))}
                   </div>
@@ -373,19 +374,20 @@ export default function MyBookingsPage() {
               <section>
                 <div className="flex items-center gap-2 mb-3">
                   <Camera className="w-4 h-4 text-blue-600" />
-                  <h3 className="font-bold text-gray-900">Experiences worth adding</h3>
+                  <h3 className="font-bold text-gray-900 dark:text-gray-100">Experiences worth adding</h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <a
-                    href="#"
-                    onClick={e => e.preventDefault()}
-                    className="rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all p-5"
+                    href={`https://www.google.com/search?q=${encodeURIComponent(`${destCity} hotels`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-blue-100 transition-all p-5"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center">
                       <Hotel className="w-5 h-5 text-amber-600" />
                     </div>
-                    <p className="font-semibold text-gray-900 text-sm mt-3">Hotels & Stays</p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm mt-3">Hotels & Stays</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       {upcoming
                         ? `Verified stays near ${upcoming.schedule.route.dest.name}`
                         : stats.topSource
@@ -394,26 +396,28 @@ export default function MyBookingsPage() {
                     </p>
                   </a>
                   <a
-                    href="#"
-                    onClick={e => e.preventDefault()}
-                    className="rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all p-5"
+                    href={`https://www.google.com/search?q=${encodeURIComponent(`${destCity} restaurants`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-blue-100 transition-all p-5"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center">
                       <UtensilsCrossed className="w-5 h-5 text-emerald-600" />
                     </div>
-                    <p className="font-semibold text-gray-900 text-sm mt-3">Food & Cafés</p>
-                    <p className="text-xs text-gray-500 mt-1">Local favourites and hidden gems at your destination</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm mt-3">Food & Cafés</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Local favourites and hidden gems at your destination</p>
                   </a>
                   <a
-                    href="#"
-                    onClick={e => e.preventDefault()}
-                    className="rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all p-5"
+                    href={`https://www.google.com/search?q=${encodeURIComponent(`${destCity} tourist attractions`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-blue-100 transition-all p-5"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center">
                       <Camera className="w-5 h-5 text-blue-600" />
                     </div>
-                    <p className="font-semibold text-gray-900 text-sm mt-3">Tours & Activities</p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm mt-3">Tours & Activities</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       {upcoming
                         ? `Tours in ${upcoming.schedule.route.dest.name}`
                         : 'Curated tours from chaperoned guides'}
@@ -424,13 +428,13 @@ export default function MyBookingsPage() {
 
               <section>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-bold text-gray-900">Booking History</h3>
-                  <span className="text-xs text-gray-400">{bookings.length} total</span>
+                  <h3 className="font-bold text-gray-900 dark:text-gray-100">Booking History</h3>
+                  <span className="text-xs text-gray-400 dark:text-gray-500">{bookings.length} total</span>
                 </div>
                 {bookings.length === 0 ? (
-                  <div className="text-center py-14 rounded-xl border border-dashed border-gray-200 bg-white">
-                    <Frown className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                    <p className="text-gray-500 text-sm mb-4">No bookings yet</p>
+                  <div className="text-center py-14 rounded-xl border border-dashed border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+                    <Frown className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">No bookings yet</p>
                     <Link href="/search" className="gosafe-btn gosafe-btn-primary">
                       Book Your First Ticket
                     </Link>
@@ -441,27 +445,27 @@ export default function MyBookingsPage() {
                       <Link
                         key={booking.id}
                         href={`/confirmation/${booking.id}`}
-                        className="block bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all p-4 sm:p-5"
+                        className="block bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-blue-100 transition-all p-4 sm:p-5"
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                           <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+                            <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center shrink-0">
                               <Bus className="w-5 h-5 text-blue-600" />
                             </div>
                             <div className="min-w-0">
                               <div className="flex items-center gap-2">
-                                <span className="font-semibold text-gray-900 text-sm truncate">
+                                <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm truncate">
                                   {booking.schedule.route.source.name} → {booking.schedule.route.dest.name}
                                 </span>
                                 <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                                  booking.status === 'CONFIRMED' ? 'bg-green-100 text-green-700' :
-                                  booking.status === 'CANCELLED' ? 'bg-red-100 text-red-700' :
-                                  'bg-amber-100 text-amber-700'
+                                  booking.status === 'CONFIRMED' ? 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400' :
+                                  booking.status === 'CANCELLED' ? 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400' :
+                                  'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400'
                                 }`}>
                                   {booking.status}
                                 </span>
                               </div>
-                              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-gray-500">
+                              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
                                 <span className="flex items-center gap-1">
                                   <Calendar className="w-3 h-3" />
                                   {new Date(booking.journeyDate).toLocaleDateString('en-IN')}
@@ -479,13 +483,13 @@ export default function MyBookingsPage() {
                           </div>
                           <div className="flex items-center gap-3 shrink-0">
                             <div className="text-right">
-                              <div className="text-sm font-bold text-gray-900 flex items-center gap-0.5">
+                              <div className="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-0.5">
                                 <IndianRupee className="w-3 h-3" />
                                 {formatCurrency(booking.totalAmount)}
                               </div>
-                              <div className="text-[10px] text-gray-400">Ref: {booking.referenceCode}</div>
+                              <div className="text-[10px] text-gray-400 dark:text-gray-500">Ref: {booking.referenceCode}</div>
                             </div>
-                            <ChevronRight className="w-4 h-4 text-gray-300" />
+                            <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-600" />
                           </div>
                         </div>
                       </Link>

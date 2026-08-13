@@ -93,8 +93,8 @@ export default function PrivacyPage() {
       </section>
 
       {/* Introduction */}
-      <section className="gosafe-container py-8 border-b border-gray-100">
-        <div className="max-w-3xl mx-auto text-sm text-gray-600 leading-relaxed">
+      <section className="gosafe-container py-8 border-b border-gray-100 dark:border-gray-800">
+        <div className="max-w-3xl mx-auto text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
           <p>
             GoSafe Technologies Pvt. Ltd. (&ldquo;GoSafe,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;)
             is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose,
@@ -115,14 +115,14 @@ export default function PrivacyPage() {
             return (
               <div key={s.title}>
                 <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center">
                     <Icon className="w-5 h-5 text-blue-600" />
                   </div>
-                  <h2 className="text-base font-bold text-gray-900">{s.title}</h2>
+                  <h2 className="text-base font-bold text-gray-900 dark:text-gray-100">{s.title}</h2>
                 </div>
                 <ul className="space-y-2">
                   {s.content.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                    <li key={i} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
                       <span className="text-blue-600 mt-1.5 shrink-0">•</span>
                       <span>{item}</span>
                     </li>
@@ -135,11 +135,11 @@ export default function PrivacyPage() {
       </section>
 
       {/* Contact */}
-      <section className="bg-gray-50 border-y border-gray-100">
+      <section className="bg-gray-50 dark:bg-gray-900/60 border-y border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-lg font-bold text-gray-900 mb-2">Contact Our Data Protection Officer</h2>
-            <p className="text-sm text-gray-500 mb-5">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Contact Our Data Protection Officer</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">
               If you have any questions about this privacy policy or wish to exercise your data rights, please contact us.
             </p>
             <a
@@ -148,7 +148,7 @@ export default function PrivacyPage() {
             >
               <Mail className="w-4 h-4" /> dpo@gosafe.in
             </a>
-            <p className="text-xs text-gray-400 mt-3">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">
               GoSafe Technologies Pvt. Ltd., B-121, Sector 2, Noida, Uttar Pradesh 201301, India
             </p>
           </div>

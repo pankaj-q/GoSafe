@@ -14,12 +14,12 @@ export default function InsuranceSelector({ opted, premium, coverage, onToggle }
   return (
     <div
       onClick={() => onToggle(!opted)}
-      className={`gosafe-card p-4 cursor-pointer transition-all ${
-        opted ? 'border-blue-400 ring-2 ring-blue-100' : ''
+      className={`gosafe-card dark:bg-gray-900 dark:border-gray-800 p-4 cursor-pointer transition-all ${
+        opted ? 'border-blue-400 dark:ring-blue-500/20 ring-2 ring-blue-100' : ''
       }`}
     >
       <div className="flex items-start gap-3">
-        <div className={`p-2 rounded-lg shrink-0 ${opted ? 'bg-blue-100' : 'bg-gray-100'}`}>
+        <div className={`p-2 rounded-lg shrink-0 ${opted ? 'bg-blue-100 dark:bg-blue-500/20' : 'bg-gray-100 dark:bg-gray-800'}`}>
           {opted ? (
             <ShieldCheck className="w-5 h-5 text-blue-600" />
           ) : (
@@ -28,12 +28,12 @@ export default function InsuranceSelector({ opted, premium, coverage, onToggle }
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
-            <h4 className="font-semibold text-sm text-gray-900">Bus Travel Insurance</h4>
-            <span className={`text-sm font-bold ${opted ? 'text-blue-600' : 'text-gray-500'}`}>
+            <h4 className="font-semibold text-sm text-gray-900 dark:text-gray-100">Bus Travel Insurance</h4>
+            <span className={`text-sm font-bold ${opted ? 'text-blue-600' : 'text-gray-500 dark:text-gray-400'}`}>
               {formatCurrency(premium)}
             </span>
           </div>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             Get covered up to {formatCurrency(coverage)} for accident, journey interruption & baggage loss.
           </p>
           <ul className="mt-2 space-y-1">
@@ -43,17 +43,17 @@ export default function InsuranceSelector({ opted, premium, coverage, onToggle }
               'Baggage loss/damage',
               'Journey cancellation',
             ].map((item, i) => (
-              <li key={i} className="flex items-center gap-1.5 text-xs text-gray-600">
-                <div className={`w-1.5 h-1.5 rounded-full ${opted ? 'bg-blue-500' : 'bg-gray-300'}`} />
+              <li key={i} className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+                <div className={`w-1.5 h-1.5 rounded-full ${opted ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
                 {item}
               </li>
             ))}
           </ul>
           <div className="mt-3">
-            <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${opted ? 'bg-blue-600' : 'bg-gray-300'}`}>
-              <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${opted ? 'translate-x-6' : 'translate-x-1'}`} />
+            <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${opted ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'}`}>
+              <span className={`inline-block h-4 w-4 transform rounded-full bg-white dark:bg-gray-100 transition-transform ${opted ? 'translate-x-6' : 'translate-x-1'}`} />
             </div>
-            <span className="ml-2 text-xs font-medium text-gray-700">
+            <span className="ml-2 text-xs font-medium text-gray-700 dark:text-gray-300">
               {opted ? 'Insurance added' : 'Add for your safety'}
             </span>
           </div>

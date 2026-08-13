@@ -88,7 +88,7 @@ export default function BusCard(props: BusCardProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-200 overflow-hidden group">
+    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-200 overflow-hidden group">
       <div className="p-4 sm:p-5">
         <div className="flex flex-col sm:flex-row gap-4">
           {/* Left — Operator & Thumbnails */}
@@ -98,14 +98,14 @@ export default function BusCard(props: BusCardProps) {
                 {operatorName.charAt(0)}
               </div>
               <div className="text-left">
-                <h3 className="font-semibold text-gray-900 text-sm leading-tight">{operatorName}</h3>
-                <span className="inline-block mt-0.5 text-[10px] font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm leading-tight">{operatorName}</h3>
+                <span className="inline-block mt-0.5 text-[10px] font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-full">
                   {BUS_TYPE_LABELS[busType] || busType.replace(/_/g, ' ')}
                 </span>
                 <div className="flex items-center gap-1 mt-1">
                   <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                  <span className="text-xs font-semibold text-gray-800">{busRating.toFixed(1)}</span>
-                  <span className="text-[10px] text-gray-400">({totalRatings})</span>
+                  <span className="text-xs font-semibold text-gray-800 dark:text-gray-300">{busRating.toFixed(1)}</span>
+                  <span className="text-[10px] text-gray-400 dark:text-gray-500">({totalRatings})</span>
                 </div>
               </div>
             </div>
@@ -113,12 +113,12 @@ export default function BusCard(props: BusCardProps) {
             {busImages.length > 0 && (
               <div className="hidden sm:flex gap-1 mt-2">
                 {busImages.slice(0, 3).map((img, i) => (
-                  <div key={i} className="w-12 h-9 rounded-md overflow-hidden bg-gray-100 relative">
+                  <div key={i} className="w-12 h-9 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800 relative">
                     <Image src={img.url} alt="" fill className="object-cover" sizes="48px" />
                   </div>
                 ))}
                 {busImages.length > 3 && (
-                  <div className="w-12 h-9 rounded-md bg-gray-100 flex items-center justify-center text-[10px] font-medium text-gray-500">
+                  <div className="w-12 h-9 rounded-md bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-[10px] font-medium text-gray-500 dark:text-gray-400">
                     +{busImages.length - 3}
                   </div>
                 )}
@@ -130,11 +130,11 @@ export default function BusCard(props: BusCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3">
               <div className="text-center min-w-[70px]">
-                <div className="text-xl font-bold text-gray-900 leading-none">{departureTime}</div>
-                <div className="text-[10px] text-gray-400 mt-0.5">Departure</div>
+                <div className="text-xl font-bold text-gray-900 dark:text-gray-100 leading-none">{departureTime}</div>
+                <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">Departure</div>
               </div>
               <div className="flex-1 flex flex-col items-center px-2">
-                <div className="text-[11px] font-medium text-gray-500 bg-gray-50 px-2 py-0.5 rounded-full">
+                <div className="text-[11px] font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 px-2 py-0.5 rounded-full">
                   {Math.floor(durationMin / 60)}h {durationMin % 60}m
                 </div>
                 <div className="w-full flex items-center gap-1 my-0.5">
@@ -144,15 +144,15 @@ export default function BusCard(props: BusCardProps) {
                 </div>
               </div>
               <div className="text-center min-w-[70px]">
-                <div className="text-xl font-bold text-gray-900 leading-none">{arrivalTime}</div>
-                <div className="text-[10px] text-gray-400 mt-0.5">Arrival</div>
+                <div className="text-xl font-bold text-gray-900 dark:text-gray-100 leading-none">{arrivalTime}</div>
+                <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">Arrival</div>
               </div>
             </div>
 
             {amenities.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {amenities.slice(0, 5).map(a => (
-                  <span key={a} className="inline-flex items-center gap-1 text-[10px] text-gray-600 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
+                  <span key={a} className="inline-flex items-center gap-1 text-[10px] text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-md border border-gray-100 dark:border-gray-800">
                     {amenityIcons[a] || <ArmchairIcon className="w-3 h-3" />}
                     {a}
                   </span>
@@ -166,7 +166,7 @@ export default function BusCard(props: BusCardProps) {
             {!showSeats && boardingPoints && boardingPoints.length > 0 && (
               <button
                 onClick={() => setShowPoints(!showPoints)}
-                className="mt-2 flex items-center gap-1 text-[11px] text-gray-500 hover:text-blue-600 transition-colors"
+                className="mt-2 flex items-center gap-1 text-[11px] text-gray-500 dark:text-gray-400 hover:text-blue-600 transition-colors"
               >
                 <MapPin className="w-3 h-3" />
                 {showPoints ? 'Hide' : 'View'} boarding & dropping points
@@ -176,10 +176,10 @@ export default function BusCard(props: BusCardProps) {
           </div>
 
           {/* Right — Price + Select Seat */}
-          <div className="sm:w-36 shrink-0 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 sm:gap-3 border-t sm:border-t-0 sm:border-l border-gray-100 pt-3 sm:pt-0 sm:pl-4">
+          <div className="sm:w-36 shrink-0 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 sm:gap-3 border-t sm:border-t-0 sm:border-l border-gray-100 dark:border-gray-800 pt-3 sm:pt-0 sm:pl-4">
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">{formatCurrency(baseFare)}</div>
-              <div className="text-[10px] text-gray-400 -mt-0.5">per seat</div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{formatCurrency(baseFare)}</div>
+              <div className="text-[10px] text-gray-400 dark:text-gray-500 -mt-0.5">per seat</div>
               <div className={`text-[10px] font-medium mt-1 ${seatStatus === 'critical' ? 'text-red-500' : seatStatus === 'low' ? 'text-amber-500' : 'text-green-600'}`}>
                 {availableSeats === 0 ? 'Sold Out' : `${availableSeats} seats`}
               </div>
@@ -188,7 +188,7 @@ export default function BusCard(props: BusCardProps) {
             {showSeats ? (
               <button
                 onClick={() => { setShowSeats(false); setSelectedSeats([]) }}
-                className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all flex items-center justify-center gap-1"
+                className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all flex items-center justify-center gap-1"
               >
                 <X className="w-3 h-3" /> Close Seats
               </button>
@@ -198,7 +198,7 @@ export default function BusCard(props: BusCardProps) {
                 disabled={availableSeats === 0}
                 className={`w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-semibold text-center transition-all flex items-center justify-center gap-1.5 ${
                   availableSeats === 0
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed'
                     : 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow-md active:scale-[0.97]'
                 }`}
               >
@@ -211,19 +211,19 @@ export default function BusCard(props: BusCardProps) {
 
         {/* Boarding/Dropping points */}
         {showPoints && !showSeats && (
-          <div className="mt-3 pt-3 border-t border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs animate-fade-in">
+          <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs animate-fade-in">
             {boardingPoints && boardingPoints.length > 0 && (
               <div>
-                <div className="font-semibold text-gray-800 mb-1.5 flex items-center gap-1.5">
+                <div className="font-semibold text-gray-800 dark:text-gray-300 mb-1.5 flex items-center gap-1.5">
                   <div className="w-2 h-2 rounded-full bg-green-500" />
                   Boarding Points
                 </div>
                 <div className="space-y-1.5">
                   {boardingPoints.map((bp, i) => (
                     <div key={i} className="flex items-center gap-2">
-                      <span className="font-medium text-gray-500 w-12 shrink-0">{bp.time}</span>
+                      <span className="font-medium text-gray-500 dark:text-gray-400 w-12 shrink-0">{bp.time}</span>
                       <div className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
-                      <span className="text-gray-700">{bp.name}</span>
+                      <span className="text-gray-700 dark:text-gray-300">{bp.name}</span>
                     </div>
                   ))}
                 </div>
@@ -231,16 +231,16 @@ export default function BusCard(props: BusCardProps) {
             )}
             {droppingPoints && droppingPoints.length > 0 && (
               <div>
-                <div className="font-semibold text-gray-800 mb-1.5 flex items-center gap-1.5">
+                <div className="font-semibold text-gray-800 dark:text-gray-300 mb-1.5 flex items-center gap-1.5">
                   <div className="w-2 h-2 rounded-full bg-red-500" />
                   Dropping Points
                 </div>
                 <div className="space-y-1.5">
                   {droppingPoints.map((dp, i) => (
                     <div key={i} className="flex items-center gap-2">
-                      <span className="font-medium text-gray-500 w-12 shrink-0">{dp.time}</span>
+                      <span className="font-medium text-gray-500 dark:text-gray-400 w-12 shrink-0">{dp.time}</span>
                       <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
-                      <span className="text-gray-700">{dp.name}</span>
+                      <span className="text-gray-700 dark:text-gray-300">{dp.name}</span>
                     </div>
                   ))}
                 </div>
@@ -252,13 +252,13 @@ export default function BusCard(props: BusCardProps) {
 
       {/* Inline Seat Layout */}
       {showSeats && (
-        <div className="border-t border-gray-100 bg-gray-50/50 animate-fade-in">
+        <div className="border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/60 animate-fade-in">
           <div className="px-4 sm:px-5 pt-4 pb-0">
-            <div className="flex items-center gap-0 text-xs font-medium border-b border-gray-200">
-              <span className="px-3 py-2 text-blue-700 border-b-2 border-blue-600 bg-white rounded-t-md">Select Seat</span>
-              <span className="px-3 py-2 text-gray-400 cursor-not-allowed">Review Booking</span>
-              <span className="px-3 py-2 text-gray-400 cursor-not-allowed">Boarding Points</span>
-              <span className="px-3 py-2 text-gray-400 cursor-not-allowed">Cancel Policy</span>
+            <div className="flex items-center gap-0 text-xs font-medium border-b border-gray-200 dark:border-gray-800">
+              <span className="px-3 py-2 text-blue-700 dark:text-blue-300 border-b-2 border-blue-600 bg-white dark:bg-gray-900 rounded-t-md">Select Seat</span>
+              <span className="px-3 py-2 text-gray-400 dark:text-gray-500 cursor-not-allowed">Review Booking</span>
+              <span className="px-3 py-2 text-gray-400 dark:text-gray-500 cursor-not-allowed">Boarding Points</span>
+              <span className="px-3 py-2 text-gray-400 dark:text-gray-500 cursor-not-allowed">Cancel Policy</span>
             </div>
           </div>
 
@@ -284,10 +284,10 @@ export default function BusCard(props: BusCardProps) {
                 />
 
                 {selectedSeats.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <div className="text-sm text-gray-700">
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div className="text-sm text-gray-700 dark:text-gray-300">
                       <strong>{selectedSeats.length}</strong> seat{selectedSeats.length > 1 ? 's' : ''} selected ·
-                      Total: <strong className="text-blue-700 text-base">{formatCurrency(baseFare * selectedSeats.length)}</strong>
+                      Total: <strong className="text-blue-700 dark:text-blue-300 text-base">{formatCurrency(baseFare * selectedSeats.length)}</strong>
                     </div>
                     <Link
                       href={`/booking/${scheduleId}?${queryString || ''}&seats=${selectedSeats.join(',')}`}

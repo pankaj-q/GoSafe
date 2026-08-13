@@ -52,20 +52,20 @@ function SortDropdown({ value, onChange }: { value: SortKey; onChange: (k: SortK
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
       >
-        <ArrowUpDown className="w-3.5 h-3.5 text-gray-400" />
+        <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
         Sort: <span className="text-blue-600">{active?.label}</span>
-        <ChevronDown className={`w-3 h-3 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-3 h-3 text-gray-400 dark:text-gray-500 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-gray-200 rounded-xl shadow-elevated z-30 py-1 animate-fade-in">
+        <div className="absolute right-0 top-full mt-1 w-44 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-elevated z-30 py-1 animate-fade-in">
           {sortOptions.map(o => (
             <button
               key={o.key}
               onClick={() => { onChange(o.key); setOpen(false) }}
               className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${
-                value === o.key ? 'text-blue-700 bg-blue-50 font-semibold' : 'text-gray-700 hover:bg-gray-50'
+                value === o.key ? 'text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
               }`}
             >
               {o.key === 'rating' && <Star className="w-3.5 h-3.5" />}
@@ -136,33 +136,33 @@ function SearchContent({ source, destination, date, queryString }: {
     <>
       <div className="sticky top-0 z-50">
         <NavHeader sticky={false} />
-        <div className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
           <div className="gosafe-container py-2.5 sm:py-3">
             <SearchBar compact initialSource={source} initialDest={destination} updateMode />
           </div>
         </div>
       </div>
 
-      <main className="min-h-screen bg-gray-50">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
         <div className="gosafe-container py-6">
           <div className="flex gap-6">
             <FilterSidebar isOpen={showFilters} onClose={() => setShowFilters(false)} />
 
             <div className="flex-1 min-w-0">
-              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 mb-4">
+              <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 mb-4">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     {loading ? (
-                      <div className="h-5 w-48 bg-gray-200 rounded animate-pulse" />
+                      <div className="h-5 w-48 bg-gray-200 dark:bg-gray-800 rounded animate-pulse" />
                     ) : (
                       <>
-                        <h1 className="text-base font-bold text-gray-900 truncate">
+                        <h1 className="text-base font-bold text-gray-900 dark:text-gray-100 truncate">
                           {source} → {destination}
                         </h1>
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                           {formattedDate}{formattedDate ? ' · ' : ''}
-                          <span className="font-semibold text-gray-700">{available.length}</span> buses
-                          {available.length < sorted.length && <span className="text-gray-400"> ({sorted.length - available.length} sold out)</span>}
+                          <span className="font-semibold text-gray-700 dark:text-gray-300">{available.length}</span> buses
+                          {available.length < sorted.length && <span className="text-gray-400 dark:text-gray-500"> ({sorted.length - available.length} sold out)</span>}
                           <button
                             onClick={() => window.location.reload()}
                             className="ml-2 text-blue-600 hover:text-blue-700 font-medium"
@@ -176,7 +176,7 @@ function SearchContent({ source, destination, date, queryString }: {
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       onClick={() => setShowFilters(true)}
-                      className="lg:hidden flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                      className="lg:hidden flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       <SlidersHorizontal className="w-3.5 h-3.5" />
                       Filters
@@ -191,20 +191,20 @@ function SearchContent({ source, destination, date, queryString }: {
               {loading ? (
                 <div className="space-y-3">
                   {[1, 2, 3].map(i => (
-                    <div key={i} className="bg-white rounded-xl border border-gray-100 p-5 animate-pulse">
+                    <div key={i} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-5 animate-pulse">
                       <div className="flex gap-4">
                         <div className="w-44 shrink-0 space-y-2">
-                          <div className="w-14 h-14 bg-gray-200 rounded-xl" />
-                          <div className="h-3 w-24 bg-gray-200 rounded" />
-                          <div className="h-3 w-16 bg-gray-200 rounded" />
+                          <div className="w-14 h-14 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+                          <div className="h-3 w-24 bg-gray-200 dark:bg-gray-800 rounded" />
+                          <div className="h-3 w-16 bg-gray-200 dark:bg-gray-800 rounded" />
                         </div>
                         <div className="flex-1 space-y-2">
-                          <div className="h-4 w-32 bg-gray-200 rounded" />
-                          <div className="h-3 w-48 bg-gray-200 rounded" />
+                          <div className="h-4 w-32 bg-gray-200 dark:bg-gray-800 rounded" />
+                          <div className="h-3 w-48 bg-gray-200 dark:bg-gray-800 rounded" />
                         </div>
                         <div className="w-36 space-y-2">
-                          <div className="h-5 w-20 bg-gray-200 rounded ml-auto" />
-                          <div className="h-8 w-28 bg-gray-200 rounded ml-auto" />
+                          <div className="h-5 w-20 bg-gray-200 dark:bg-gray-800 rounded ml-auto" />
+                          <div className="h-8 w-28 bg-gray-200 dark:bg-gray-800 rounded ml-auto" />
                         </div>
                       </div>
                     </div>
@@ -212,8 +212,8 @@ function SearchContent({ source, destination, date, queryString }: {
                 </div>
               ) : error ? (
                 <div className="text-center py-20">
-                  <Frown className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500 text-sm mb-4">{error}</p>
+                  <Frown className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">{error}</p>
                   <button
                     onClick={() => window.location.reload()}
                     className="text-blue-600 font-medium text-sm hover:text-blue-700"
@@ -223,8 +223,8 @@ function SearchContent({ source, destination, date, queryString }: {
                 </div>
               ) : sorted.length === 0 ? (
                 <div className="text-center py-20">
-                  <Frown className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500 text-sm">No buses found for this route.</p>
+                  <Frown className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">No buses found for this route.</p>
                 </div>
               ) : (
                 <div className="space-y-3">

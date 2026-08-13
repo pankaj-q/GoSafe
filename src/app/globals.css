@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @font-face {
   font-family: 'Aquire';
   src: url('/fonts/Aquire.otf') format('opentype');
@@ -45,6 +47,19 @@ body {
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.dark body {
+  background: #0b1220;
+  color: #e2e8f0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @layer components {
@@ -410,6 +425,110 @@ body {
   .seat-seater-locked::before {
     background: #e5e7eb;
   }
+
+  .seat-layout-compact .seat-sleeper {
+    width: 2.5rem;
+    height: 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.4rem;
+  }
+  .seat-layout-compact .seat-sleeper::before {
+    height: 0.2rem;
+    left: 0.35rem;
+    right: 0.35rem;
+  }
+  .seat-layout-compact .seat-seater {
+    width: 1.6rem;
+    height: 2rem;
+    border-radius: 0.25rem 0.25rem 0.5rem 0.5rem;
+    font-size: 0.4rem;
+  }
+  .seat-layout-compact .seat-seater::before {
+    height: 0.18rem;
+    left: 0.25rem;
+    right: 0.25rem;
+  }
+  .seat-layout-compact .seat-sleeper > svg,
+  .seat-layout-compact .seat-seater > svg {
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .seat-layout-compact .seat-sleeper {
+      width: 3rem;
+      height: 1.75rem;
+    }
+    .seat-layout-compact .seat-seater {
+      width: 1.8rem;
+      height: 2.2rem;
+    }
+  }
+}
+
+.dark .seat-sleeper-available {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+}
+.dark .seat-sleeper-selected {
+  background: linear-gradient(180deg, #2563eb, #1d4ed8);
+  color: white;
+}
+.dark .seat-sleeper-booked {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(239, 68, 68, 0.15),
+    rgba(239, 68, 68, 0.15) 4px,
+    rgba(239, 68, 68, 0.2) 4px,
+    rgba(239, 68, 68, 0.2) 8px
+  );
+  color: #f87171;
+}
+.dark .seat-sleeper-pending {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(245, 158, 11, 0.12),
+    rgba(245, 158, 11, 0.12) 4px,
+    rgba(245, 158, 11, 0.18) 4px,
+    rgba(245, 158, 11, 0.18) 8px
+  );
+  color: #fbbf24;
+}
+.dark .seat-sleeper-locked {
+  background: rgba(51, 65, 85, 0.4);
+  color: #64748b;
+  border-color: #475569;
+}
+.dark .seat-seater-available {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+}
+.dark .seat-seater-selected {
+  background: linear-gradient(180deg, #2563eb, #1d4ed8);
+  color: white;
+}
+.dark .seat-seater-booked {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(239, 68, 68, 0.15),
+    rgba(239, 68, 68, 0.15) 4px,
+    rgba(239, 68, 68, 0.2) 4px,
+    rgba(239, 68, 68, 0.2) 8px
+  );
+  color: #f87171;
+}
+.dark .seat-seater-pending {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(245, 158, 11, 0.12),
+    rgba(245, 158, 11, 0.12) 4px,
+    rgba(245, 158, 11, 0.18) 4px,
+    rgba(245, 158, 11, 0.18) 8px
+  );
+  color: #fbbf24;
+}
+.dark .seat-seater-locked {
+  background: rgba(51, 65, 85, 0.4);
+  color: #64748b;
+  border-color: #475569;
 }
 
 @keyframes fadeIn {

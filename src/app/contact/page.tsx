@@ -33,14 +33,14 @@ const contactMethods = [
     title: 'WhatsApp',
     details: '+91 8000 123 456',
     sub: 'Chat with us on WhatsApp',
-    href: '#',
+    href: 'https://wa.me/918000123456',
   },
   {
     icon: MapPin,
     title: 'Office',
     details: 'New Delhi, India',
     sub: 'Mon-Fri, 10:00 AM - 6:00 PM',
-    href: '#',
+    href: 'https://maps.google.com/?q=GoSafe+Technologies+Noida',
   },
 ]
 
@@ -73,12 +73,12 @@ export default function ContactPage() {
               <a
                 key={m.title}
                 href={m.href}
-                className="bg-white rounded-xl p-5 border border-gray-100 hover:border-blue-100 hover:shadow-sm transition-all text-center"
+                className="bg-white dark:bg-gray-900 rounded-xl p-5 border border-gray-100 dark:border-gray-800 hover:border-blue-100 hover:shadow-sm transition-all text-center"
               >
                 <Icon className="w-6 h-6 text-blue-600 mx-auto mb-2.5" />
-                <h3 className="font-semibold text-gray-900 text-sm">{m.title}</h3>
-                <p className="text-xs text-gray-900 mt-0.5 font-medium">{m.details}</p>
-                <p className="text-[10px] text-gray-500 mt-0.5">{m.sub}</p>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{m.title}</h3>
+                <p className="text-xs text-gray-900 dark:text-gray-100 mt-0.5 font-medium">{m.details}</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">{m.sub}</p>
               </a>
             )
           })}
@@ -86,38 +86,38 @@ export default function ContactPage() {
       </section>
 
       {/* Form & Map */}
-      <section className="bg-gray-50 border-y border-gray-100">
+      <section className="bg-gray-50 dark:bg-gray-900/60 border-y border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
           <div className="grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Contact Form */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Send us a message</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Send us a message</h2>
               <form className="space-y-4">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="name" className="block text-xs font-medium text-gray-700 mb-1">Full Name</label>
+                    <label htmlFor="name" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
                     <input
                       id="name"
                       type="text"
                       placeholder="Your name"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-xs font-medium text-gray-700 mb-1">Email Address</label>
+                    <label htmlFor="email" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
                     <input
                       id="email"
                       type="email"
                       placeholder="you@example.com"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="subject" className="block text-xs font-medium text-gray-700 mb-1">Subject</label>
+                  <label htmlFor="subject" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
                   <select
                     id="subject"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                   >
                     <option>Booking Issue</option>
                     <option>Payment Problem</option>
@@ -129,12 +129,12 @@ export default function ContactPage() {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-xs font-medium text-gray-700 mb-1">Message</label>
+                  <label htmlFor="message" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
                   <textarea
                     id="message"
                     rows={4}
                     placeholder="Describe your issue or question..."
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
                   />
                 </div>
                 <button
@@ -148,13 +148,13 @@ export default function ContactPage() {
 
             {/* Office Info */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Visit our office</h2>
-              <div className="bg-white rounded-xl p-6 border border-gray-100">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Visit our office</h2>
+              <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-100 dark:border-gray-800">
                 <div className="flex items-start gap-3 mb-4">
                   <MapPin className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 text-sm">GoSafe Technologies Pvt. Ltd.</h3>
-                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">GoSafe Technologies Pvt. Ltd.</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
                       B-121, Sector 2, Noida<br />
                       Uttar Pradesh 201301<br />
                       New Delhi NCR, India
@@ -164,8 +164,8 @@ export default function ContactPage() {
                 <div className="flex items-start gap-3 mb-4">
                   <Clock className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 text-sm">Business Hours</h3>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Business Hours</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       Monday - Friday: 10:00 AM - 6:00 PM<br />
                       Saturday: 10:00 AM - 2:00 PM<br />
                       Sunday: Closed
@@ -175,8 +175,8 @@ export default function ContactPage() {
                 <div className="flex items-start gap-3">
                   <Phone className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 text-sm">Customer Support</h3>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Customer Support</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       24/7 helpline: +91 8000 123 456<br />
                       Email: support@gosafe.in
                     </p>
@@ -184,8 +184,8 @@ export default function ContactPage() {
                 </div>
               </div>
               {/* Map placeholder */}
-              <div className="mt-4 bg-gray-200 rounded-xl h-48 flex items-center justify-center text-xs text-gray-500 border border-gray-100">
-                <MapPin className="w-5 h-5 text-gray-400 mr-1" /> Map loading...
+              <div className="mt-4 bg-gray-200 dark:bg-gray-800 rounded-xl h-48 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 border border-gray-100 dark:border-gray-800">
+                <MapPin className="w-5 h-5 text-gray-400 dark:text-gray-500 mr-1" /> Map loading...
               </div>
             </div>
           </div>
@@ -194,8 +194,8 @@ export default function ContactPage() {
 
       {/* CTA */}
       <section className="gosafe-container py-10 text-center">
-        <h2 className="text-lg font-bold text-gray-900 mb-1">Prefer self-service?</h2>
-        <p className="text-sm text-gray-500 mb-4">Visit our Help Centre for instant answers</p>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">Prefer self-service?</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Visit our Help Centre for instant answers</p>
         <a
           href="/help"
           className="inline-flex items-center gap-2 bg-blue-600 text-white font-medium px-6 py-2.5 rounded-xl text-sm hover:bg-blue-700 transition-colors"

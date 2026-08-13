@@ -111,14 +111,14 @@ export default function BlogPage() {
       </section>
 
       {/* Categories */}
-      <section className="bg-white border-b border-gray-100">
+      <section className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-4">
           <div className="flex flex-wrap gap-2 justify-center">
             {categories.map(c => (
               <button
                 key={c}
                 className={`text-xs font-medium px-3.5 py-1.5 rounded-full transition-colors ${
-                  c === 'All' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  c === 'All' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
                 }`}
               >
                 {c}
@@ -135,18 +135,18 @@ export default function BlogPage() {
             <Link
               key={i}
               href={`/blog/${article.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}
-              className="group bg-white rounded-xl border border-gray-100 p-5 hover:border-blue-100 hover:shadow-sm transition-all"
+              className="group bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-5 hover:border-blue-100 hover:shadow-sm transition-all"
             >
-              <span className="inline-block text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full mb-3">
+              <span className="inline-block text-[10px] font-semibold text-blue-600 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-full mb-3">
                 {article.category}
               </span>
-              <h2 className="font-semibold text-gray-900 text-sm mb-2 group-hover:text-blue-600 transition-colors leading-snug">
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-2 group-hover:text-blue-600 transition-colors leading-snug">
                 {article.title}
               </h2>
-              <p className="text-xs text-gray-500 leading-relaxed mb-3 line-clamp-2">
+              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-3 line-clamp-2">
                 {article.excerpt}
               </p>
-              <div className="flex items-center justify-between text-[10px] text-gray-400">
+              <div className="flex items-center justify-between text-[10px] text-gray-400 dark:text-gray-500">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1">
                     <User className="w-3 h-3" /> {article.author}
@@ -166,7 +166,7 @@ export default function BlogPage() {
 
       {/* Load More */}
       <section className="gosafe-container pb-12 text-center">
-        <button className="text-sm font-medium text-blue-600 bg-blue-50 px-6 py-2.5 rounded-xl hover:bg-blue-100 transition-colors inline-flex items-center gap-1.5">
+        <button className="text-sm font-medium text-blue-600 bg-blue-50 dark:bg-blue-500/10 px-6 py-2.5 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors inline-flex items-center gap-1.5">
           Load More Articles <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </section>

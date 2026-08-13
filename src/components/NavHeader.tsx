@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Bus, Phone, Menu, X, User, LogOut, Calendar } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { useSession, signOut } from 'next-auth/react'
+import ThemeToggle from '@/components/ThemeToggle'
 
 export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
   const { data: session } = useSession()
@@ -45,7 +46,7 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
 
   return (
     <header
-      className={`bg-white border-b border-gray-200 ${
+      className={`bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 ${
         sticky ? 'sticky top-0 z-50' : ''
       } transition-all duration-300 ease-in-out ${
         visible || sticky
@@ -63,22 +64,24 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="/" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+            <Link href="/" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">
               Home
             </Link>
-            <Link href="/search" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+            <Link href="/search" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">
               Book Tickets
             </Link>
-            <a href="tel:1800-XXX-XXXX" className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+            <a href="tel:+918000123456" className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">
               <Phone className="w-3.5 h-3.5" />
-              <span className="hidden lg:inline">1800-XXX-XXXX</span>
+              <span className="hidden lg:inline">1800-800-1234</span>
             </a>
+
+            <ThemeToggle />
 
             {session ? (
               <div ref={userMenuRef} className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors text-sm font-medium"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors text-sm font-medium dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-500/20"
                 >
                   <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">
                     {initial}
@@ -86,11 +89,11 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
                   <span className="max-w-24 truncate">{name}</span>
                 </button>
                 {userMenuOpen && (
-                  <div className="absolute right-0 top-full mt-1.5 w-48 bg-white border border-gray-200 rounded-xl shadow-elevated z-30 py-1 animate-fade-in">
+                  <div className="absolute right-0 top-full mt-1.5 w-48 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-elevated z-30 py-1 animate-fade-in">
                     <Link
                       href="/my-bookings"
                       onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors dark:text-gray-300 dark:hover:bg-gray-800"
                     >
                       <Calendar className="w-4 h-4 text-gray-400" />
                       My Bookings
@@ -119,7 +122,7 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
             aria-label="Toggle menu"
           >
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -127,9 +130,13 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
         </div>
 
         {menuOpen && (
-          <div className="md:hidden pb-4 border-t border-gray-100 pt-4 animate-fade-in">
-            <div className="flex flex-col gap-2">
-              <Link href="/" className="text-sm font-medium text-gray-600 px-2 py-1.5" onClick={() => setMenuOpen(false)}>
+      <div className="md:hidden pb-4 border-t border-gray-100 pt-4 animate-fade-in dark:border-gray-800">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between px-2">
+            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Appearance</span>
+            <ThemeToggle />
+          </div>
+          <Link href="/" className="text-sm font-medium text-gray-600 px-2 py-1.5 dark:text-gray-300" onClick={() => setMenuOpen(false)}>
                 Home
               </Link>
               <Link href="/search" className="text-sm font-medium text-gray-600 px-2 py-1.5" onClick={() => setMenuOpen(false)}>
@@ -152,8 +159,8 @@ export default function NavHeader({ sticky = true }: { sticky?: boolean }) {
                   Sign In
                 </Link>
               )}
-              <a href="tel:1800-XXX-XXXX" className="text-sm font-medium text-gray-600 px-2 py-1.5" onClick={() => setMenuOpen(false)}>
-                Contact: 1800-XXX-XXXX
+              <a href="tel:+918000123456" className="text-sm font-medium text-gray-600 px-2 py-1.5" onClick={() => setMenuOpen(false)}>
+                Contact: 1800-800-1234
               </a>
             </div>
           </div>

@@ -90,15 +90,15 @@ export default function SafetyPage() {
 
       {/* Safety Measures */}
       <section className="gosafe-container py-10">
-        <h2 className="text-lg font-bold text-gray-900 text-center mb-6">Our Safety Measures</h2>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 text-center mb-6">Our Safety Measures</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {guidelines.map(g => {
             const Icon = g.icon
             return (
-              <div key={g.title} className="bg-white rounded-xl p-5 border border-gray-100 hover:border-blue-100 hover:shadow-sm transition-all">
+              <div key={g.title} className="bg-white dark:bg-gray-900 rounded-xl p-5 border border-gray-100 dark:border-gray-800 hover:border-blue-100 hover:shadow-sm transition-all">
                 <Icon className="w-6 h-6 text-blue-600 mb-3" />
-                <h3 className="font-semibold text-gray-900 text-sm mb-1.5">{g.title}</h3>
-                <p className="text-xs text-gray-500 leading-relaxed">{g.desc}</p>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-1.5">{g.title}</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{g.desc}</p>
               </div>
             )
           })}
@@ -106,21 +106,21 @@ export default function SafetyPage() {
       </section>
 
       {/* COVID */}
-      <section className="bg-gray-50 border-y border-gray-100">
+      <section className="bg-gray-50 dark:bg-gray-900/60 border-y border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
           <div className="max-w-3xl mx-auto">
             <div className="flex items-center gap-2 mb-4">
               <Droplets className="w-5 h-5 text-blue-600" />
-              <h2 className="text-lg font-bold text-gray-900">COVID-19 Precautions</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">COVID-19 Precautions</h2>
             </div>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               We continue to follow all government-mandated health protocols to ensure safe travel for every passenger.
             </p>
             <div className="grid sm:grid-cols-2 gap-3">
               {covidMeasures.map((m, i) => (
-                <div key={i} className="flex items-start gap-2 bg-white rounded-xl p-3.5 border border-gray-100">
+                <div key={i} className="flex items-start gap-2 bg-white dark:bg-gray-900 rounded-xl p-3.5 border border-gray-100 dark:border-gray-800">
                   <ShieldCheck className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
-                  <span className="text-xs text-gray-700">{m}</span>
+                  <span className="text-xs text-gray-700 dark:text-gray-300">{m}</span>
                 </div>
               ))}
             </div>
@@ -131,16 +131,16 @@ export default function SafetyPage() {
       {/* Emergency Contacts */}
       <section className="gosafe-container py-10">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Emergency Contacts</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Emergency Contacts</h2>
           <div className="grid sm:grid-cols-2 gap-4">
-            <div className="bg-red-50 border border-red-100 rounded-xl p-5">
-              <h3 className="font-semibold text-gray-900 text-sm mb-2">GoSafe Emergency Helpline</h3>
+            <div className="bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/30 rounded-xl p-5">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-2">GoSafe Emergency Helpline</h3>
               <a href="tel:+918000123456" className="text-lg font-bold text-red-600 hover:text-red-700">+91 8000 123 456</a>
-              <p className="text-xs text-gray-500 mt-1">Available 24/7 for all emergencies during your journey</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Available 24/7 for all emergencies during your journey</p>
             </div>
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-5">
-              <h3 className="font-semibold text-gray-900 text-sm mb-2">National Helpline Numbers</h3>
-              <ul className="space-y-1 text-xs text-gray-700">
+            <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/30 rounded-xl p-5">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-2">National Helpline Numbers</h3>
+              <ul className="space-y-1 text-xs text-gray-700 dark:text-gray-300">
                 <li><strong>Police:</strong> 100</li>
                 <li><strong>Ambulance:</strong> 108</li>
                 <li><strong>Fire:</strong> 101</li>

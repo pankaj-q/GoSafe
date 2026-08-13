@@ -67,7 +67,7 @@ export default function AboutPage() {
       </section>
 
       {/* Stats */}
-      <section className="bg-white border-b border-gray-100">
+      <section className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
             {stats.map(s => {
@@ -75,8 +75,8 @@ export default function AboutPage() {
               return (
                 <div key={s.label} className="text-center">
                   <Icon className="w-5 h-5 text-blue-600 mx-auto mb-1.5" />
-                  <div className="text-xl font-bold text-gray-900">{s.value}</div>
-                  <div className="text-xs text-gray-500">{s.label}</div>
+                  <div className="text-xl font-bold text-gray-900 dark:text-gray-100">{s.value}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">{s.label}</div>
                 </div>
               )
             })}
@@ -87,8 +87,8 @@ export default function AboutPage() {
       {/* Story */}
       <section className="gosafe-container py-12">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Our Story</h2>
-          <div className="space-y-4 text-sm text-gray-600 leading-relaxed">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Our Story</h2>
+          <div className="space-y-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
             <p>
               GoSafe was founded in early 2024 with a simple mission — transform the way India travels by bus.
               We noticed that while train and flight booking had become seamless, bus booking still suffered from
@@ -114,10 +114,10 @@ export default function AboutPage() {
       </section>
 
       {/* Timeline */}
-      <section className="bg-gray-50 border-y border-gray-100">
+      <section className="bg-gray-50 dark:bg-gray-900/60 border-y border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-12">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">Our Journey</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">Our Journey</h2>
             <div className="space-y-4">
               {timeline.map((t, i) => (
                 <div key={i} className="flex gap-4 items-start">
@@ -126,8 +126,8 @@ export default function AboutPage() {
                     {i < timeline.length - 1 && <div className="w-0.5 h-full bg-blue-200" />}
                   </div>
                   <div className="pb-4">
-                    <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">{t.year}</span>
-                    <p className="text-sm text-gray-600 mt-1">{t.event}</p>
+                    <span className="text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-full">{t.year}</span>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t.event}</p>
                   </div>
                 </div>
               ))}
@@ -139,15 +139,15 @@ export default function AboutPage() {
       {/* Values */}
       <section className="gosafe-container py-12">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">Our Values</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">Our Values</h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {values.map(v => {
               const Icon = v.icon
               return (
-                <div key={v.title} className="bg-white rounded-xl p-5 border border-gray-100 text-center">
+                <div key={v.title} className="bg-white dark:bg-gray-900 rounded-xl p-5 border border-gray-100 dark:border-gray-800 text-center">
                   <Icon className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1.5">{v.title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">{v.desc}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-1.5">{v.title}</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{v.desc}</p>
                 </div>
               )
             })}

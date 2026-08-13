@@ -71,16 +71,16 @@ export default function CancellationPage() {
             return (
               <div key={slab.title} className={`rounded-xl p-5 border ${slab.color}`}>
                 <Icon className={`w-7 h-7 ${slab.iconColor} mb-3`} />
-                <h3 className="font-semibold text-gray-900 text-sm mb-1">{slab.title}</h3>
-                <p className="text-xs text-gray-600 mb-3 font-medium">{slab.window}</p>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-1">{slab.title}</h3>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 font-medium">{slab.window}</p>
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-500">Refund</span>
-                    <span className="font-semibold text-gray-900">{slab.refund}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Refund</span>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">{slab.refund}</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-500">Deduction</span>
-                    <span className="text-gray-600">{slab.charge}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Deduction</span>
+                    <span className="text-gray-600 dark:text-gray-400">{slab.charge}</span>
                   </div>
                 </div>
               </div>
@@ -90,14 +90,14 @@ export default function CancellationPage() {
       </section>
 
       {/* Important Notes */}
-      <section className="bg-gray-50 border-y border-gray-100">
+      <section className="bg-gray-50 dark:bg-gray-900/60 border-y border-gray-100 dark:border-gray-800">
         <div className="gosafe-container py-10">
           <div className="max-w-3xl mx-auto">
             <div className="flex items-center gap-2 mb-4">
               <AlertTriangle className="w-5 h-5 text-amber-500" />
-              <h2 className="text-lg font-bold text-gray-900">Important Notes</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Important Notes</h2>
             </div>
-            <ul className="space-y-2.5 text-sm text-gray-600">
+            <ul className="space-y-2.5 text-sm text-gray-600 dark:text-gray-400">
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 mt-0.5 shrink-0">•</span>
                 <span>Cancellation can only be done through the GoSafe website or mobile app. We do not process cancellations over phone or email.</span>
@@ -130,7 +130,7 @@ export default function CancellationPage() {
       {/* How to Cancel */}
       <section className="gosafe-container py-10">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">How to Cancel</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">How to Cancel</h2>
           <div className="space-y-3">
             {[
               { step: '1', text: 'Log in to your GoSafe account and go to My Bookings' },
@@ -139,11 +139,11 @@ export default function CancellationPage() {
               { step: '4', text: 'Review the cancellation charges and refund amount' },
               { step: '5', text: 'Confirm cancellation — your refund will be initiated immediately' },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3 bg-white rounded-xl p-4 border border-gray-100">
+              <div key={i} className="flex items-center gap-3 bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-100 dark:border-gray-800">
                 <div className="w-7 h-7 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
                   {item.step}
                 </div>
-                <p className="text-sm text-gray-700">{item.text}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-300">{item.text}</p>
               </div>
             ))}
           </div>
