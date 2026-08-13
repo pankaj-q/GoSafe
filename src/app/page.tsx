@@ -98,29 +98,29 @@ export default function Home() {
         </div>
         <div className="relative gosafe-container py-10 sm:py-14">
           <div className="max-w-2xl mx-auto text-center mb-8">
-            <div className="inline-flex items-center gap-1.5 bg-blue-500/30 text-blue-100 text-xs font-medium px-3 py-1 rounded-full mb-4">
+            <div className="inline-flex items-center gap-1.5 bg-blue-500/30 text-blue-100 text-xs font-medium px-3 py-1 rounded-full mb-4 animate-fade-up" style={{ animationDelay: '50ms' }}>
               <TrendingUp className="w-3 h-3" /> India&apos;s Trusted Bus Platform
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-3 leading-tight whitespace-nowrap">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-3 leading-tight whitespace-nowrap animate-fade-up" style={{ animationDelay: '150ms' }}>
               Book{' '}
               <span className="font-[Aquire] font-normal italic tracking-wider">
                 <TypewriterText words={['Bus Tickets', 'Bus Booking', 'Travel Safe']} typeSpeed={150} deleteSpeed={80} />
               </span>{' '}
               Across India
             </h1>
-            <p className="text-blue-200 text-sm sm:text-base max-w-lg mx-auto">
+            <p className="text-blue-200 text-sm sm:text-base max-w-lg mx-auto animate-fade-up" style={{ animationDelay: '250ms' }}>
               Safe, reliable & affordable bus travel for every route in India — AC Sleeper, Volvo, Non-AC.
               Instant e-tickets, free cancellation, 24/7 support.
             </p>
           </div>
 
           {/* Search card */}
-          <div className="max-w-3xl mx-auto bg-white dark:bg-gray-900 rounded-2xl p-4 sm:p-6 shadow-2xl ring-1 ring-black/5">
+          <div className="max-w-3xl mx-auto bg-white dark:bg-gray-900 rounded-2xl p-4 sm:p-6 shadow-2xl ring-1 ring-black/5 animate-fade-up" style={{ animationDelay: '400ms' }}>
             <SearchBar />
           </div>
 
           {/* Trust bar */}
-          <div className="max-w-3xl mx-auto mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="max-w-3xl mx-auto mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 animate-fade-up" style={{ animationDelay: '550ms' }}>
             {stats.map(s => {
               const Icon = s.icon
               return (

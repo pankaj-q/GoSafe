@@ -229,7 +229,7 @@ function SearchContent({ source, destination, date, queryString }: {
               ) : (
                 <div className="space-y-3">
                   {sorted.map((bus, i) => (
-                    <div key={bus.scheduleId} style={{ animationDelay: `${i * 60}ms` }}>
+                    <div key={bus.scheduleId} className="animate-fade-up" style={{ animationDelay: `${i * 80}ms` }}>
                       <BusCard
                         scheduleId={bus.scheduleId}
                         operatorName={bus.operatorName}

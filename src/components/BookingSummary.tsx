@@ -96,7 +96,7 @@ export default function BookingSummary({
         )}
         <div className="flex justify-between pt-2 border-t border-gray-200 dark:border-gray-800">
           <span className="font-bold text-gray-900 dark:text-gray-100">Total Amount</span>
-          <span className="font-bold text-lg text-blue-600">{formatCurrency(total)}</span>
+          <span key={total} className="font-bold text-lg text-blue-600 inline-block animate-price-pop">{formatCurrency(total)}</span>
         </div>
       </div>
     </div>

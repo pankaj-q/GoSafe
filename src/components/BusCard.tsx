@@ -287,7 +287,7 @@ export default function BusCard(props: BusCardProps) {
                   <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div className="text-sm text-gray-700 dark:text-gray-300">
                       <strong>{selectedSeats.length}</strong> seat{selectedSeats.length > 1 ? 's' : ''} selected ·
-                      Total: <strong className="text-blue-700 dark:text-blue-300 text-base">{formatCurrency(baseFare * selectedSeats.length)}</strong>
+                      Total: <strong key={baseFare * selectedSeats.length} className="text-blue-700 dark:text-blue-300 text-base inline-block animate-price-pop">{formatCurrency(baseFare * selectedSeats.length)}</strong>
                     </div>
                     <Link
                       href={`/booking/${scheduleId}?${queryString || ''}&seats=${selectedSeats.join(',')}`}

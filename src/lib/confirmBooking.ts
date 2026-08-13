@@ -16,6 +16,10 @@ export async function confirmPaidBooking(bookingId: number) {
           bus: { include: { operator: true } },
           route: { include: { source: true, dest: true } },
           seats: { select: { id: true, seatNumber: true } },
+          boardingPoints: {
+            orderBy: { sortOrder: 'asc' },
+            select: { name: true, time: true, address: true, type: true },
+          },
         },
       },
       passengers: true,
@@ -38,6 +42,12 @@ export async function confirmPaidBooking(bookingId: number) {
   const route = schedule.route
   const seatIdToNumber = new Map(schedule.seats.map(s => [s.id, s.seatNumber]))
   const seatNumbers = booking.passengers.map(p => seatIdToNumber.get(p.seatId) ?? String(p.seatId))
+  const boardingPoints = schedule.boardingPoints
+    .filter(bp => bp.type === 'BOARDING')
+    .map(bp => ({ name: bp.name, time: bp.time }))
+  const droppingPoints = schedule.boardingPoints
+    .filter(bp => bp.type === 'DROPPING')
+    .map(bp => ({ name: bp.name, time: bp.time }))
 
   let pdfBuffer: Buffer | undefined
   try {
@@ -59,6 +69,10 @@ export async function confirmPaidBooking(bookingId: number) {
       })),
       totalAmount: booking.totalAmount,
       insuranceOpted: booking.insuranceOpted,
+      contactName: booking.contactName,
+      contactPhone: booking.contactPhone,
+      boardingPoints,
+      droppingPoints,
     })
   } catch (err) {
     console.error('[Confirm] PDF generation failed:', err)

@@ -17,6 +17,10 @@ export async function GET(
             bus: { include: { operator: true } },
             route: { include: { source: true, dest: true } },
             seats: { select: { id: true, seatNumber: true } },
+            boardingPoints: {
+              orderBy: { sortOrder: 'asc' },
+              select: { name: true, time: true, address: true, type: true },
+            },
           },
         },
         passengers: true,
@@ -31,6 +35,13 @@ export async function GET(
     const bus = schedule.bus
     const route = schedule.route
     const seatIdToNumber = new Map(schedule.seats.map(s => [s.id, s.seatNumber]))
+
+    const boardingPoints = schedule.boardingPoints
+      .filter(bp => bp.type === 'BOARDING')
+      .map(bp => ({ name: bp.name, time: bp.time }))
+    const droppingPoints = schedule.boardingPoints
+      .filter(bp => bp.type === 'DROPPING')
+      .map(bp => ({ name: bp.name, time: bp.time }))
 
     const pdfBuffer = await generateTicketPDF({
       referenceCode: booking.referenceCode,
@@ -50,6 +61,10 @@ export async function GET(
       })),
       totalAmount: booking.totalAmount,
       insuranceOpted: booking.insuranceOpted,
+      contactName: booking.contactName,
+      contactPhone: booking.contactPhone,
+      boardingPoints,
+      droppingPoints,
     })
 
     const pdfArrayBuffer = pdfBuffer.buffer.slice(

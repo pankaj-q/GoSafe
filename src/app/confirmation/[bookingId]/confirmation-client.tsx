@@ -89,8 +89,11 @@ export default function ConfirmationClient({ bookingId }: { bookingId: string })
       <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
         <div className="gosafe-container py-8 sm:py-12">
           <div className="max-w-2xl mx-auto text-center mb-8 animate-fade-in">
-            <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-500/20 flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-9 h-9 text-green-600" />
+            <div className="relative w-16 h-16 mx-auto mb-4">
+              <div className="absolute inset-0 rounded-full bg-green-400/40 animate-celebrate-ring" />
+              <div className="relative w-16 h-16 rounded-full bg-green-100 dark:bg-green-500/20 flex items-center justify-center animate-pop-in">
+                <CheckCircle className="w-9 h-9 text-green-600" />
+              </div>
             </div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">Booking Confirmed!</h1>
             <p className="text-gray-500 dark:text-gray-400 text-sm">Your ticket has been booked successfully</p>
