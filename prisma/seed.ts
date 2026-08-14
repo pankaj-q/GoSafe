@@ -30,6 +30,7 @@ async function main() {
     { name: 'Amritsar', state: 'Punjab', slug: 'amritsar' },
     { name: 'Indore', state: 'Madhya Pradesh', slug: 'indore' },
     { name: 'Bhopal', state: 'Madhya Pradesh', slug: 'bhopal' },
+    { name: 'Saharnpur',state: 'Uttar Pradesh', slug: 'lucknow'},
   ]
 
   for (const city of cities) {
