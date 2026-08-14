@@ -107,3 +107,47 @@ export async function capturePayment(paymentId: string, amount: number) {
     throw new Error(`Razorpay capture failed: ${err instanceof Error ? err.message : String(err)}`)
   }
 }
+
+export async function createRazorpayRefund(params: {
+  paymentId: string
+  amount: number // in paise
+  notes?: Record<string, string>
+}): Promise<{
+  id: string
+  status: string
+  mock?: boolean
+}> {
+  if (!isConfigured()) {
+    if (IS_PRODUCTION) {
+      throw new Error('Razorpay is not configured (RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET missing)')
+    }
+    console.log('[Razorpay] Mock: refund skipped (no keys)')
+    return { id: `rfnd_mock_${Date.now()}`, status: 'processed', mock: true }
+  }
+
+  const auth = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString('base64')
+
+  try {
+    const res = await fetch(`https://api.razorpay.com/v1/refunds`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        payment_id: params.paymentId,
+        amount: Math.round(params.amount),
+        notes: params.notes,
+      }),
+    })
+
+    if (!res.ok) {
+      const err = await res.text()
+      throw new Error(`Razorpay refund failed: ${err}`)
+    }
+
+    return res.json()
+  } catch (err) {
+    throw new Error(`Razorpay refund failed: ${err instanceof Error ? err.message : String(err)}`)
+  }
+}

@@ -25,6 +25,11 @@ export function getMissingEnvVars(): string[] {
     }
   }
 
+  const hasGemini = process.env.GEMINI_API_KEY
+  if (process.env.NODE_ENV === 'production' && !hasGemini) {
+    missing.push('GEMINI_API_KEY (required in production for the AI assistant)')
+  }
+
   if (process.env.NEXTAUTH_SECRET && process.env.NEXTAUTH_SECRET.length < 32) {
     missing.push('NEXTAUTH_SECRET (must be at least 32 characters)')
   }

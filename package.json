@@ -15,11 +15,14 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.44",
+    "@ai-sdk/react": "^4.0.68",
     "@libsql/client": "^0.17.4",
     "@posthog/nextjs": "^0.0.2",
     "@prisma/adapter-libsql": "^7.9.0",
     "@prisma/client": "^7.9.0",
     "@sentry/nextjs": "^10.67.0",
+    "ai": "^7.0.65",
     "dotenv": "^17.4.2",
     "lucide-react": "^1.25.0",
     "next": "16.2.10",

@@ -4,6 +4,7 @@ import { jsonLdOrganisation, jsonLdWebsite } from '@/lib/seo'
 import PWARegister from '@/components/PWARegister'
 import BookingProvider from '@/components/BookingProvider'
 import FloatingBus from '@/components/FloatingBus'
+import AIWidget from '@/components/AIWidget'
 import './globals.css'
 
 const geistSans = Geist({
@@ -118,6 +119,7 @@ export default function RootLayout({
         <BookingProvider>
           {children}
           <FloatingBus />
+          <AIWidget />
           <PWARegister />
         </BookingProvider>
       </body>

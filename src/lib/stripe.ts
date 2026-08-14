@@ -111,3 +111,35 @@ export function verifyStripeWebhook(body: string, signature: string): Stripe.Eve
 
   return Stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET)
 }
+
+export interface StripeRefundParams {
+  paymentId: string
+  amountPaise: number
+  reason?: string
+  referenceCode: string
+}
+
+export async function createStripeRefund(params: StripeRefundParams): Promise<{
+  refundId: string
+  status: string
+  mock?: boolean
+}> {
+  if (!isConfigured()) {
+    if (IS_PRODUCTION) {
+      throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
+    }
+    console.log('[Stripe] Mock: refund skipped (no keys)')
+    return { refundId: `re_mock_${Date.now()}`, status: 'succeeded', mock: true }
+  }
+
+  const stripe = getStripe()
+
+  const refund = await stripe.refunds.create({
+    payment_intent: params.paymentId,
+    amount: Math.round(params.amountPaise),
+    reason: (params.reason as Stripe.RefundCreateParams['reason']) || 'requested_by_customer',
+    metadata: { referenceCode: params.referenceCode },
+  })
+
+  return { refundId: refund.id, status: refund.status ?? 'pending' }
+}
