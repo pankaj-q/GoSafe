@@ -14,13 +14,13 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
 
+        const input = credentials.email as string
+        const isEmail = input.includes('@')
+
         const user = await prisma.user.findFirst({
-          where: {
-            OR: [
-              { email: credentials.email as string },
-              { phone: credentials.email as string },
-            ],
-          },
+          where: isEmail
+            ? { email: input }
+            : { phone: input },
         })
 
         if (!user?.password) return null

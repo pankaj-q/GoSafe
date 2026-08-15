@@ -106,7 +106,11 @@ export function verifyStripeWebhook(body: string, signature: string): Stripe.Eve
       throw new Error('Stripe webhook is not configured (STRIPE_WEBHOOK_SECRET missing)')
     }
     // Mock mode: accept and parse body without verification
-    return JSON.parse(body) as Stripe.Event
+    try {
+      return JSON.parse(body) as Stripe.Event
+    } catch {
+      throw new Error('Invalid webhook body')
+    }
   }
 
   return Stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET)
