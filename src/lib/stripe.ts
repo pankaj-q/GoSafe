@@ -7,7 +7,11 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 let stripeClient: Stripe | null = null
 
 function isConfigured(): boolean {
-  return Boolean(STRIPE_SECRET_KEY)
+  if (!STRIPE_SECRET_KEY) return false
+  // Treat placeholder/test keys as unconfigured for demo mode
+  const key = STRIPE_SECRET_KEY.trim()
+  if (key.startsWith('sk_test_') && /^sk_test_x+$/i.test(key)) return false
+  return true
 }
 
 export function getStripe(): Stripe {
