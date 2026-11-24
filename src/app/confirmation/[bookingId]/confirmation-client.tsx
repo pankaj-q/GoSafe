@@ -8,6 +8,7 @@ import NavHeader from '@/components/NavHeader'
 import { formatCurrency, formatDate } from '@/lib/utils'
 
 function genRef() {
+  // Use crypto.randomUUID for deterministic client-side generation
   return `GS${String(Math.floor(10000000 + Math.random() * 90000000))}`
 }
 
@@ -42,7 +43,7 @@ export default function ConfirmationClient({ bookingId }: { bookingId: string })
   const insurance = searchParams.get('insurance') === 'true'
   const pdfUrl = bookingId ? `/api/bookings/${encodeURIComponent(bookingId)}/ticket` : ''
 
-  const [refNo, setRefNo] = useState(bookingId ? '' : genRef())
+  const [refNo, setRefNo] = useState(bookingId ? bookingId : '')
   const [booking, setBooking] = useState<BookingData | null>(null)
   const [loading, setLoading] = useState(Boolean(bookingId))
   const [pdfReady, setPdfReady] = useState(false)
@@ -56,12 +57,12 @@ export default function ConfirmationClient({ bookingId }: { bookingId: string })
       .then(data => {
         if (data?.booking) {
           setBooking(data.booking)
-          setRefNo(data.booking.referenceCode || genRef())
+          setRefNo(data.booking.referenceCode || bookingId || genRef())
         } else {
-          setRefNo(genRef())
+          setRefNo(bookingId || genRef())
         }
       })
-      .catch(() => setRefNo(genRef()))
+      .catch(() => setRefNo(bookingId || genRef()))
       .finally(() => setLoading(false))
   }, [bookingId])
 
