@@ -3,6 +3,9 @@ import Stripe from 'stripe'
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || ''
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || ''
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
+// Allows the full booking flow to be exercised without real gateway keys.
+// Never enable this on a production storefront taking real money.
+const PAYMENTS_DEMO_MODE = process.env.PAYMENTS_DEMO_MODE === 'true'
 
 let stripeClient: Stripe | null = null
 
@@ -50,7 +53,7 @@ export async function createStripeCheckoutSession(params: StripeCheckoutParams):
   mock?: boolean
 }> {
   if (!isConfigured()) {
-    if (IS_PRODUCTION) {
+    if (IS_PRODUCTION && !PAYMENTS_DEMO_MODE) {
       throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
     }
     // Mock mode — mirror the payment as if a session was created
@@ -133,7 +136,7 @@ export async function createStripeRefund(params: StripeRefundParams): Promise<{
   mock?: boolean
 }> {
   if (!isConfigured()) {
-    if (IS_PRODUCTION) {
+    if (IS_PRODUCTION && !PAYMENTS_DEMO_MODE) {
       throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
     }
     console.log('[Stripe] Mock: refund skipped (no keys)')

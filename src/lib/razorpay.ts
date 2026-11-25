@@ -4,6 +4,8 @@ const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || ''
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || ''
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
+// Allows the booking flow to be exercised without real gateway keys.
+const PAYMENTS_DEMO_MODE = process.env.PAYMENTS_DEMO_MODE === 'true'
 
 function isConfigured(): boolean {
   return Boolean(RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET)
@@ -20,7 +22,7 @@ export async function createRazorpayOrder(params: {
   notes?: Record<string, string>
 }) {
   if (!isConfigured()) {
-    if (IS_PRODUCTION) {
+    if (IS_PRODUCTION && !PAYMENTS_DEMO_MODE) {
       throw new Error('Razorpay is not configured (RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET missing)')
     }
     console.log('[Razorpay] Mock: order creation skipped (no keys)')
@@ -84,7 +86,7 @@ export function verifyRazorpayWebhook(body: string, signature: string): boolean 
 
 export async function capturePayment(paymentId: string, amount: number) {
   if (!isConfigured()) {
-    if (IS_PRODUCTION) {
+    if (IS_PRODUCTION && !PAYMENTS_DEMO_MODE) {
       throw new Error('Razorpay is not configured (RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET missing)')
     }
     console.log('[Razorpay] Mock: payment capture skipped')
@@ -118,7 +120,7 @@ export async function createRazorpayRefund(params: {
   mock?: boolean
 }> {
   if (!isConfigured()) {
-    if (IS_PRODUCTION) {
+    if (IS_PRODUCTION && !PAYMENTS_DEMO_MODE) {
       throw new Error('Razorpay is not configured (RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET missing)')
     }
     console.log('[Razorpay] Mock: refund skipped (no keys)')

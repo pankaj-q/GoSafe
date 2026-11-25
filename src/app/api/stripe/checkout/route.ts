@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { createStripeCheckoutSession } from '@/lib/stripe'
+import { confirmPaidBooking } from '@/lib/confirmBooking'
 
 const MAX_BODY_SIZE = 16384
 
@@ -75,6 +76,20 @@ export async function POST(req: NextRequest) {
       where: { id: payment.id },
       data: { stripeSessionId: session.sessionId },
     })
+
+    // Demo/test mode: no real gateway redirect happens, so settle the booking
+    // immediately instead of waiting for a webhook that will never arrive.
+    if (session.mock) {
+      try {
+        await prisma.payment.update({
+          where: { id: payment.id },
+          data: { status: 'CAPTURED' },
+        })
+        await confirmPaidBooking(booking.id)
+      } catch (err) {
+        console.error('[Stripe] Demo confirmation failed:', err)
+      }
+    }
 
     return NextResponse.json({
       sessionId: session.sessionId,
