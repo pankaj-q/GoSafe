@@ -1,6 +1,7 @@
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
-const REQUIRED = ['DATABASE_URL', 'NEXTAUTH_SECRET']
+const REQUIRED = ['NEXTAUTH_SECRET']
+const DB_VARS = ['DATABASE_URL', 'TURSO_DATABASE_URL']
 const RAZORPAY_REQUIRED = ['RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET', 'RAZORPAY_WEBHOOK_SECRET']
 const STRIPE_REQUIRED = ['STRIPE_SECRET_KEY']
 
@@ -9,6 +10,10 @@ export function getMissingEnvVars(): string[] {
 
   for (const key of REQUIRED) {
     if (!process.env[key]) missing.push(key)
+  }
+
+  if (!DB_VARS.some(k => process.env[k])) {
+    missing.push('DATABASE_URL (or TURSO_DATABASE_URL)')
   }
 
   const hasRazorpay = RAZORPAY_REQUIRED.some(k => process.env[k])
